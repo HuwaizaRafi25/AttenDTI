@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" viewbox="0 0 400 400">
+  <g visibility="hidden">
+    <rect id="square" width="40" height="40" shape-rendering="crispEdges" />
+    <path id="htt" d="M 0 0 h 40 L 0 40 Z" shape-rendering="crispEdges" />
+    <path id="qcirc" d="M 0 0 h 40 A 40 40 0 0 1 0 40 Z" shape-rendering="geometricPrecision" />
+  </g>
+
+  <!-- Dense bottom-left core -->
+  <use xlink:href="#square" transform="translate(0 360)" fill="#ffbb00" />
+  <use xlink:href="#htt" transform="translate(0 360) rotate(90 20 20)" fill="#457b9d" />
+  <use xlink:href="#qcirc" transform="translate(40 360) rotate(180 20 20)" fill="#1d3557" />
+  <use xlink:href="#square" transform="translate(0 320)" fill="#f1faee" />
+  <use xlink:href="#qcirc" transform="translate(40 320) rotate(270 20 20)" fill="#a8dadc" />
+  <use xlink:href="#htt" transform="translate(0 280) rotate(180 20 20)" fill="#ffbb00" />
+  <use xlink:href="#square" transform="translate(40 280)" fill="#1d3557" />
+
+  <!-- Spreading up-left -->
+  <use xlink:href="#square" transform="translate(0 240)" fill="#457b9d" />
+  <use xlink:href="#qcirc" transform="translate(0 200)" fill="#ffbb00" />
+  <use xlink:href="#htt" transform="translate(40 200) rotate(90 20 20)" fill="#a8dadc" />
+  <use xlink:href="#square" transform="translate(0 160)" fill="#1d3557" />
+  <use xlink:href="#qcirc" transform="translate(0 120)" fill="#f1faee" />
+  <use xlink:href="#htt" transform="translate(0 80) rotate(180 20 20)" fill="#457b9d" />
+  <use xlink:href="#square" transform="translate(40 80)" fill="#ffbb00" />
+  <use xlink:href="#qcirc" transform="translate(0 40)" fill="#a8dadc" />
+
+  <!-- Extended bottom spread -->
+  <use xlink:href="#square" transform="translate(80 360)" fill="#1d3557" />
+  <use xlink:href="#htt" transform="translate(120 360) rotate(270 20 20)" fill="#f1faee" />
+  <use xlink:href="#qcirc" transform="translate(160 360)" fill="#457b9d" />
+  <use xlink:href="#square" transform="translate(200 360)" fill="#ffbb00" />
+  <use xlink:href="#htt" transform="translate(240 360)" fill="#a8dadc" />
+  <use xlink:href="#qcirc" transform="translate(280 360) rotate(90 20 20)" fill="#1d3557" />
+  <use xlink:href="#square" transform="translate(320 360)" fill="#f1faee" />
+
+  <!-- Dense bottom-right section -->
+  <use xlink:href="#square" transform="translate(80 320)" fill="#ffbb00" />
+  <use xlink:href="#htt" transform="translate(120 320)" fill="#a8dadc" />
+  <use xlink:href="#square" transform="translate(160 320)" fill="#1d3557" />
+  <use xlink:href="#qcirc" transform="translate(200 320) rotate(90 20 20)" fill="#f1faee" />
+  <use xlink:href="#htt" transform="translate(240 320) rotate(180 20 20)" fill="#457b9d" />
+  <use xlink:href="#square" transform="translate(280 320)" fill="#ffbb00" />
+
+  <!-- Bottom-right spread -->
+  <use xlink:href="#square" transform="translate(160 280)" fill="#457b9d" />
+  <use xlink:href="#qcirc" transform="translate(200 280)" fill="#a8dadc" />
+  <use xlink:href="#htt" transform="translate(240 280) rotate(90 20 20)" fill="#1d3557" />
+
+  <!-- Scattered elements in middle -->
+  <use xlink:href="#square" transform="translate(80 280)" fill="#457b9d" />
+  <use xlink:href="#htt" transform="translate(80 240) rotate(180 20 20)" fill="#ffbb00" />
+  <use xlink:href="#qcirc" transform="translate(120 240)" fill="#a8dadc" />
+  <use xlink:href="#square" transform="translate(80 200)" fill="#1d3557" />
+</svg>

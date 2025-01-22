@@ -1,0 +1,93 @@
+<?php
+
+namespace Database\Seeders;
+
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Location;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+class UserSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // User::truncate();
+        // Location::truncate();
+
+        Location::create([
+            'name' => 'CRCS',
+            'campus' => 'ITB Kampus Ganesha',
+            'address' => 'Jl. Ganesha No. 10',
+            'latitude' => -6.887633,
+            'longitude' => 107.611791,
+            'radius' => 25,
+        ]);
+
+        Location::create([
+            'name' => 'Labtek I',
+            'campus' => 'ITB Kampus Ganesha',
+            'address' => 'Jl. G ITB',
+            'latitude' => -6.889032,
+            'longitude' => 107.611147,
+            'radius' => 25,
+        ]);
+        
+
+        User::create([
+            'nisn' => null,
+            'username' => 'paakew',
+            'itb_account' => 'paakew@itb.ac.id',
+            'email' => 'paakew@gmail.com',
+            'phone' => '081234567890',
+            'password' => Hash::make('dtikerenaslina'),
+            'full_name' => 'Iwan Setiawan',
+            'address' => 'Jl. Admin No. 1',
+            'profile_pic' => 'default_admin_pic.jpg',
+            'period_start_date' => null,
+            'period_end_date' => null,
+            'school' => null,
+            'placement_id' => null,
+            'last_seen' => now(),
+        ]);
+
+        // Membuat user biasa
+        User::create([
+            'nisn' => '0987654321',
+            'username' => 'huwaizarafi25',
+            'itb_account' => 'huwaiza.r@itb.ac.id',
+            'email' => 'huwaiza137@gmail.com',
+            'phone' => '08815184624',
+            'password' => Hash::make('sayadaricisaat'),
+            'full_name' => 'Muhammad Huwaiza Rafi',
+            'address' => 'Jl. Student No. 2',
+            'profile_pic' => 'default_student_pic.jpg',
+            'period_start_date' => Carbon::parse('2024-01-02'),
+            'period_end_date' => Carbon::parse('2024-04-11'),
+            'school' => 'SMK TI Pembangunan Cimahi',
+            'placement_id' => 1,
+            'last_seen' => now(),
+        ]);
+
+        User::create([
+            'nisn' => '1234567890',
+            'username' => 'akmalmaulana',
+            'itb_account' => 'akmal.ma@itb.ac.id',
+            'email' => 'akmalmaulana@gmail.com',
+            'phone' => '0884456654',
+            'password' => Hash::make('akmalanaksoleh'),
+            'full_name' => 'Akmal Maulana',
+            'address' => 'Jl. Student No. 3',
+            'profile_pic' => 'default_student_pic.jpg',
+            'period_start_date' => Carbon::parse('2024-01-02'),
+            'period_end_date' => Carbon::parse('2024-04-11'),
+            'school' => 'SMK TI Pembangunan Cimahi',
+            'placement_id' => 2,
+            'last_seen' => now(),
+        ]);
+    }
+}

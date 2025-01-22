@@ -1,0 +1,54 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+.hover-lift {
+    transition: transform 0.3s ease-in-out;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+}
+
+.clock-hand {
+    transform-origin: 50% 50%;
+    /* Pastikan transformasi dilakukan dari pusat */
+}
+
+#secondHand {
+    stroke: #ef4444;
+}
+
+#minuteHand {
+    stroke: #1f2937;
+}
+
+#hourHand {
+    stroke: #1f2937;
+    stroke-width: 3;
+}
