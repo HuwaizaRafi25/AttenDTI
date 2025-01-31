@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\LocationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\AccountSettingsController;
 
@@ -21,6 +23,14 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::middleware(['web'])->group(function () {
+    return view('auth.login');
+});
+
+Route::get('/set-locale/{locale}', function ($locale) {
+    session(['locale' => $locale]);
+    return redirect()->back();
+})->name('locale');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/loginAct', [LoginController::class, 'authenticate'])->name('loginAct');
@@ -41,9 +51,12 @@ Route::middleware(['auth'])->group(
             return view('admin.main');
         });
 
-        Route::get('/overview', function () {
-            return view('menus.overview');
-        });
+        // Route::get('/overview', function () {
+        //     return view('menus.overview');
+        // });
+        Route::get('/overview', [DashboardController::class, 'index'])->name('overview');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
         Route::get('/attendance', function () {
             return view('menus.attendance');
         });
@@ -60,19 +73,28 @@ Route::middleware(['auth'])->group(
             return view('menus.job');
 
         });
-        Route::get('/profile', function () {
-            return view('profile');
-        });
+
         Route::get('/job_detail', function () {
             return view('menus.job_detail');
+
         });
 
-        Route::get('/users', [UserController::class, 'index'])->name('users');
-        Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
-        Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-        Route::put('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
-        Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+        Route::get('/test_print', function () {
+            return view('test-print');
 
+        });
+
+        Route::get('/{username}', [UserController::class, 'view'])->name('user.view');
+
+        Route::get('/users/list', [UserController::class, 'index'])->name('users.list');
+        Route::post('/users/store', [UserController::class, 'store'])->middleware(['Permission:manage-user', 'method.check:POST'])->name('users.store');
+        Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::get('/users/update/{id}', [UserController::class, 'updateView'])->name('users.updateView');
+        Route::put('/users/updateAct/{id}', [UserController::class, 'update'])->name('users.updateAct');
+        Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+        Route::get('/users/getPlacements', [LocationController::class, 'getPlacements'])->name('users.getPlacements');
+        Route::get('/users/check-username', [UserController::class, 'checkUsername'])->name('checkUsername');
+        Route::get('/users/check-itb-account', [UserController::class, 'checkITBAccount'])->name('checkItbAccount');
 
     }
 );

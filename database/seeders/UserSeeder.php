@@ -36,57 +36,82 @@ class UserSeeder extends Seeder
             'longitude' => 107.611147,
             'radius' => 25,
         ]);
-        
+
 
         User::create([
-            'nisn' => null,
+            'identity_number' => null,
             'username' => 'paakew',
             'itb_account' => 'paakew@itb.ac.id',
             'email' => 'paakew@gmail.com',
             'phone' => '081234567890',
             'password' => Hash::make('dtikerenaslina'),
             'full_name' => 'Iwan Setiawan',
+            'gender' => '1',
             'address' => 'Jl. Admin No. 1',
-            'profile_pic' => 'default_admin_pic.jpg',
+            'profile_pic' => 'alkhawarizmi.jpg',
             'period_start_date' => null,
             'period_end_date' => null,
-            'school' => null,
+            'major' => null,
+            'institution' => null,
             'placement_id' => null,
             'last_seen' => now(),
         ]);
 
         // Membuat user biasa
         User::create([
-            'nisn' => '0987654321',
+            'identity_number' => '0987654321',
             'username' => 'huwaizarafi25',
             'itb_account' => 'huwaiza.r@itb.ac.id',
             'email' => 'huwaiza137@gmail.com',
             'phone' => '08815184624',
             'password' => Hash::make('sayadaricisaat'),
             'full_name' => 'Muhammad Huwaiza Rafi',
+            'gender' => '1',
             'address' => 'Jl. Student No. 2',
-            'profile_pic' => 'default_student_pic.jpg',
+            'profile_pic' => 'A9DwuCrB5YxU6mhIq0IjK8hPKRsBi6NsY1VrMr9S.jpg',
             'period_start_date' => Carbon::parse('2024-01-02'),
             'period_end_date' => Carbon::parse('2024-04-11'),
-            'school' => 'SMK TI Pembangunan Cimahi',
+            'major' => 'Rekayasa Perangkat Lunak',
+            'institution' => 'SMK TI Pembangunan Cimahi',
             'placement_id' => 1,
             'last_seen' => now(),
         ]);
 
         User::create([
-            'nisn' => '1234567890',
+            'identity_number' => '1234567890',
             'username' => 'akmalmaulana',
             'itb_account' => 'akmal.ma@itb.ac.id',
             'email' => 'akmalmaulana@gmail.com',
             'phone' => '0884456654',
             'password' => Hash::make('akmalanaksoleh'),
             'full_name' => 'Akmal Maulana',
+            'gender' => '1',
             'address' => 'Jl. Student No. 3',
-            'profile_pic' => 'default_student_pic.jpg',
+            'profile_pic' => 'aQQ3fBEi0iDY97mN7ITKtE8KU7gZgXPfVKGtwje1.jpg',
             'period_start_date' => Carbon::parse('2024-01-02'),
             'period_end_date' => Carbon::parse('2024-04-11'),
-            'school' => 'SMK TI Pembangunan Cimahi',
+            'major' => 'Teknik Komputer dan Jaringan',
+            'institution' => 'SMK TI Pembangunan Cimahi',
             'placement_id' => 2,
+            'last_seen' => now(),
+        ]);
+
+        User::create([
+            'identity_number' => '008556454',
+            'username' => 'imamajah',
+            'itb_account' => 'mamsajah@itb.ac.id',
+            'email' => 'imams@gmail.com',
+            'phone' => '08877653345',
+            'password' => Hash::make('imamdarisoreang'),
+            'full_name' => 'Imam Ajah',
+            'gender' => '1',
+            'address' => 'Jl. Imam No. 1',
+            'profile_pic' => 'hengker.jpg',
+            'period_start_date' => Carbon::parse('2024-07-02'),
+            'period_end_date' => Carbon::parse('2025-01-11'),
+            'major' => 'Desain Komunikasi dan Visual',
+            'institution' => 'SMK Itikurih',
+            'placement_id' => 1,
             'last_seen' => now(),
         ]);
     }

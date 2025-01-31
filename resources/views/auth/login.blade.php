@@ -4,12 +4,36 @@
     <form method="POST" action="{{ route('loginAct') }}" class="space-y-4">
         @csrf
         <div>
-            @error('email')
+            {{-- @error('email')
                 <p class="text-red-500 text-sm my-3">{!! $message !!}</p>
-            @enderror
+            @enderror --}}
+            @if ($errors->any())
+            <div class="bg-red-500/15 text-red-700 rounded-lg p-4 my-3 shadow-md">
+                @foreach ($errors->all() as $error)
+                    <p class="text-sm font-semibold">
+                        {!! $error !!}
+                    </p>
+                @endforeach
+            </div>
+        @endif
+        @if (session('success'))
+            <div id="success-modal" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md text-center transform scale-95 opacity-0 transition-all duration-300 ease-out"
+                    id="modal-content">
+                    <h2 class="text-lg font-semibold text-green-700 mb-4">Success</h2>
+                    <p class="text-sm text-gray-700 mb-6">
+                        {!! session('success') !!}
+                    </p>
+                    <button id="close-modal-btn"
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-6 py-3 rounded-lg transition duration-200 ease-in-out transform hover:scale-105">
+                        OK
+                    </button>
+                </div>
+            </div>
+        @endif
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">ITB
                 Account</label>
-            <input type="email" id="email" name="email"
+            <input type="email" id="email" name="itb_account"
                 @if (isset($_COOKIE['email'])) value="{{ $_COOKIE['email'] }}" @else value="{{ old('email') }}" @endif
                 placeholder="Enter your ITB account"
                 class="w-full border p-3 rounded-md text-base transition-smooth focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50 @error('email') border-red-500 @enderror">
@@ -45,28 +69,5 @@
             Login
         </button>
     </form>
-    @if ($errors->any())
-        <div class="bg-red-500/15 text-red-700 rounded-lg p-4 my-3 shadow-md">
-            @foreach ($errors->all() as $error)
-                <p class="text-sm font-semibold">
-                    {!! $error !!}
-                </p>
-            @endforeach
-        </div>
-    @endif
-    @if (session('success'))
-        <div id="success-modal" class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
-            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md text-center transform scale-95 opacity-0 transition-all duration-300 ease-out"
-                id="modal-content">
-                <h2 class="text-lg font-semibold text-green-700 mb-4">Success</h2>
-                <p class="text-sm text-gray-700 mb-6">
-                    {!! session('success') !!}
-                </p>
-                <button id="close-modal-btn"
-                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-6 py-3 rounded-lg transition duration-200 ease-in-out transform hover:scale-105">
-                    OK
-                </button>
-            </div>
-        </div>
-    @endif
+
 @endsection

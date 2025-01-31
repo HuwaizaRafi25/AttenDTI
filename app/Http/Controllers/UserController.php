@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Location;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Exceptions\UnauthorizedException;
+
 
 class UserController extends Controller
 {
@@ -21,13 +28,16 @@ class UserController extends Controller
         if ($request->has('role')) {
             $role = $request->role;
             if ($role !== 'all' && !empty($role)) {
-                $query->where('role', $role);
+                $query->with('roles')
+                    ->whereHas('roles', function ($query) use ($role) {
+                        $query->where('name', $role);
+                    });
             }
         }
 
         if ($request->has('status')) {
             $status = $request->status;
-            $query->where('status', $status == 1);
+            $query->where('last_seen', '>=', Carbon::now()->subMinutes(1));
         }
 
         $sortColumn = $request->get('sort', 'full_name');
@@ -43,12 +53,21 @@ class UserController extends Controller
 
         $users = $query->paginate(5);
 
-        return view('menus.user', compact('users'));
+        $placements = Location::all();
+
+        return view('menus.user', compact('users', 'placements'));
+    }
+
+    public function view($username)
+    {
+        $users = User::where('username', $username)->get();
+        return view('profile', compact('users'));
     }
 
     public function export()
     {
         $users = User::with('outlet')->get();
+        
         // Logika untuk mengekspor data ke CSV atau Excel
         // Gunakan package seperti maatwebsite/excel untuk implementasi
     }
@@ -61,12 +80,12 @@ class UserController extends Controller
 
     public function search(Request $request)
     {
-        $rafi_search = $request->get('q');
+        $search = $request->get('q');
 
-        $users = User::with('outlet')
-            ->where(function ($query) use ($rafi_search) {
-                $query->where('nama', 'like', "%{$rafi_search}%")
-                    ->orWhere('email', 'like', "%{$rafi_search}%");
+        $users = User::with('placement')
+            ->where(function ($query) use ($search) {
+                $query->where('full_name', 'like', "%{$search}%")
+                    ->orWhere('itb_account', 'like', "%{$search}%");
             })
             ->paginate(5);
 
@@ -74,146 +93,209 @@ class UserController extends Controller
         return view('menus.tables.user_table', compact('users'));
     }
 
+    public function checkUsername(Request $request)
+    {
+        $username = $request->query('username');
+        $id = $request->query('id');
+        if ($id) {
+            $exists = User::where('username', $username)->where('id', '!=', $id)->exists();
+        } else {
+            $exists = User::where('username', $username)->exists();
+        }
+        return response()->json(['available' => !$exists]);
+    }
+
+    public function checkITBAccount(Request $request)
+    {
+        $email = $request->query('itb_account');
+        $id = $request->query('id');
+        if ($id) {
+            $exists = User::where('itb_account', $email)->where('id', '!=', $id)->exists();
+        } else {
+            $exists = User::where('itb_account', $email)->exists();
+        }
+        return response()->json(['availableEmail' => !$exists]);
+    }
 
     public function store(Request $request)
     {
         try {
             $request->validate([
-                'nama' => ['required', 'string', 'max:100'],
-                'username' => ['required', 'string', 'max:30', 'unique:tb_user,username'],
-                'email' => ['required', 'string', 'email', 'max:100', 'unique:tb_user,email'],
-                'telepon' => ['required', 'numeric', 'unique:tb_user,tlp'],
-                'placement_id' => ['nullable'],
+                'username' => ['required', 'string', 'max:30', 'unique:users,username'],
+                'itb_account' => ['required', 'string', 'email', 'max:100', 'unique:users,itb_account'],
+                'placement_id' => ['nullable', 'exists:locations,id'],
+                'role' => ['required', Rule::in(['admin', 'alumni', 'user'])],
+                'userProfilePic' => ['nullable', 'image|mimes:jpeg,png,jpg,webp|max:2048', 'dimensions:min_width=100,min_height=100'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
-                'role' => ['required', Rule::in(['super_admin', 'manajer', 'admin', 'owner', 'kasir'])],
-                'userProfilePic' => 'image|mimes:jpeg,png,jpg,gif|max:10000',
             ]);
 
-            $rafi_outlet = $request->placement_id;
+            if (!str_ends_with($request['itb_account'], '@itb.ac.id')) {
+                notify()->error('Email harus menggunakan domain @itb.ac.id.', 'Gagal!');
+                return back();
+            }
 
-            if ($request->role == 'super_admin' || $request->role == 'owner') {
-                $rafi_outlet = NULL;
+            $placement = $request->placement_id;
+
+            if ($request->role == 'admin' || $request->role == 'alumni') {
+                $placement = NULL;
             }
 
             $profilePicPath = null;
 
             if ($request->hasFile('userProfilePic')) {
                 $image = $request->file('userProfilePic');
+                $image->fit(500, 500, function ($constraint) {
+                    $constraint->upsize();
+                });
+                $image->encode('jpg', 75);
                 $path = $image->store('profilePics', 'public');
                 $profilePicPath = 'storage/' . $path;
             }
 
-            $rafi_currentOwner = User::where('role', 'owner')->get();
-            $rafi_currentManajer = User::where('role', 'manajer')->where('placement_id', $request->placement_id)->get();
+            $user = User::create([
+                'username' => $request->username,
+                'itb_account' => $request->itb_account,
+                'placement_id' => $placement,
+                'profile_pic' => $profilePicPath,
+                'password' => Hash::make($request->password),
+            ]);
 
-            if (count($rafi_currentOwner) == 1 && $request->role == 'owner') {
-                notify()->error('Owner sudah ada!', 'Gagal!');
-                return redirect()->back();
-            } elseif (count($rafi_currentManajer) == 1 && $request->role == 'manajer') {
-                notify()->error('Manajer sudah ada!', 'Gagal!');
-                return redirect()->back();
-            } else {
-                $rafi_user = User::create([
-                    'nama' => $request->nama,
-                    'username' => $request->username,
-                    'email' => $request->email,
-                    'tlp' => $request->telepon,
-                    'placement_id' => $rafi_outlet,
-                    'password' => Hash::make($request->password),
-                    'role' => $request->role,
-                    'profile_pic' => $profilePicPath,
-                ]);
-
-                activity()
-                    ->performedOn($rafi_user)
-                    ->causedBy(auth()->user())
-                    ->event('tambah')
-                    ->log('Pengguna bernama ' . $rafi_user->nama . ' dibuat oleh: ' . Auth::user()->nama);
-
-                notify()->success('Pengguna berhasil ditambahkan! ✍️', 'Berhasil!');
-                return redirect()->back();
+            if ($request->role !== null) {
+                $user->assignRole($request->role);
             }
+
+            activity()
+                ->performedOn($user)
+                ->causedBy(auth()->user())
+                ->event('created')
+                ->log("User {$user->username} was created by " . Auth::user()->username);
+
+            notify()->success('User was created successfully! ✍️', 'Success!');
+            return redirect()->back();
+
         } catch (\Exception $e) {
-            // Log the exception message
-            Log::error('Gagal menambahkan pengguna: ' . $e->getMessage(), [
+            Log::error('Failed to create user: ' . $e->getMessage(), [
                 'exception' => $e
             ]);
 
-            notify()->error('Gagal menambahkan pengguna!', 'Gagal!');
+            notify()->error('Failed to create user. Please try again.', 'Failed!');
             return redirect()->back();
+        }
+    }
+    public function updateView($id)
+    {
+        foreach (Auth::user()->roles as $role) {
+            if ($role->name == 'admin' || Auth::id() == $id) {
+                $user = User::findOrFail($id);
+                $placements = Location::all();
+                return view('menus.modals.user.update_user_view', compact('user', 'placements'));
+            } else {
+                throw new UnauthorizedException(403);
+            }
         }
     }
     public function update(Request $request, $id)
     {
         try {
 
-            $rafi_user = User::findOrFail($id);
+            $user = User::findOrFail($id);
+            $role = $user->roles->first()->name;
             $request->validate([
-                'userProfilePic' => 'image|mimes:jpeg,png,jpg,gif|max:10000',
-                'username' => ['required', 'string', 'max:255'],
-                'namaPengguna' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:tb_user,email,' . $id],
-                'telepon' => ['required', 'numeric', 'unique:tb_user,tlp,' . $id],
-                'roleUpdate' => ['required', Rule::in(['super_admin', 'manajer', 'admin', 'owner', 'kasir'])],
-                'placement_id_update' => ['nullable'],
+                'userProfilePic' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10000',
+                'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $id],
+                'itb_account' => ['required', 'string', 'email', 'max:100', 'unique:users,itb_account,' . $id],
+                'full_name' => ['nullable', 'string', 'max:255'],
+                'gender' => ['required', Rule::in([1, 0])],
+                'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email,' . $id],
+                'phone' => ['nullable', 'numeric', 'unique:users,phone,' . $id],
+                'address' => ['nullable', 'string', 'max:255'],
+                'identity_number' => ['nullable', 'string', 'max:55', 'unique:users,identity_number,' . $id],
+                'major' => ['nullable', 'string', 'max:255'],
+                'institution' => ['nullable', 'string', 'max:255'],
+                'placement_id' => ['nullable', Rule::in(Location::all()->pluck('id')->toArray())],
+                'period_start_date' => ['nullable', 'date'],
+                'period_end_date' => ['nullable', 'date'],
+                'role' => [Rule::in(['admin', 'user', 'alumni'])],
                 'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             ]);
 
+            $placement = $request->placement_id;
 
-            $rafi_outlet = $request->placement_id_update;
-
-            if ($request->roleUpdate == 'super_admin' || $request->roleUpdate == 'owner') {
-                $rafi_outlet = NULL;
+            if ($request->role == 'admin') {
+                $placement = NULL;
             }
 
-            $profilePicPath = $rafi_user->profile_pic;
+            if ($request->role !== $role && $request->role !== null) {
+                $user->removeRole(role: $role);
+                $user->assignRole($request->role);
+            }
 
             if ($request->hasFile('userProfilePic')) {
-                if ($profilePicPath && file_exists(public_path($profilePicPath))) {
-                    unlink(public_path($profilePicPath));
+                if ($user->profile_picture && Storage::disk('public')->exists('profilePics/' . $user->profile_picture)) {
+                    Storage::disk('public')->delete('profilePics/' . $user->profile_picture);
                 }
-                $image = $request->file('userProfilePic');
-                $path = $image->store('profilePics', 'public');
-                $profilePicPath = 'storage/' . $path;
+                $newFileName = uniqid() . '.' . $request->file('userProfilePic')->getClientOriginalExtension();
+                $request->file('userProfilePic')->storeAs('profilePics', $newFileName, 'public');
+                $user->update([
+                    'profile_pic' => $newFileName,
+                ]);
             }
 
-            $rafi_user->update([
-                'nama' => $request->namaPengguna,
+            $user->update([
                 'username' => $request->username,
+                'itb_account' => $request->itb_account,
+                'full_name' => $request->full_name,
+                'gender' => $request->gender,
                 'email' => $request->email,
-                'tlp' => $request->telepon,
-                'placement_id' => $rafi_outlet,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'identity_number' => $request->identity_number,
+                'major' => $request->major,
+                'institution' => $request->institution,
+                'placement_id' => $placement,
+                'period_start_date' => $request->period_start_date,
+                'period_end_date' => $request->period_end_date,
                 'password' => Hash::make($request->password),
-                'role' => $request->roleUpdate,
-                'profile_pic' => $profilePicPath,
             ]);
             activity()
-                ->performedOn($rafi_user)
+                ->performedOn($user)
                 ->causedBy(auth()->user())
-                ->event('edit')
-                ->log('Pengguna bernama ' . $rafi_user->nama . ' dirubah oleh: ' . Auth::user()->nama);
+                ->event('updated')
+                ->log("User {$user->username} was updated by " . Auth::user()->username);
 
-            notify()->success('Pengguna berhasil diedit! 👌', 'Berhasil!');
-            return redirect()->back();
+            notify()->success('User was updated successfully! 👌', 'Success!');
+            foreach (Auth::user()->roles as $role) {
+                if ($role->name == 'admin') {
+                    return redirect()->route('users.list');
+                } else {
+                    return redirect()->route('user.view');
+                }
+            }
         } catch (\Exception $e) {
             Log::error('Gagal mengedit pengguna: ' . $e->getMessage(), [
             ]);
 
-            notify()->error('Gagal mengedit pengguna!', 'Gagal!');
-            return redirect()->back();
+            notify()->error('Failed to update user! Try again', 'Failed!');
+            foreach (Auth::user()->roles as $role) {
+                if ($role->name == 'admin') {
+                    return redirect()->route('users.list');
+                } else {
+                    return redirect()->route('user.view');
+                }
+            }
         }
     }
 
     public function destroy($id)
     {
         try {
-            $rafi_user = user::findOrFail($id);
-            $rafi_user->delete();
+            $user = user::findOrFail($id);
+            $user->delete();
             activity()
-                ->performedOn($rafi_user)
+                ->performedOn($user)
                 ->causedBy(auth()->user())
                 ->event('tambah')
-                ->log('Pengguna bernama ' . $rafi_user->nama . ' dihapus oleh: ' . Auth::user()->nama);
+                ->log('Pengguna bernama ' . $user->username . ' dihapus oleh: ' . Auth::user()->username);
 
             notify()->success('Pengguna berhasil dihapus! 👍', 'Berhasil!');
             return redirect()->back();

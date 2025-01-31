@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use HasRoles;
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
@@ -23,18 +24,19 @@ class User extends Authenticatable
         'period_start_date',    // Tanggal mulai periode
         'period_end_date',      // Tanggal mulai periode
     ];
-    
+
     protected $fillable = [
-        'nisn',          // Tambahkan nisn jika ingin memungkinkan mass assignment
+        'identity_number',          // Tambahkan identity_number jika ingin memungkinkan mass assignment
         'username',      // Username pengguna
         'itb_account',   // Akun ITB pengguna
         'email',         // Email pengguna
         'phone',         // Nomor telepon
         'password',      // Password pengguna
         'full_name',     // Nama lengkap
+        'gender',        // Gender
         'address',       // Alamat pengguna
         'profile_pic',   // Gambar profil
-        'school',        // Nama sekolah
+        'institution',   // Nama institusi
         'placement_id',  // ID lokasi penempatan
     ];
 
@@ -57,6 +59,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'last_seen' => 'datetime',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, "model_has_roles", "model_id", "role_id");
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, "model_has_permissions", "model_id", "permission_id");
+    }
 
     public function isOnline()
     {

@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('content')
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- <div class="flex items-center mb-8">
+            <a href="/job">
+                <h1><i class="fa-solid fa-arrow-left"></i></h1>
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900 ml-6">Job Details</h1>
+        </div> -->
         <div class="px-4 sm:px-0">
             <div class="flex flex-col lg:flex-row gap-6">
                 <div class="lg:w-2/3">

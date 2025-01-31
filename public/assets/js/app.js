@@ -30,12 +30,12 @@ const subNavLinks = document.querySelectorAll(".sub-nav-text");
 
 const routes = {
     navLinks: {
-        1: "/overview",
+        1: "/dashboard",
         2: "/logs",
         3: "/members",
     },
     subNavLinks: {
-        1: "/users",
+        1: "/users/list",
         2: "/members",
         3: "/outlets",
         4: "/packages",

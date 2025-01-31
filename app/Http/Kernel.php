@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\UserActivity::class,
             \App\Http\Middleware\UpdateLastSeen::class,
+            \App\Http\Middleware\Localization::class,
         ],
 
         'api' => [
@@ -70,4 +71,9 @@ class Kernel extends HttpKernel
         'Permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
     ];
+
+    protected $routeMiddleware = [
+        // Middleware bawaan Laravel lainnya...
+        'method.check' => \App\Http\Middleware\MethodCheck::class,
+    ];    
 }

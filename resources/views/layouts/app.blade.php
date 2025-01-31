@@ -77,13 +77,16 @@
                         <div x-data="{ open: false }" class="relative">
                             <button @click="open = !open" x-cloak class="flex items-center focus:outline-none">
                                 <img class="w-8 h-8 rounded-full object-cover bg-gray-200"
-                                    src="{{ asset('assets/images/userPlaceHolder.png') }}" alt="Profile">
+                                    src="{{ auth()->user() && auth()->user()->profile_pic ? asset('storage/profilePics/' . auth()->user()->profile_pic) : asset('assets/images/userPlaceHolder.png') }}"
+                                    alt="Profile">
+
                             </button>
                             <div x-show="open" x-cloak @click.away="open = false"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 z-50">
-                                <a href="/profile"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i
-                                        class="fas fa-user mr-2"></i>Profile</a>
+                                <a href="{{ route('user.view', Auth::user()->username) }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
                                 <a href="#"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i
                                         class="fas fa-cog mr-2"></i>Settings</a>
@@ -409,22 +412,24 @@
             </div>
         </nav>
 
-        @include('menus.modals.user.view_user_modal')
+        @include('menus.modals.user.report_user_modal')
         @include('menus.modals.user.add_user_modal')
+        @include('menus.modals.user.view_user_modal')
         @include('menus.modals.user.edit_user_modal')
         @include('menus.modals.user.delete_user_modal')
-    
 
-        <div class="home absolute top-0 lg:left-[296px] w-screen left-0 min-h-screen h-screen bg-gray-50 transition-all transform duration-300">
+        <div
+            class="home absolute top-0 lg:left-[296px] w-screen left-0 min-h-screen h-screen bg-gray-50 transition-all transform duration-300">
             <!-- Header -->
             <header class="bg-gray-50 w-full sticky top-0" style="z-index: 29">
-                <div class="w-full mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <div class="w-full py-4 px-4 sm:px-6 lg:px-8 flex justify-end items-center">
                     <!-- Search, Notification, Profile Section -->
-                    <div class="ml-12 flex items-center justify-center gap-x-2">
-                        <h1 class="text-xl">Wilujeng Enjing, <span class="font-bold">{{ Auth::user()->full_name }}</span></h1>
-                        {{-- <h1 class="font-semibold text-gray-800">!</h1> --}}
-                    </div>
-                    <div class="flex items-center space-x-6">
+                    {{-- <div class="ml-12 hidden md:flex items-center justify-center gap-x-2">
+                        <h1 class="text-xl">Wilujeng Enjing, <span
+                                class="font-bold">{{ Auth::user()->full_name }}</span></h1>
+                        <h1 class="font-semibold text-gray-800">!</h1>
+                    </div> --}}
+                    <div class="flex items-center space-x-4 mr-0 md:mr-3">
                         <!-- Search Bar -->
                         <div class="relative">
                             <input type="text" placeholder="Cari"
@@ -450,6 +455,43 @@
                             @endif
                         </button>
 
+                        {{-- Language Dropdown --}}
+                        <div x-data="{ open: false }" class="relative">
+                            <!-- Trigger Button -->
+                            <button @click="open = !open" class="flex items-center focus:outline-none">
+                                <!-- Default Flag Icon -->
+                                <img class="w-10 h-10 p-1 rounded-full object-cover bg-slate-100"
+                                    src="{{ asset('assets/images/english.png') }}" alt="Language">
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="open" x-cloak @click.away="open = false"
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 z-50">
+                                <!-- Indonesian -->
+                                <a href="/set-locale/id"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                                    <img class="w-7 h-7 border-sm border-gray-200 mr-2 shadow-xl rounded-full object-cover"
+                                        src="{{ asset('assets/images/indonesia.png') }}" alt="Bahasa Indonesia">
+                                    <span>Bahasa Indonesia</span>
+                                </a>
+                                <!-- Sundanese -->
+                                <a href="/set-locale/su"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                                    <img class="w-7 h-7 border-sm border-gray-200 mr-2 shadow-xl rounded-full object-cover"
+                                        src="{{ asset('assets/images/sunda.png') }}" alt="Basa Sunda">
+                                    <span>Basa Sunda</span>
+                                </a>
+                                <!-- English -->
+                                <a href="/set-locale/en"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                                    <img class="w-7 h-7 mr-2 shadow-xl rounded-full object-cover"
+                                        src="{{ asset('assets/images/english.png') }}" alt="English">
+                                    <span>English</span>
+                                </a>
+                            </div>
+                        </div>
+
+
                         <!-- Profile Dropdown -->
                         <div x-data="{ open: false }" class="relative">
                             <button @click="open = !open" class="flex items-center focus:outline-none">
@@ -460,8 +502,13 @@
 
                             <div x-show="open" x-cloak @click.away="open = false"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 z-50">
-                                {{-- <a href="" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile</a>
-                            <a href="" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a> --}}
+                                <a href="{{ route('user.view', Auth::user()->username) }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i
+                                        class="fas fa-cog mr-2"></i>Settings</a>
                                 <a href="#"
                                     class="px-4 py-2 text-red-600 hover:bg-red-100 rounded-md flex items-center space-x-2"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -493,6 +540,7 @@
 
         <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/js/app.js') }}"></script>
+        <script src="{{ asset('assets/js/modalComponents.js') }}"></script>
 
         <x-notify::notify />
         @notifyJs

@@ -197,6 +197,7 @@ return [
 
         Mckenziearts\Notify\LaravelNotifyServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*

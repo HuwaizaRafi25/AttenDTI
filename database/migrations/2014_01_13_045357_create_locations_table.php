@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('campus',['ITB Kampus Ganesha', 'ITB Kampus Jatinangor', 'ITB Kampus Cirebon', 'ITB Kampus Jakarta']);
+            $table->string('campus');
             $table->text('address');
             $table->decimal('latitude', 10, 8);
             $table->decimal('longitude', 11, 8);

@@ -176,28 +176,24 @@ function printData(rafiTableId, rafiTableHeader) {
     // Tunggu sampai window siap, lalu cetak dan tutup
     printWindow.onload = function () {
         printWindow.print();
-        printWindow.onafterprint = function() {
+        printWindow.onafterprint = function () {
             printWindow.close();
         };
     };
 }
 document.getElementById("role").addEventListener("change", function () {
     const gridRoleOutlet = document.getElementById("gridRoleOutlet");
-    const outletContainer = document.getElementById("outletContainer");
+    const placementContainer = document.getElementById("placementContainer");
 
-    if (
-        this.value === "kasir" ||
-        this.value === "manajer" ||
-        this.value === "admin"
-    ) {
-        outletContainer.classList.remove("hidden", "opacity-0");
-        outletContainer.classList.add("block", "opacity-100");
+    if (this.value === "user") {
+        placementContainer.classList.remove("hidden", "opacity-0");
+        placementContainer.classList.add("block", "opacity-100");
 
         gridRoleOutlet.classList.remove("grid-cols-1");
         gridRoleOutlet.classList.add("grid-cols-2");
     } else {
-        outletContainer.classList.remove("opacity-100", "block");
-        outletContainer.classList.add("hidden", "opacity-0");
+        placementContainer.classList.remove("opacity-100", "block");
+        placementContainer.classList.add("hidden", "opacity-0");
 
         gridRoleOutlet.classList.remove("grid-cols-2");
         gridRoleOutlet.classList.add("grid-cols-1");
@@ -209,14 +205,14 @@ document.getElementById("roleUpdate").addEventListener("change", function () {
         this.value === "admin" ||
         this.value === "manajer"
     ) {
-        outletContainerUpdate.classList.remove("hidden", "opacity-0");
-        outletContainerUpdate.classList.add("block", "opacity-100");
+        placementContainerUpdate.classList.remove("hidden", "opacity-0");
+        placementContainerUpdate.classList.add("block", "opacity-100");
 
         gridRoleOutletUpdate.classList.remove("grid-cols-1");
         gridRoleOutletUpdate.classList.add("grid-cols-2");
     } else {
-        outletContainerUpdate.classList.remove("opacity-100", "block");
-        outletContainerUpdate.classList.add("hidden", "opacity-0");
+        placementContainerUpdate.classList.remove("opacity-100", "block");
+        placementContainerUpdate.classList.add("hidden", "opacity-0");
 
         gridRoleOutletUpdate.classList.remove("grid-cols-2");
         gridRoleOutletUpdate.classList.add("grid-cols-1");
@@ -272,10 +268,22 @@ function closeDeleteModal() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    const printUserButton = document.getElementById("printUserButton");
+    if (printUserButton) {
+        printUserButton.addEventListener("click", function () {
+            const userReportModal = document.getElementById("userReportModal");
+            userReportModal.classList.remove("hidden");
+            userReportModal.classList.add("flex");
+            // const rafiTableHeader = document.getElementById("rafiTableHeader").innerHTML;
+            // printTable(rafiTable, rafiTableHeader);
+        });
+    }
+
     // Event Tambah Pengguna
     const addButton = document.querySelectorAll(".add-button");
     const addModal = document.getElementById("addModal");
-    const closeModal = document.getElementById("closeAddModal");
+    const closeModal = document.getElementById("closeAddUserModal");
     const addUserForm = document.getElementById("addUserForm");
     addButton.forEach((button) => {
         button.addEventListener("click", function () {
@@ -323,27 +331,47 @@ document.addEventListener("DOMContentLoaded", function () {
                 let baris = tombol.closest("tr");
 
                 if (baris) {
-                    let foto = baris.getAttribute("data-profile-image");
-                    let nama = baris.getAttribute("data-pengguna");
+                    let pic = baris.getAttribute("data-profile-pic");
+                    let username = baris.getAttribute("data-username");
+                    let fullname = baris.getAttribute("data-fullname");
                     let role = baris.getAttribute("data-role");
-                    let email = baris.getAttribute("data-email");
-                    let telepon = baris.getAttribute("data-telepon");
-                    let outlet = baris.getAttribute("data-outlet");
+                    let gender = baris.getAttribute("data-gender");
+                    let institution = baris.getAttribute("data-institution");
+                    let ITBAccount = baris.getAttribute("data-itb-account");
+                    let major = baris.getAttribute("data-major");
                     let modalLihat = document.getElementById("userModal");
 
-                    if (foto) {
-                        document.getElementById("userProfileImage").src = foto;
+                    if (gender == 1) {
+                        document.getElementById("gradientGenderColor").classList.remove("from-pink-600", "to-pink-300")
+                        document.getElementById("gradientGenderColor").classList.add("from-blue-600", "to-blue-300")
+                    }else {
+                        document.getElementById("gradientGenderColor").classList.remove("from-blue-600", "to-blue-300")
+                        document.getElementById("gradientGenderColor").classList.add("from-pink-600", "to-pink-300")
+                    }
+
+                    if (pic) {
+                        document.getElementById("userProfileImage").src = `/storage/profilePics/${pic}`;
                     }
                     document.getElementById("userName").innerText =
-                        nama || "Tidak ada";
+                        username || "Tidak ada";
+                    document.getElementById("userFullname").innerText =
+                        fullname || "Tidak ada";
                     document.getElementById("userRole").innerText =
                         role || "Tidak ada";
-                    document.getElementById("userEmail").innerText =
-                        email || "Tidak ada";
-                    document.getElementById("userContacts").innerText =
-                        telepon || "Tidak ada";
-                    document.getElementById("userOutlet").innerText =
-                        outlet || "Tidak ada";
+                    document.getElementById("userITBAccount").innerText =
+                        ITBAccount || "Tidak ada";
+                        if (major) {
+                            document.getElementById("majorContainer").classList.remove("hidden");
+                            document.getElementById("majorContainer").classList.add("flex");
+                            document.getElementById("userMajor").innerText =
+                                major || "Tidak ada";
+                        }else{
+                            document.getElementById("majorContainer").classList.remove("flex");
+                            document.getElementById("majorContainer").classList.add("hidden");
+                        }
+                        document.getElementById("userInstitution").innerText =
+                            institution || "Tidak ada";
+
 
                     modalLihat.classList.remove("hidden");
                     modalLihat.classList.add("flex");
@@ -357,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
 
                     // Tombol "Back" untuk menutup modal
-                    let tombolViewBack = document.getElementById("backButton");
+                    let tombolViewBack = document.getElementById("closeViewUserModal");
                     tombolViewBack.addEventListener("click", function () {
                         modalLihat.classList.remove("flex");
                         modalLihat.classList.add("hidden");
@@ -412,25 +440,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 const gridRoleOutletUpdate = document.getElementById(
                     "gridRoleOutletUpdate"
                 );
-                const outletContainerUpdate = document.getElementById(
-                    "outletContainerUpdate"
+                const placementContainerUpdate = document.getElementById(
+                    "placementContainerUpdate"
                 );
 
-                if (role === "kasir" || role === "manajer" || role === "admin") {
-                    outletContainerUpdate.classList.remove(
+                if (
+                    role === "kasir" ||
+                    role === "manajer" ||
+                    role === "admin"
+                ) {
+                    placementContainerUpdate.classList.remove(
                         "hidden",
                         "opacity-0"
                     );
-                    outletContainerUpdate.classList.add("block", "opacity-100");
+                    placementContainerUpdate.classList.add(
+                        "block",
+                        "opacity-100"
+                    );
 
                     gridRoleOutletUpdate.classList.remove("grid-cols-1");
                     gridRoleOutletUpdate.classList.add("grid-cols-2");
                 } else {
-                    outletContainerUpdate.classList.remove(
+                    placementContainerUpdate.classList.remove(
                         "opacity-100",
                         "block"
                     );
-                    outletContainerUpdate.classList.add("hidden", "opacity-0");
+                    placementContainerUpdate.classList.add(
+                        "hidden",
+                        "opacity-0"
+                    );
 
                     gridRoleOutletUpdate.classList.remove("grid-cols-2");
                     gridRoleOutletUpdate.classList.add("grid-cols-1");
@@ -465,35 +503,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 let picUser = this.getAttribute("data-user-pic");
                 let modalHapus = document.getElementById("deleteModal");
 
-                document.getElementById("imageDelete").src = `/${picUser}`;
+                document.getElementById("imageDelete").src = `/storage/profilePics/${picUser}`;
                 document.getElementById("nameDelete").textContent = namaUser;
                 document.getElementById("emailDelete").textContent = emailUser;
+                console.log(idUser);
+                document.getElementById("deleteUserForm").action = `/users/destroy/${idUser}`;
 
                 modalHapus.classList.remove("hidden");
                 modalHapus.classList.add("flex");
 
-                document.getElementById("confirmDelete").onclick = function () {
-                    let form = document.createElement("form");
-                    form.method = "POST";
-                    form.action = "/users/destroy/" + idUser;
+                // document.getElementById("confirmDelete").onclick = function () {
+                //     let form = document.createElement("form");
+                //     form.method = "POST";
+                //     form.action = "/users/destroy/" + idUser;
 
-                    let inputToken = document.createElement("input");
-                    inputToken.type = "hidden";
-                    inputToken.name = "_token";
-                    inputToken.value = document.querySelector(
-                        'meta[name="csrf-token"]'
-                    ).content;
+                //     let inputToken = document.createElement("input");
+                //     inputToken.type = "hidden";
+                //     inputToken.name = "_token";
+                //     inputToken.value = document.querySelector(
+                //         'meta[name="csrf-token"]'
+                //     ).content;
 
-                    let inputMethod = document.createElement("input");
-                    inputMethod.type = "hidden";
-                    inputMethod.name = "_method";
-                    inputMethod.value = "DELETE";
+                //     let inputMethod = document.createElement("input");
+                //     inputMethod.type = "hidden";
+                //     inputMethod.name = "_method";
+                //     inputMethod.value = "DELETE";
 
-                    form.appendChild(inputToken);
-                    form.appendChild(inputMethod);
-                    document.body.appendChild(form);
-                    form.submit();
-                };
+                //     form.appendChild(inputToken);
+                //     form.appendChild(inputMethod);
+                //     document.body.appendChild(form);
+                //     form.submit();
+                // };
 
                 window.addEventListener("click", function (event) {
                     if (event.target === modalHapus) {
@@ -507,3 +547,123 @@ document.addEventListener("DOMContentLoaded", function () {
     // Jalankan fungsi pasang modal pertama kali
     pasangModal();
 });
+
+// ===== User Registration ===== //
+
+let emailTimeoutId;
+let timeoutId;
+
+function validateITBAccount(email) {
+    const feedback2 = document.getElementById("itb-account-feedback");
+    feedback2.classList.add("hidden");
+    feedback2.textContent = "";
+
+    function checkDomain(){
+        if (!email.endsWith("@itb.ac.id")) {
+            feedback2.textContent = "Email harus menggunakan domain @itb.ac.id";
+            feedback2.classList.remove("hidden");
+            feedback2.classList.add("text-red-500");
+        }
+    }
+    checkDomain();
+
+    clearTimeout(emailTimeoutId);
+    emailTimeoutId = setTimeout(async () => {
+        try {
+            const response = await fetch(
+                `check-itb-account?itb_account=${email}`
+            );
+            const data = await response.json();
+
+            if (data.availableEmail) {
+                feedback2.textContent = "✅ Email tersedia!";
+                feedback2.classList.remove("text-red-500");
+                feedback2.classList.remove("text-yellow-500");
+                feedback2.classList.add("text-green-500");
+                checkDomain();
+            } else {
+                feedback2.textContent = "❌ Email sudah digunakan";
+                feedback2.classList.remove("text-green-500");
+                feedback2.classList.remove("text-yellow-500");
+                feedback2.classList.add("text-red-500");
+            }
+
+            feedback2.classList.remove("hidden");
+        } catch (error) {
+            console.log(error);
+            feedback2.textContent = "⚠️ Gagal memeriksa email";
+            feedback2.classList.add("text-yellow-600");
+            feedback2.classList.remove("hidden");
+        }
+    }, 500);
+}
+
+function checkPasswordMatch(confirmPassword) {
+    const password = document.querySelector('input[name="password"]').value;
+    const feedback = document.getElementById("password-feedback");
+
+    feedback.classList.add("hidden");
+
+    if (password !== confirmPassword) {
+        feedback.textContent = "Password tidak cocok!";
+        feedback.classList.remove("hidden");
+        feedback.classList.add("text-red-500");
+    }
+}
+
+async function checkUsername(username) {
+    const feedback = document.getElementById("username-feedback");
+
+    feedback.classList.add("hidden");
+    feedback.textContent = "";
+
+    function textMin() {
+        if (username.length < 3) {
+            feedback.textContent = "Username minimal 3 karakter";
+            feedback.classList.remove("hidden");
+            feedback.classList.remove("text-green-500");
+            feedback.classList.remove("text-red-500");
+            feedback.classList.add("text-yellow-500");
+            return;
+        }
+    }
+    textMin();
+    if (!/^[a-z0-9_]+$/.test(username)) {
+        feedback.textContent =
+            "Hanya boleh huruf kecil, angka, dan underscore (_)";
+        feedback.classList.remove("text-green-500");
+        feedback.classList.remove("text-yellow-500");
+        feedback.classList.remove("hidden");
+        feedback.classList.add("text-red-500");
+        return;
+    }
+
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(async () => {
+        try {
+            const response = await fetch(
+                `check-username?username=${username}`
+            );
+            const data = await response.json();
+
+            if (data.available) {
+                feedback.textContent = "✅ Username tersedia!";
+                feedback.classList.remove("text-red-500");
+                feedback.classList.remove("text-yellow-500");
+                feedback.classList.add("text-green-500");
+                textMin();
+            } else {
+                feedback.textContent = "❌ Username sudah digunakan";
+                feedback.classList.remove("text-green-500");
+                feedback.classList.remove("text-yellow-500");
+                feedback.classList.add("text-red-500");
+            }
+
+            feedback.classList.remove("hidden");
+        } catch (error) {
+            feedback.textContent = "⚠️ Gagal memeriksa username";
+            feedback.classList.add("text-yellow-600");
+            feedback.classList.remove("hidden");
+        }
+    }, 500);
+}

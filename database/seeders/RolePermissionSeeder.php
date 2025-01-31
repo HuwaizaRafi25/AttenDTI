@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -19,23 +20,48 @@ class RolePermissionSeeder extends Seeder
 
         $roleAdmin = Role::create(['name' => 'admin']);
         $roleUser = Role::create(['name' => 'user']);
-        $roleAlumnus = Role::create(['name' => 'alumnus']);
-        
-        User::create([
-            'nisn' => '008556454',
-            'username' => 'imamajah',
-            'itb_account' => 'mamsajah@itb.ac.id',
-            'email' => 'imams@gmail.com',
-            'phone' => '08877653345',
-            'password' => Hash::make('imamdarisoreang'),
-            'full_name' => 'Imam Ajah',
-            'address' => 'Jl. Imam No. 1',
-            'profile_pic' => 'foto_imam.jpg',
-            'period_start_date' => Carbon::parse('2024-07-02'),
-            'period_end_date' => Carbon::parse('2025-01-11'),
-            'school' => 'SMK Itikurih',
-            'placement_id' => 1,
-            'last_seen' => now(),
+        $roleAlumni = Role::create(['name' => 'alumni']);
+
+        $permissions = [
+            'read-user',
+            'manage-user',
+            'manage_roll_permission',
+            'read_activity_log',
+            'manage-activity_log',
+            'read_announcement',
+            'manage_announcement',
+            'read_attendance',
+            'record_attendance',
+            'manage_attendance',
+            'manage_document',
+            'manage_location',
+            'read_job',
+            'manage-job',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+
+        $roleAdmin = Role::where('name', 'admin')->first();
+        $roleAdmin->givePermissionTo($permissions);
+
+        $roleUser = Role::where('name', 'user')->first();
+        $roleUser->givePermissionTo([
+            'read-user',            // Untuk melihat data diri sendiri
+            'read_activity_log',    // Untuk melihat log aktivitas
+            'read_announcement',    // Untuk melihat pengumuman
+            'read_attendance',      // Untuk rekapan kehadiran
+            'record_attendance',    // Untuk merekam kehadiran
+            'read_job'              // Untuk melihat lowongan kerja
+        ]);
+
+        $roleAlumni = Role::where('name', 'alumni')->first();
+        $roleAlumni->givePermissionTo([
+            'read-user',            // Untuk melihat data diri sendiri
+            'read_activity_log',    // Untuk melihat log aktivitas
+            'read_announcement',    // Untuk melihat pengumuman
+            'read_job'              // Untuk melihat lowongan kerja
         ]);
 
         $user = User::find(1);
@@ -43,8 +69,10 @@ class RolePermissionSeeder extends Seeder
         $user2 = User::find(2);
         $user2->assignRole('user');
         $user3 = User::find(3);
-        $user3->assignRole('alumnus');
+        $user3->assignRole('alumni');
         $user4 = User::find(4);
         $user4->assignRole('user');
+
+        
     }
 }

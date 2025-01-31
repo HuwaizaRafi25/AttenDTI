@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Spatie\Permission\Exceptions\UnauthorizedException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,5 +47,36 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $e)
+    {
+        if ($e instanceof UnauthorizedException) {
+            return response()->view(
+                'errors.unauthorized',
+                ['exception' => $e->getMessage()],
+                403
+            );
+        }
+
+        if ($e instanceof NotFoundHttpException) {
+            return response()->view('errors.404', [
+                'message' => 'The page you are looking for could not be found.',
+            ], 404);
+        }
+
+        if ($e instanceof MethodNotAllowedHttpException) {
+            return response()->view('errors.method_not_allowed', [
+                'message' => 'The method used is not allowed for this route.',
+            ], 405);
+        }
+
+        if ($e instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
+            return response()->view('errors.500', [
+                'message' => 'Oops! Something went wrong on our server.',
+            ], 500);
+        }
+
+        return parent::render($request, $e);
     }
 }

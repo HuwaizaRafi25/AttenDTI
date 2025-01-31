@@ -22,48 +22,43 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        // try {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'itb_account' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        $data = $request->all();
-        // echo "pre"; print_r($data) ; die;
+        if (!str_ends_with($credentials['itb_account'], '@itb.ac.id')) {
+            return back()->withErrors([
+                'itb_account' => 'Email harus menggunakan domain @itb.ac.id.',
+            ])->withInput($request->only('itb_account', 'password'));
+        }
 
-        if (Auth::attempt($credentials)) {
+        $data = $request->all();
+
+        if (Auth::attempt($credentials, isset($data['remember']))) {
             $request->session()->regenerate();
             $user = Auth::user();
             $user_auth = User::find(Auth::id());
+
             activity()
                 ->performedOn($user_auth)
                 ->causedBy(auth()->user())
                 ->event('login')
                 ->log('User bernama ' . $user_auth->username . ' berhasil melakukan login');
 
-            if (isset($data['remember']) && $data['remember'] == 'on') {
-                // $remember_me = true;
-                setcookie("email", $data['email'], time() + 3600);
-                setcookie("password", $data['password'], time() + 3600);
-            } else {
-                // $remember_me = false;
-                setcookie("email", "");
-                setcookie("password", "");
-            }
-
             notify()->success('Selamat Datang Kembali di attenDTI!', 'Hai👋');
-            return redirect()->intended('overview');
-        } else {
-            // notify()->error('Username atau Password Anda Salah!', 'Gagal Login');
-            return back()
-                ->withErrors(['email' => 'Oops, it seems like the email or password you entered is incorrect. Try again!'])
-                ->withInput($request->only('email', 'password'));
+
+            if (Auth::user()->roles->contains('name', 'admin')) {
+                return redirect()->intended('dashboard');
+            }else{
+                return redirect()->intended('overview');
+            }
         }
-        // } catch (\Exception $e) {
-        //     Log::error('Gagal Login: ' . $e->getMessage(), [
-        //         'exception' => $e
-        //     ]);
-        // }
+         else {
+            return back()
+                ->withErrors(['itb_account' => 'Oops, it seems like the email or password you entered is incorrect. Try again!'])
+                ->withInput($request->only('itb_account', 'password'));
+        }
     }
 
     public function forgotPassword()

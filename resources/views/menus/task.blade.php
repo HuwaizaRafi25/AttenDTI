@@ -184,283 +184,239 @@
                             </div>
 
                             <div class="space-y-4">
-                                <!-- Section: To Do -->
-                                <div class="border rounded-lg">
-                                    <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
-                                        id="todoDropdown">
-                                        <div class="flex items-center">
-                                            <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
-                                            <h3 class="font-medium">To Do</h3>
-                                            <span
-                                                class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
-                                        </div>
-                                    </div>
+                                <div class="w-full overflow-x-auto">
+                                    <div class="min-w-max space-y-4">
+                                        <!-- Section: To Do -->
+                                        <div class="border rounded-lg">
+                                            <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
+                                                id="todoDropdown">
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
+                                                    <h3 class="font-medium">To Do</h3>
+                                                    <span
+                                                        class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
+                                                </div>
+                                            </div>
 
-                                    <!-- Task List -->
-                                    <div id="todoTasks" class="divide-y divide-gray-200">
-                                        <div
-                                            class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
-                                            <div class="col-span-1 flex items-center justify-center">Status</div>
-                                            <div class="col-span-1 flex items-center justify-center">Task Name</div>
-                                            <div class="col-span-2 flex items-center justify-center">Description</div>
-                                            <div class="col-span-1 flex items-center justify-center">Estimation</div>
-                                            <div class="col-span-1 flex items-center justify-center">Action</div>
-                                        </div>
+                                            <!-- Task List -->
+                                            <div id="todoTasks" class="divide-y divide-gray-200">
+                                                <div
+                                                    class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
+                                                    <div class="col-span-1 flex items-center justify-center">Status</div>
+                                                    <div class="col-span-1 flex items-center justify-center">Task Name
+                                                    </div>
+                                                    <div class="col-span-2 flex items-center justify-center">Description
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Estimation
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Action</div>
+                                                </div>
 
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
-                                            </div>
-                                            <div class="col-span-1 font-medium truncate">Employee Details</div>
-                                            <div class="col-span-2 truncate">
-                                                Create a page where there is information about employees
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap truncate">Feb 14, 2024 - Feb 1, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
-                                            </div>
-                                            <div class="col-span-1 font-medium">Project Setup</div>
-                                            <div class="col-span-2 truncate">
-                                                Set up the initial project repository with all required configurations
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Jan 15, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Section: In Progress -->
-                                <div class="border rounded-lg">
-                                    <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
-                                        id="inprogressDropdown">
-                                        <div class="flex items-center">
-                                            <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
-                                            <h3 class="font-medium">In Progress</h3>
-                                            <span
-                                                class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Task List -->
-                                    <div id="inprogressTasks" class="divide-y divide-gray-200">
-                                        <div
-                                            class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
-                                            <div class="col-span-1 flex items-center justify-center">Status</div>
-                                            <div class="col-span-1 flex items-center justify-center">Task Name</div>
-                                            <div class="col-span-2 flex items-center justify-center">Description</div>
-                                            <div class="col-span-1 flex items-center justify-center">Estimation</div>
-                                            <div class="col-span-1 flex items-center justify-center">Action</div>
-                                        </div>
-
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
-                                            </div>
-                                            <div class="col-span-1 font-medium">Employee Details</div>
-                                            <div class="col-span-2 truncate">
-                                                Create a page where there is information about employees
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Feb 14, 2024 - Feb 1, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
+                                                <!-- Task items (repeated for each task) -->
+                                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <input type="checkbox" class="w-4 h-4">
+                                                    </div>
+                                                    <div class="col-span-1 font-medium truncate">Employee Details</div>
+                                                    <div class="col-span-2 truncate">
+                                                        Create a page where there is information about employees
+                                                    </div>
+                                                    <div class="col-span-1 whitespace-nowrap truncate">Feb 14, 2024 - Feb
+                                                        1, 2024</div>
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <button class="text-gray-400 hover:text-gray-600">
+                                                            <i class="fas fa-ellipsis-h"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- More task items... -->
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
+                                        <!-- In Progress -->
+                                        <div class="border rounded-lg">
+                                            <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
+                                                id="inprogressDropdown">
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
+                                                    <h3 class="font-medium">In Progress</h3>
+                                                    <span
+                                                        class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
+                                                </div>
                                             </div>
-                                            <div class="col-span-1 font-medium">Project Setup</div>
-                                            <div class="col-span-2 truncate">
-                                                Set up the initial project repository with all required configurations
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Jan 15, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Section: In Review -->
-                                <div class="border rounded-lg">
-                                    <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
-                                        id="inreviewDropdown">
-                                        <div class="flex items-center">
-                                            <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
-                                            <h3 class="font-medium">In Review</h3>
-                                            <span
-                                                class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
-                                        </div>
-                                    </div>
 
-                                    <!-- Task List -->
-                                    <div id="inreviewTasks" class="divide-y divide-gray-200">
-                                        <div
-                                            class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
-                                            <div class="col-span-1 flex items-center justify-center">Status</div>
-                                            <div class="col-span-1 flex items-center justify-center">Task Name</div>
-                                            <div class="col-span-2 flex items-center justify-center">Description</div>
-                                            <div class="col-span-1 flex items-center justify-center">Estimation</div>
-                                            <div class="col-span-1 flex items-center justify-center">Action</div>
-                                        </div>
+                                            <!-- Task List -->
+                                            <div id="inprogressTasks" class="divide-y divide-gray-200">
+                                                <div
+                                                    class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
+                                                    <div class="col-span-1 flex items-center justify-center">Status</div>
+                                                    <div class="col-span-1 flex items-center justify-center">Task Name
+                                                    </div>
+                                                    <div class="col-span-2 flex items-center justify-center">Description
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Estimation
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Action</div>
+                                                </div>
 
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
-                                            </div>
-                                            <div class="col-span-1 font-medium">Employee Details</div>
-                                            <div class="col-span-2 truncate">
-                                                Create a page where there is information about employees
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Feb 14, 2024 - Feb 1, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
+                                                <!-- Task items (repeated for each task) -->
+                                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <input type="checkbox" class="w-4 h-4">
+                                                    </div>
+                                                    <div class="col-span-1 font-medium truncate">Employee Details</div>
+                                                    <div class="col-span-2 truncate">
+                                                        Create a page where there is information about employees
+                                                    </div>
+                                                    <div class="col-span-1 whitespace-nowrap truncate">Feb 14, 2024 - Feb
+                                                        1, 2024</div>
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <button class="text-gray-400 hover:text-gray-600">
+                                                            <i class="fas fa-ellipsis-h"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- More task items... -->
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
+                                        <!-- In Review -->
+                                        <div class="border rounded-lg">
+                                            <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
+                                                id="inreviewDropdown">
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
+                                                    <h3 class="font-medium">In Review</h3>
+                                                    <span
+                                                        class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
+                                                </div>
                                             </div>
-                                            <div class="col-span-1 font-medium">Project Setup</div>
-                                            <div class="col-span-2 truncate">
-                                                Set up the initial project repository with all required configurations
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Jan 15, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Section: Completed -->
-                                <div class="border rounded-lg">
-                                    <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
-                                        id="completedDropdown">
-                                        <div class="flex items-center">
-                                            <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
-                                            <h3 class="font-medium">Completed</h3>
-                                            <span
-                                                class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
-                                        </div>
-                                    </div>
 
-                                    <!-- Task List -->
-                                    <div id="completedTasks" class="divide-y divide-gray-200">
-                                        <div
-                                            class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
-                                            <div class="col-span-1 flex items-center justify-center">Status</div>
-                                            <div class="col-span-1 flex items-center justify-center">Task Name</div>
-                                            <div class="col-span-2 flex items-center justify-center">Description</div>
-                                            <div class="col-span-1 flex items-center justify-center">Estimation</div>
-                                            <div class="col-span-1 flex items-center justify-center">Action</div>
-                                        </div>
+                                            <!-- Task List -->
+                                            <div id="inreviewTasks" class="divide-y divide-gray-200">
+                                                <div
+                                                    class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
+                                                    <div class="col-span-1 flex items-center justify-center">Status</div>
+                                                    <div class="col-span-1 flex items-center justify-center">Task Name
+                                                    </div>
+                                                    <div class="col-span-2 flex items-center justify-center">Description
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Estimation
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Action</div>
+                                                </div>
 
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
-                                            </div>
-                                            <div class="col-span-1 font-medium">Employee Details</div>
-                                            <div class="col-span-2 truncate">
-                                                Create a page where there is information about employees
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Feb 14, 2024 - Feb 1, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
+                                                <!-- Task items (repeated for each task) -->
+                                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <input type="checkbox" class="w-4 h-4">
+                                                    </div>
+                                                    <div class="col-span-1 font-medium truncate">Employee Details</div>
+                                                    <div class="col-span-2 truncate">
+                                                        Create a page where there is information about employees
+                                                    </div>
+                                                    <div class="col-span-1 whitespace-nowrap truncate">Feb 14, 2024 - Feb
+                                                        1, 2024</div>
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <button class="text-gray-400 hover:text-gray-600">
+                                                            <i class="fas fa-ellipsis-h"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- More task items... -->
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
+                                        <!-- Completed -->
+                                        <div class="border rounded-lg">
+                                            <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
+                                                id="completedDropdown">
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
+                                                    <h3 class="font-medium">Completed</h3>
+                                                    <span
+                                                        class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
+                                                </div>
                                             </div>
-                                            <div class="col-span-1 font-medium">Project Setup</div>
-                                            <div class="col-span-2 truncate">
-                                                Set up the initial project repository with all required configurations
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Jan 15, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Section: Backlog -->
-                                <div class="border rounded-lg">
-                                    <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
-                                        id="backlogDropdown">
-                                        <div class="flex items-center">
-                                            <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
-                                            <h3 class="font-medium">Backlog</h3>
-                                            <span
-                                                class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
-                                        </div>
-                                    </div>
 
-                                    <!-- Task List -->
-                                    <div id="backlogTasks" class="divide-y divide-gray-200">
-                                        <div
-                                            class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
-                                            <div class="col-span-1 flex items-center justify-center">Status</div>
-                                            <div class="col-span-1 flex items-center justify-center">Task Name</div>
-                                            <div class="col-span-2 flex items-center justify-center">Description</div>
-                                            <div class="col-span-1 flex items-center justify-center">Estimation</div>
-                                            <div class="col-span-1 flex items-center justify-center">Action</div>
-                                        </div>
+                                            <!-- Task List -->
+                                            <div id="completedTasks" class="divide-y divide-gray-200">
+                                                <div
+                                                    class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
+                                                    <div class="col-span-1 flex items-center justify-center">Status</div>
+                                                    <div class="col-span-1 flex items-center justify-center">Task Name
+                                                    </div>
+                                                    <div class="col-span-2 flex items-center justify-center">Description
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Estimation
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Action</div>
+                                                </div>
 
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
-                                            </div>
-                                            <div class="col-span-1 font-medium">Employee Details</div>
-                                            <div class="col-span-2 truncate">
-                                                Create a page where there is information about employees
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Feb 14, 2024 - Feb 1, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
+                                                <!-- Task items (repeated for each task) -->
+                                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <input type="checkbox" class="w-4 h-4">
+                                                    </div>
+                                                    <div class="col-span-1 font-medium truncate">Employee Details</div>
+                                                    <div class="col-span-2 truncate">
+                                                        Create a page where there is information about employees
+                                                    </div>
+                                                    <div class="col-span-1 whitespace-nowrap truncate">Feb 14, 2024 - Feb
+                                                        1, 2024</div>
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <button class="text-gray-400 hover:text-gray-600">
+                                                            <i class="fas fa-ellipsis-h"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- More task items... -->
                                             </div>
                                         </div>
+                                        <!-- Backlog -->
+                                        <div class="border rounded-lg">
+                                            <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
+                                                id="backlogDropdown">
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
+                                                    <h3 class="font-medium">Backlog</h3>
+                                                    <span
+                                                        class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">3</span>
+                                                </div>
+                                            </div>
 
-                                        <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <input type="checkbox" class="w-4 h-4">
-                                            </div>
-                                            <div class="col-span-1 font-medium">Project Setup</div>
-                                            <div class="col-span-2 truncate">
-                                                Set up the initial project repository with all required configurations
-                                            </div>
-                                            <div class="col-span-1 whitespace-nowrap">Jan 15, 2024</div>
-                                            <div class="col-span-1 flex items-center justify-center">
-                                                <button class="text-gray-400 hover:text-gray-600">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
+                                            <!-- Task List -->
+                                            <div id="backlogTasks" class="divide-y divide-gray-200">
+                                                <div
+                                                    class="grid grid-cols-6 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
+                                                    <div class="col-span-1 flex items-center justify-center">Status</div>
+                                                    <div class="col-span-1 flex items-center justify-center">Task Name
+                                                    </div>
+                                                    <div class="col-span-2 flex items-center justify-center">Description
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Estimation
+                                                    </div>
+                                                    <div class="col-span-1 flex items-center justify-center">Action</div>
+                                                </div>
+
+                                                <!-- Task items (repeated for each task) -->
+                                                <div class="grid grid-cols-6 gap-4 py-4 px-4 items-center text-sm">
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <input type="checkbox" class="w-4 h-4">
+                                                    </div>
+                                                    <div class="col-span-1 font-medium truncate">Employee Details</div>
+                                                    <div class="col-span-2 truncate">
+                                                        Create a page where there is information about employees
+                                                    </div>
+                                                    <div class="col-span-1 whitespace-nowrap truncate">Feb 14, 2024 - Feb
+                                                        1, 2024</div>
+                                                    <div class="col-span-1 flex items-center justify-center">
+                                                        <button class="text-gray-400 hover:text-gray-600">
+                                                            <i class="fas fa-ellipsis-h"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- More task items... -->
                                             </div>
                                         </div>
                                     </div>
@@ -523,15 +479,15 @@
                                                     <div class="absolute inset-0 flex items-center justify-between px-4">
                                                         <span class="text-sm font-medium">Competition analysis</span>
                                                         <!-- <div class="flex items-center justify-center relative">
-                                                                <div class="w-7 h-7 bg-blue-500 rounded-full absolute left-0">
-                                                                </div>
-                                                                <div class="w-7 h-7 bg-green-500 rounded-full absolute left-3">
-                                                                </div>
-                                                                <div
-                                                                    class="w-7 h-7 bg-red-500 rounded-full flex items-center justify-center absolute left-6">
-                                                                    <p class="text-white text-sm font-semibold">+</p>
-                                                                </div>
-                                                            </div> -->
+                                                                                    <div class="w-7 h-7 bg-blue-500 rounded-full absolute left-0">
+                                                                                    </div>
+                                                                                    <div class="w-7 h-7 bg-green-500 rounded-full absolute left-3">
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="w-7 h-7 bg-red-500 rounded-full flex items-center justify-center absolute left-6">
+                                                                                        <p class="text-white text-sm font-semibold">+</p>
+                                                                                    </div>
+                                                                                </div> -->
                                                     </div>
                                                 </div>
                                             </div>

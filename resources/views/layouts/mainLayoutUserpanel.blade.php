@@ -133,7 +133,7 @@
                             </button>
                             <div x-show="open" x-cloak @click.away="open = false"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 z-50">
-                                <a href="/profile"
+                                <a href="{{ route('profile') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i
                                         class="fas fa-user mr-2"></i>Profile</a>
                                 <a href="#"
@@ -157,7 +157,7 @@
                     </div>
                 </div>
             </div>
-            <div class="hidden md:hidden" id="mobileMenu">
+            <div class="hidden md:hidden sticky" id="mobileMenu">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     <a href="/overview"
                         class="{{ Request::is('overview') ? 'text-blue-600' : 'text-gray-600' }} block px-3 py-2 rounded-md text-base font-medium transition-colors">
@@ -513,7 +513,7 @@
         @include('menus.modals.user.add_user_modal')
         @include('menus.modals.user.edit_user_modal')
         @include('menus.modals.user.delete_user_modal')
-    
+
 
         <div class="home absolute top-0 lg:left-[296px] w-screen left-0 min-h-screen h-screen bg-gray-50 transition-all transform duration-300">
             <!-- Header -->

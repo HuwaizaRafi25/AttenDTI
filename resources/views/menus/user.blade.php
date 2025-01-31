@@ -79,22 +79,16 @@
                                     <div class="py-1">
                                         <a href="#" :class="{ 'bg-blue-100': filters.role === 'all' }"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="toggleFilter('role', 'all')">Semua</a>
-                                        <a href="#" :class="{ 'bg-blue-100': filters.role === 'super_admin' }"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="toggleFilter('role', 'super_admin')">Super Admin</a>
-                                        <a href="#" :class="{ 'bg-blue-100': filters.role === 'manajer' }"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="toggleFilter('role', 'manajer')">Manajer</a>
+                                            @click.prevent="toggleFilter('role', 'all')">All</a>
                                         <a href="#" :class="{ 'bg-blue-100': filters.role === 'admin' }"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                             @click.prevent="toggleFilter('role', 'admin')">Admin</a>
-                                        <a href="#" :class="{ 'bg-blue-100': filters.role === 'owner' }"
+                                        <a href="#" :class="{ 'bg-blue-100': filters.role === 'alumni' }"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="toggleFilter('role', 'owner')">Owner</a>
-                                        <a href="#" :class="{ 'bg-blue-100': filters.role === 'kasir' }"
+                                            @click.prevent="toggleFilter('role', 'alumni')">Alumni</a>
+                                        <a href="#" :class="{ 'bg-blue-100': filters.role === 'user' }"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="toggleFilter('role', 'kasir')">Kasir</a>
+                                            @click.prevent="toggleFilter('role', 'user')">User</a>
                                         <div class="border-t mx-2"></div>
                                         <a href="#" :class="{ 'bg-blue-100': filters.status === '1' }"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -126,35 +120,35 @@
                                     class="fixed md:ml-0 ml-[116px] md:mt-2 -mt-6 w-48 bg-white border-t rounded-md shadow-lg z-10">
                                     <div class="py-1">
                                         <a href="#"
-                                            :class="activeSort === 'nama' && activeDirection === 'asc' ?
+                                            :class="activeSort === 'full_name' && activeDirection === 'asc' ?
                                                 'bg-blue-100' : ''"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="applySort('nama', 'asc')">Nama (A-Z)</a>
+                                            @click.prevent="applySort('full_name', 'asc')">Full Name (A-Z)</a>
                                         <a href="#"
-                                            :class="activeSort === 'nama' && activeDirection === 'desc' ?
+                                            :class="activeSort === 'full_name' && activeDirection === 'desc' ?
                                                 'bg-blue-100' : ''"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="applySort('nama', 'desc')">Nama (Z-A)</a>
+                                            @click.prevent="applySort('full_name', 'desc')">Full Name (Z-A)</a>
                                         <a href="#"
-                                            :class="activeSort === 'email' && activeDirection === 'asc' ?
+                                            :class="activeSort === 'username' && activeDirection === 'asc' ?
                                                 'bg-blue-100' : ''"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="applySort('email', 'asc')">Email (A-Z)</a>
+                                            @click.prevent="applySort('username', 'asc')">Username (A-Z)</a>
                                         <a href="#"
-                                            :class="activeSort === 'email' && activeDirection === 'desc' ?
+                                            :class="activeSort === 'username' && activeDirection === 'desc' ?
                                                 'bg-blue-100' : ''"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="applySort('email', 'desc')">Email (Z-A)</a>
+                                            @click.prevent="applySort('username', 'desc')">Username (Z-A)</a>
                                         <a href="#"
-                                            :class="activeSort === 'id_outlet' && activeDirection === 'asc' ?
+                                            :class="activeSort === 'institution' && activeDirection === 'asc' ?
                                                 'bg-blue-100' : ''"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="applySort('id_outlet', 'asc')">Outlet (A-Z)</a>
+                                            @click.prevent="applySort('institution', 'asc')">Institution (A-Z)</a>
                                         <a href="#"
-                                            :class="activeSort === 'id_outlet' && activeDirection === 'desc' ?
+                                            :class="activeSort === 'institution' && activeDirection === 'desc' ?
                                                 'bg-blue-100' : ''"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            @click.prevent="applySort('id_outlet', 'desc')">Outlet (Z-A)</a>
+                                            @click.prevent="applySort('institution', 'desc')">Institution (Z-A)</a>
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +181,8 @@
                                 </div>
                             </div>
                             <!-- Print Button -->
-                            <button onclick="printData('userTable', 'Daftar Pengguna')"
+                            {{-- onclick="printData('userTable', 'Daftar Pengguna')" --}}
+                            <button id="printUserButton"
                                 class="flex items-center text-gray-700 hover:text-green-600 transition duration-200">
                                 <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/printer.svg')) !!}</span>
                                 <span>Print</span>
@@ -219,9 +214,6 @@
                     </div>
                 </div>
                 <div id="user-table" class="w-full overflow-x-scroll">
-                    @if ($users->isEmpty())
-                        <p>User not found.</p>
-                    @else
                         <table class="min-w-full w-full table-auto" id="userTable">
                             <thead>
                                 <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
@@ -238,10 +230,9 @@
                                 @include('menus.tables.user_table', ['users' => $users])
                             </tbody>
                         </table>
-                        <div id="pagination-container" class="mt-4">
-                            {{ $users->links() }}
-                        </div>
-                    @endif
+                </div>
+                <div id="pagination-container" class="mt-4">
+                    {{ $users->links() }}
                 </div>
             </div>
         </div>
@@ -249,7 +240,6 @@
 
 
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/user.js') }}"></script>
     <script>
         const printCssPath = "{{ asset('assets/css/app.css') }}";
     </script>
@@ -259,11 +249,12 @@
             optionsMenu.classList.toggle("show");
         });
 
-        window.addEventListener("resize", function () {
-        var optionsMenu = document.getElementById("optionsMenu");
-        if (optionsMenu.classList.contains("show")) {
-            optionsMenu.classList.remove("show");
-        }
-    });
+        window.addEventListener("resize", function() {
+            var optionsMenu = document.getElementById("optionsMenu");
+            if (optionsMenu.classList.contains("show")) {
+                optionsMenu.classList.remove("show");
+            }
+        });
     </script>
+    <script src="{{ asset('assets/js/user.js') }}"></script>
 @endsection
