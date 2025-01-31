@@ -80,11 +80,17 @@
             let currentMonth = today.getMonth();
             let currentYear = today.getFullYear();
 
+            const apiKey = 'YOUR_API_KEY'; // Ganti dengan API key Anda
+
             async function fetchHolidays(month, year) {
                 try {
-                    const response = await fetch(`/api/holidays?month=${month + 1}&year=${year}`);
+                    const response = await fetch(
+                        `https://holidayapi.com/v1/holidays?key=${apiKey}&country=ID&year=${year}&month=${month + 1}`
+                    );
                     if (response.ok) {
-                        return await response.json();
+                        const data = await response.json();
+                        console.log('Holidays fetched:', data.holidays); // Debugging
+                        return data.holidays || [];
                     } else {
                         console.error('Failed to fetch holidays:', response.statusText);
                         return [];
@@ -109,10 +115,14 @@
                     html += '<div></div>';
                 }
                 for (let i = 1; i <= lastDay.getDate(); i++) {
-                    const isToday = i === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-                    const isHoliday = holidays.some(holiday => new Date(holiday.date).getDate() === i);
-                    html +=
-                        `<div class="text-center p-1 ${isToday ? 'bg-blue-500 text-white' : isHoliday ? 'bg-red-500 text-white' : 'hover:bg-indigo-200'} rounded-full">${i}</div>`;
+                    const isToday = i === today.getDate() && month === today.getMonth() && year === today
+                        .getFullYear();
+                    const dateKey =
+                        `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+                    const isHoliday = holidays.some(holiday => holiday.date === dateKey);
+                    html += `<div class="text-center p-1 ${
+                isToday ? 'bg-blue-500 text-white' : isHoliday ? 'bg-red-500 text-white' : 'hover:bg-indigo-200'
+            } rounded-full">${i}</div>`;
                 }
                 html += '</div>';
                 return html;
