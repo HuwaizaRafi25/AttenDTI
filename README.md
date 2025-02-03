@@ -1,66 +1,125 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AttenDTI - Sistem Presensi dan Pengelolaan Siswa PKL
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+AttenDTI adalah aplikasi berbasis web yang dirancang untuk mempermudah proses **absensi siswa PKL** di **Direktorat Teknologi Informasi ITB**. Aplikasi ini tidak hanya fokus pada presensi, tetapi juga mencakup berbagai fitur lainnya, seperti **pengelolaan data siswa**, **manajemen tugas**, **pengumuman**, dan **rekrutmen kerja**. 
 
-## About Laravel
+Dengan menggunakan teknologi **Geofencing** dan **WiFi Address Verification**, sistem ini menawarkan keamanan dan keakuratan dalam proses absensi siswa.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## **Fitur Utama**
+- **Absensi Geofencing**: Verifikasi kehadiran berdasarkan lokasi siswa menggunakan GPS.
+- **Verifikasi WiFi Address**: Memastikan siswa terhubung dengan jaringan WiFi resmi untuk validasi kehadiran.
+- **Pengelolaan Data Siswa PKL**: Admin dapat mengelola data siswa, termasuk pendaftaran, absensi, dan dokumen terkait.
+- **Pengumuman dan Informasi**: Fitur untuk menyampaikan informasi penting kepada siswa secara cepat.
+- **Manajemen Tugas**: Memberikan, melacak, dan menyelesaikan tugas siswa.
+- **Rekrutmen Kerja**: Fitur untuk membantu siswa PKL menemukan peluang kerja terkait.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## **Teknologi yang Digunakan**
+- **Laravel 10**: Framework PHP modern untuk pengembangan web.
+- **MySQL**: Database yang digunakan untuk menyimpan data.
+- **Tailwind CSS**: Membantu dalam mendesain antarmuka yang responsif dan modern.
+- **Redis**: Untuk manajemen cache dan pelacakan status pengguna online.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## **Prasyarat**
+Sebelum memulai, pastikan perangkat Anda telah menginstal:
+- PHP >= 8.2
+- Composer (untuk mengelola dependensi Laravel)
+- MySQL
+- Node.js & npm
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## **Cara Instalasi**
+1. **Clone Repository**  
+   Clone proyek ini ke komputer Anda:
+   ```bash
+   git clone https://github.com/username/AttenDTI.git
+   cd AttenDTI
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+2. **Install Dependensi Backend**  
+   Unduh semua dependensi Laravel menggunakan Composer:
+   ```bash
+   composer install
+   ```
 
-### Premium Partners
+3. **Install Dependensi Frontend**  
+   Instal dependensi untuk frontend menggunakan npm:
+   ```bash
+   npm install
+   npm run build
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+4. **Konfigurasi File `.env`**  
+   Salin file `.env.example` menjadi `.env` dan sesuaikan konfigurasi berikut sesuai dengan pengaturan lokal Anda:
+   - **Database**: Pastikan koneksi database (`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`) sesuai dengan konfigurasi MySQL di perangkat Anda.
+   - **Key Aplikasi**: Generate application key dengan perintah berikut:
+     ```bash
+     php artisan key:generate
+     ```
 
-## Contributing
+5. **Migrasi Database**  
+   Jalankan migrasi untuk membuat tabel di database:
+   ```bash
+   php artisan migrate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. **Jalankan Aplikasi**  
+   Jalankan server pengembangan lokal Laravel:
+   ```bash
+   php artisan serve
+   ```
+   Aplikasi akan dapat diakses melalui `http://localhost:8000`.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## **Cara Penggunaan**
+1. **Login**  
+   - Siswa: Masuk menggunakan email ITB.  
+   - Admin: Mengelola data siswa, tugas, dan pengumuman.
 
-## Security Vulnerabilities
+2. **Absensi**  
+   Siswa hanya dapat melakukan absensi jika dua kondisi terpenuhi:  
+   - Lokasi berada di dalam radius geofencing.  
+   - Terhubung ke jaringan WiFi resmi (ITB Hotspot).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. **Manajemen Data**  
+   Admin dapat menambah, mengedit, atau menghapus data siswa, tugas, dan pengumuman.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## **Pengembangan**
+Jika ingin berkontribusi, silakan ikuti langkah berikut:
+1. **Buat Cabang Baru**  
+   ```bash
+   git checkout -b nama-fitur-anda
+   ```
+
+2. **Lakukan Perubahan**  
+   Tambahkan kode atau fitur sesuai kebutuhan.
+
+3. **Commit dan Push**  
+   ```bash
+   git add .
+   git commit -m "Menambahkan fitur X"
+   git push origin nama-fitur-anda
+   ```
+
+4. **Kirim Pull Request**  
+   Ajukan pull request untuk peninjauan tim.
+
+---
+
+## **Lisensi**
+Proyek ini menggunakan lisensi **MIT**. Lihat file [LICENSE](./LICENSE) untuk detailnya.
+
+---
+
+## **Kontak**
+Jika memiliki pertanyaan atau saran, hubungi kami melalui:  
+- **Email**: huwaiza137@gmail.com, fauziekaputra704@gmail.com
+```
