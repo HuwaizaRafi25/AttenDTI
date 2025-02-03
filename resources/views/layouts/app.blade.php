@@ -42,8 +42,8 @@
                                 <span
                                     class="{{ Request::is('overview') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
                             </a>
-                            <a href="/attendance"
-                                class="{{ Request::is('attendance') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
+                            <a href="/attendances"
+                                class="{{ Request::is('attendances') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
                                 <span>Attendance</span>
                                 <span
                                     class="{{ Request::is('attendance') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
@@ -116,10 +116,10 @@
                             class="fas fa-home mr-2 {{ Request::is('overview') ? 'text-blue-600' : 'text-gray-600' }}"></i>
                         Overview
                     </a>
-                    <a href="/attendance"
+                    <a href="/attendances"
                         class="{{ Request::is('attendance') ? 'text-blue-600' : 'text-gray-600' }} block px-3 py-2 rounded-md text-base font-medium transition-colors">
                         <i
-                            class="fas fa-calendar-check mr-2 {{ Request::is('attendance') ? 'text-blue-600' : 'text-gray-600' }}"></i>
+                            class="fas fa-calendar-check mr-2 {{ Request::is('attendances') ? 'text-blue-600' : 'text-gray-600' }}"></i>
                         Attendance
                     </a>
                     <a href="/announcement"
@@ -297,14 +297,14 @@
                                 <span class="text sub-nav-text" data-subNavText="2">Roles & Permissions</span>
                             </li>
                             <li class="sub-nav-link">
-                                <span class="text sub-nav-text" data-subNavText="2">Locations</span>
+                                <span class="text sub-nav-text" data-subNavText="3">Locations</span>
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="menu">
-                    <li class="nav-link" data-navLink="1">
+                    <li class="nav-link" data-navLink="2">
                         <div class="navhead">
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/attendance.svg')) !!}
@@ -315,7 +315,7 @@
                 </div>
 
                 <div class="menu">
-                    <li class="nav-link" data-navLink="1">
+                    <li class="nav-link" data-navLink="3">
                         <div class="navhead">
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/announcement.svg')) !!}
@@ -364,7 +364,7 @@
                 </div>
 
                 <div class="menu">
-                    <li class="nav-link" data-navLink="1">
+                    <li class="nav-link" data-navLink="5">
                         <div class="navhead">
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/setting.svg')) !!}
@@ -375,7 +375,7 @@
                 </div>
 
                 <div class="menu">
-                    <li class="nav-link" data-navLink="2">
+                    <li class="nav-link" data-navLink="6">
                         <div class="navhead">
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/activityLog.svg')) !!}
@@ -415,7 +415,7 @@
         @include('menus.modals.user.report_user_modal')
         @include('menus.modals.user.add_user_modal')
         @include('menus.modals.user.view_user_modal')
-        @include('menus.modals.user.edit_user_modal')
+        {{-- @include('menus.modals.user.edit_user_modal') --}}
         @include('menus.modals.user.delete_user_modal')
 
         <div

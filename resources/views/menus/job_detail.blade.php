@@ -75,30 +75,6 @@
                                         a design sprint on specific story or task</li>
                                 </ul>
                             </section>
-
-                            <section>
-                                <h2 class="text-lg font-semibold mb-3">Attachment</h2>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div class="border rounded-lg p-4 flex items-center space-x-3">
-                                        <div class="bg-blue-100 p-3 rounded-lg">
-                                            <i class="fas fa-file-pdf text-blue-600"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium">Jobs Requirements</p>
-                                            <p class="text-sm text-gray-500">PDF • 2.4MB</p>
-                                        </div>
-                                    </div>
-                                    <div class="border rounded-lg p-4 flex items-center space-x-3">
-                                        <div class="bg-blue-100 p-3 rounded-lg">
-                                            <i class="fas fa-file-pdf text-blue-600"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium">Company Benefits</p>
-                                            <p class="text-sm text-gray-500">PDF • 1.8MB</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
                         </div>
                     </div>
                 </div>

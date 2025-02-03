@@ -1,4 +1,4 @@
-@foreach ($rafi_logs as $activityLog)
+@foreach ($logs as $activityLog)
     <tr class="border-b border-gray-200 hover:bg-gray-100" data-profile-image="{{ $activityLog->profile_picture }}"
         data-name="{{ $activityLog->name }}" data-email="{{ $activityLog->email }}"
         data-contacts="{{ $activityLog->contact_info }}" data-address="{{ $activityLog->address }}"
@@ -14,8 +14,23 @@
             </div>
         </td>
         <td class="py-3 pl-3 text-left">
-            <span
-                class="block font-semibold text-gray-800">{{ $activityLog->user ? $activityLog->user->nama : 'Not found' }}</span>
+            <div class="flex items-center">
+                <img src="{{ $activityLog->user->profile_pic ? asset('storage/profilePics/' . $activityLog->user->profile_pic) : asset('assets/images/userPlaceHolder.png') }}"
+                        alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                    <div class="w-4 h-4 mt-5 -ml-2.5 flex items-center justify-center rounded-full bg-white">
+                        @if ($activityLog->user->isOnline())
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        @else
+                            <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+                        @endif
+                    </div>
+                <div class="flex flex-col items-left ml-2 gap-y-1">
+                    <span
+                    class="block font-semibold text-gray-800">{{ $activityLog->user ? $activityLog->user->username : 'Not found' }}</span>
+                    <span
+                    class="block font-semibold bg-blue-500 w-min px-2 rounded-md py-1 text-white">{{ $activityLog->user ? $activityLog->user->roles->first()->name : 'Not found' }}</span>
+                </div>
+            </div>
         </td>
         <td class="py-3 pl-3 text-center">
             {{ $activityLog->event }}

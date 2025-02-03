@@ -67,7 +67,7 @@ class UserController extends Controller
     public function export()
     {
         $users = User::with('outlet')->get();
-        
+
         // Logika untuk mengekspor data ke CSV atau Excel
         // Gunakan package seperti maatwebsite/excel untuk implementasi
     }
@@ -95,8 +95,8 @@ class UserController extends Controller
 
     public function checkUsername(Request $request)
     {
-        $username = $request->query('username');
-        $id = $request->query('id');
+        $username = $request->input('username');
+        $id = $request->input('id');
         if ($id) {
             $exists = User::where('username', $username)->where('id', '!=', $id)->exists();
         } else {
@@ -204,7 +204,7 @@ class UserController extends Controller
                 'userProfilePic' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10000',
                 'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $id],
                 'itb_account' => ['required', 'string', 'email', 'max:100', 'unique:users,itb_account,' . $id],
-                'full_name' => ['nullable', 'string', 'max:255'],
+                'fullname' => ['nullable', 'string', 'max:255'],
                 'gender' => ['required', Rule::in([1, 0])],
                 'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email,' . $id],
                 'phone' => ['nullable', 'numeric', 'unique:users,phone,' . $id],
@@ -244,7 +244,7 @@ class UserController extends Controller
             $user->update([
                 'username' => $request->username,
                 'itb_account' => $request->itb_account,
-                'full_name' => $request->full_name,
+                'full_name' => $request->fullname,
                 'gender' => $request->gender,
                 'email' => $request->email,
                 'phone' => $request->phone,

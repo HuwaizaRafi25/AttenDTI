@@ -1,6 +1,6 @@
 <!-- Modal Add User -->
 <div id="userReportModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-70 z-50 hidden">
-    <div class="bg-gray-50 text-white rounded-lg shadow-lg p-6 h-[95vh] max-w-4xl w-full">
+    <div class="bg-gray-50 text-white rounded-lg shadow-lg m-6 p-6 h-[95vh] max-w-xl md:max-w-4xl w-full">
         <div class="overflow-y-auto h-[80vh] space-y-4">
             {{-- Printed Container --}}
             <div id="laporanTransaksi"
@@ -24,7 +24,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bg-blue-600 text-white text-center p-2">
-                                        <div class="font-bold">EVALUASI EXIT INTERVIEW</div>
+                                        <div class="font-bold">LAPORAN DATA SISWA PKL</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -47,13 +47,12 @@
 
                 <!-- Body Laporan -->
                 <div class="p-8" id="laporanContainer">
-blablabla
                 </div>
             </div>
         </div>
         <div class="flex gap-x-2 py-3">
             <button class="w-full px-4 py-2 text-sm font-medium text-gray-800 rounded-md hover:text-gray-900 border-2"
-                id="notaBackButton">Kembali</button>
+                id="userReportClose">Kembali</button>
             <button class="w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
                 onclick="printDiv('laporanTransaksi')">Cetak Laporan</button>
         </div>

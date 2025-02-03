@@ -50,7 +50,7 @@
                     <div class="flex flex-col sm:flex-row justify-between gap-y-2 items-start mb-4">
                         <img src="{{ asset('assets/images/icons/more.svg') }}"
                             class="w-4 opacity-75 block ml-4 md:hidden cursor-pointer" alt="moreButton" id="moreButton">
-                        <h3 class="text-xl font-semibold mb-2 ml-4 hidden lg:block">User Management</h3>
+                        <h3 class="text-xl font-semibold mb-2 ml-4 hidden lg:block">Activity</h3>
                         <div id="optionsMenu"
                             class="hidden md:relative md:flex md:flex-row md:space-y-0 md:space-x-4 bg-white md:bg-transparent p-3 md:p-0 rounded-md md:rounded-none shadow-xl md:border-none border-t-2 md:shadow-none items-center space-y-2 mt-3 md:mt-0 ml-4 !relative"
                             style="">
@@ -204,97 +204,27 @@
                                 </span>
                             </label>
                         </div>
-                        <button
-                            class="add-button -mt-1 max-h-10 flex items-center bg-[#545DB0ff] text-white font-semibold px-4 text-sm rounded hover:bg-[#4f57a5] transition duration-200">
-                            <span class="icon mr-2 scale-150">
-                                {!! file_get_contents(public_path('assets/images/icons/plus.svg')) !!}
-                            </span>
-                            User
-                        </button>
                     </div>
                 </div>
-                <div id="user-table" class="w-full overflow-x-scroll">
-                        <table class="min-w-full w-full table-auto" id="userTable">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                                    <th class="py-3 pl-3 text-center">NO</th>
-                                    <th class="py-3 pl-6 text-left">User</th>
-                                    <th class="py-3 pl-6 text-left hidden printable">Email</th>
-                                    <th class="py-3 pl-6 text-left">Institution</th>
-                                    {{-- <th class="py-3 px-6 text-center no-print">Status</th> --}}
-                                    <th class="py-3 px-6 text-center">Role</th>
-                                    <th class="py-3 px-6 text-center no-print">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="content" class="text-gray-600 text-sm font-light">
-                                @include('menus.tables.user_table', ['users' => $users])
-                            </tbody>
-                        </table>
-                </div>
-                <div id="pagination-container" class="mt-4">
-                    {{ $users->links() }}
-                </div>
-
-                <div class="hidden" id="userReportTable">
-                    <div class="mb-6">
-                        <p>
-                            <strong>Waktu Laporan:</strong>
-                            {{-- @if($start_date && $end_date)
-                                {{ \Carbon\Carbon::parse($start_date)->translatedFormat('d M Y') }} -
-                                {{ \Carbon\Carbon::parse($end_date)->translatedFormat('d M Y') }}
-                            @else --}}
-                                Semua waktu
-                            {{-- @endif --}}
-                        </p>
-                        <p><strong>Disusun Oleh:</strong> Admin Wasuhin</p>
-                    </div>
-
-                    <table class="w-full border-collapse border border-gray-300 text-sm">
+                <div id="user-table">
+                    <table class="min-w-full table-auto" id="userTable">
                         <thead>
-                            <tr class="bg-gray-200">
-                                <th class="border border-gray-300 p-2">No</th>
-                                <th class="border border-gray-300 p-2">Nomor Identitas</th>
-                                <th class="border border-gray-300 p-2">Nama</th>
-                                <th class="border border-gray-300 p-2">Akun ITB</th>
-                                <th class="border border-gray-300 p-2">Institusi</th>
+                            <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                <th class="py-3 pl-6 text-left">TIMESTAMP</th>
+                                <th class="py-3 pl-3 text-left">USER</th>
+                                <th class="py-3 pl-3 text-center ">ACTION</th>
+                                {{-- <th class="py-3 pl-3 text-center">Subjek</th> --}}
+                                <th class="py-3 px-3 text-left">DESCRIPTION</th>
+                                {{-- <th class="py-3 px-3 text-center no-print">Hapus</th> --}}
                             </tr>
                         </thead>
-                        <tbody>
-                            @if (count($users) <= 0)
-                                <tr>
-                                    <td class="border border-gray-300 p-2 text-center" colspan="5">Data transaksi
-                                        kosong
-                                    </td>
-                                </tr>
-                            @else
-                                @foreach ($users as $user)
-                                    <tr>
-                                        <td class="border border-gray-300 p-2 text-center">{{ $loop->iteration }}</td>
-                                        <td class="border border-gray-300 p-2">{{ $user->identity_number ? $user->identity_number : '-' }}
-                                        </td>
-                                        <td class="border border-gray-300 p-2">{{ $user->full_name }}
-                                        </td>
-                                        <td class="border border-gray-300 p-2">{{ $user->itb_account }}
-                                        </td>
-                                        <td class="border border-gray-300 p-2">{{ $user->institution ? $user->institution : '-' }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
+                        <tbody id="content" class="text-gray-600 text-sm font-light">
+                            @include('menus.tables.activity_log_table', ['logs' => $logs])
                         </tbody>
                     </table>
-                    <div class="mt-10 flex flex-col items-end">
-                        <div class="text-right flex gap-x-1">
-                                <p class="text-base text-gray-800">Admin</p>
-                                <p class="text-base text-gray-800">DTI ITB,</p>
-                        </div>
-
-                        <!-- Nama Lengkap -->
-                        <div class="mt-10 text-right">
-                            <p class="text-md font-medium text-gray-700">{{ Auth::user()->nama }}</p>
-                            <div class="border-b border-gray-400 w-32 mt-2"></div>
-                        </div>
-                    </div>
+                </div>
+                <div id="pagination-container" class="mt-4">
+                    {{ $logs->links() }}
                 </div>
             </div>
         </div>

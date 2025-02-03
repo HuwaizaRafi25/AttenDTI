@@ -15,10 +15,6 @@ class DashboardController extends Controller
     {
         // $placements = Location::all();
         $currentDate = Carbon::now()->translatedFormat('l, j F Y');
-        $year = now()->year;
-        $holidays = HolidayService::getHolidays($year);
-        // dd($holidays);
-
-        return view('menus.overview', compact('currentDate', 'holidays'));
+        return view('menus.overview', compact('currentDate'));
     }
 }

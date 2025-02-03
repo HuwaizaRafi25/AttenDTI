@@ -9,6 +9,7 @@
                 </div>
                 <div class="flex gap-x-4">
                     <button
+                        onclick="window.location.href='{{ route('attendance.request', Auth::id()) }}'"
                         class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
                         <i class="fas fa-check-circle mr-2"></i> I'm Here!
                     </button>

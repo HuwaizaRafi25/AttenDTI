@@ -64,7 +64,7 @@
                 </button>
             </div>
             <div class="h-auto overflow-hidden">
-                <div id="calendar" class="bg-gradient-to-br from-indigo-100 to-purple-100 p-4 rounded-lg w-full">
+                <div id="calendar" class="bg-gray-50 p-4 rounded-lg w-full">
                     <!-- Calendar will be generated here -->
                 </div>
             </div>
@@ -80,58 +80,56 @@
             let currentMonth = today.getMonth();
             let currentYear = today.getFullYear();
 
-            const apiKey = 'YOUR_API_KEY'; // Ganti dengan API key Anda
-
-            async function fetchHolidays(month, year) {
-                try {
-                    const response = await fetch(
-                        `https://holidayapi.com/v1/holidays?key=${apiKey}&country=ID&year=${year}&month=${month + 1}`
-                    );
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('Holidays fetched:', data.holidays); // Debugging
-                        return data.holidays || [];
-                    } else {
-                        console.error('Failed to fetch holidays:', response.statusText);
-                        return [];
-                    }
-                } catch (error) {
-                    console.error('Error fetching holidays:', error);
-                    return [];
-                }
-            }
-
-            function generateCalendar(month, year, holidays) {
+            function generateCalendar(month, year) {
                 const firstDay = new Date(year, month, 1);
                 const lastDay = new Date(year, month + 1, 0);
                 let html =
                     `<h4 class="text-center font-semibold text-indigo-800 mb-2">${firstDay.toLocaleString('default', { month: 'long' })} ${year}</h4>`;
                 html += '<div class="grid grid-cols-7 gap-1">';
-                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                daysOfWeek.forEach(day => {
-                    html += `<div class="text-center text-indigo-600 font-semibold">${day}</div>`;
+
+                // Days of week header starting from Monday
+                const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                daysOfWeek.forEach((day, index) => {
+                    const isWeekend = index === 5 || index === 6; // Saturday is 5, Sunday is 6
+                    html += `<div class="text-center font-semibold ${isWeekend ? 'text-red-600' : 'text-indigo-600'}">${day}</div>`;
                 });
-                for (let i = 0; i < firstDay.getDay(); i++) {
+
+                // Calculate the first day of the week (Monday = 0, Sunday = 6)
+                let firstDayIndex = firstDay.getDay(); // 0 (Sunday) to 6 (Saturday)
+                firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1; // Convert to Monday = 0, Sunday = 6
+
+                // Empty cells for days before the first day of the month
+                for (let i = 0; i < firstDayIndex; i++) {
                     html += '<div></div>';
                 }
+
+                // Calendar days
                 for (let i = 1; i <= lastDay.getDate(); i++) {
-                    const isToday = i === today.getDate() && month === today.getMonth() && year === today
-                        .getFullYear();
-                    const dateKey =
-                        `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
-                    const isHoliday = holidays.some(holiday => holiday.date === dateKey);
-                    html += `<div class="text-center p-1 ${
-                isToday ? 'bg-blue-500 text-white' : isHoliday ? 'bg-red-500 text-white' : 'hover:bg-indigo-200'
-            } rounded-full">${i}</div>`;
+                    const date = new Date(year, month, i);
+                    let dayOfWeek = date.getDay();
+                    dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Convert to Monday = 0, Sunday = 6
+                    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6; // Saturday is 5, Sunday is 6
+                    const isToday = i === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+
+                    if (isToday) {
+                        html += `<div class="text-center p-1 bg-blue-500 text-white rounded-full">${i}</div>`;
+                    } else {
+                        html += `<div class="text-center p-1 ${isWeekend ? 'text-red-600' : ''} hover:bg-indigo-200 rounded-full">${i}</div>`;
+                    }
                 }
+
                 html += '</div>';
                 return html;
             }
 
-            async function updateCalendar() {
-                const holidays = await fetchHolidays(currentMonth, currentYear);
-                const calendarHtml = generateCalendar(currentMonth, currentYear, holidays);
-                calendarEl.innerHTML = calendarHtml;
+            function displayCalendars(month, year) {
+                let html = '';
+                html += generateCalendar(month, year);
+                calendarEl.innerHTML = html;
+            }
+
+            function updateCalendar() {
+                displayCalendars(currentMonth, currentYear);
             }
 
             prevMonthBtn.addEventListener('click', () => {

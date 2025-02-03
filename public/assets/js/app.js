@@ -31,16 +31,17 @@ const subNavLinks = document.querySelectorAll(".sub-nav-text");
 const routes = {
     navLinks: {
         1: "/dashboard",
-        2: "/logs",
-        3: "/members",
+        2: "/attendances",
+        3: "/announcement",
+        5: "/application-settings",
+        6: "/activity-logs",
     },
     subNavLinks: {
-        1: "/users/list",
-        2: "/members",
+        1: "/users",
+        2: "/roles-permissions",
         3: "/outlets",
         4: "/packages",
         5: "/new-transactions",
-        6: "/transactions",
         7: "/general-setting",
         8: "/notification-setting",
         9: "/support/help-center",

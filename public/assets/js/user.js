@@ -199,25 +199,25 @@ document.getElementById("role").addEventListener("change", function () {
         gridRoleOutlet.classList.add("grid-cols-1");
     }
 });
-document.getElementById("roleUpdate").addEventListener("change", function () {
-    if (
-        this.value === "kasir" ||
-        this.value === "admin" ||
-        this.value === "manajer"
-    ) {
-        placementContainerUpdate.classList.remove("hidden", "opacity-0");
-        placementContainerUpdate.classList.add("block", "opacity-100");
+// document.getElementById("roleUpdate").addEventListener("change", function () {
+//     if (
+//         this.value === "kasir" ||
+//         this.value === "admin" ||
+//         this.value === "manajer"
+//     ) {
+//         placementContainerUpdate.classList.remove("hidden", "opacity-0");
+//         placementContainerUpdate.classList.add("block", "opacity-100");
 
-        gridRoleOutletUpdate.classList.remove("grid-cols-1");
-        gridRoleOutletUpdate.classList.add("grid-cols-2");
-    } else {
-        placementContainerUpdate.classList.remove("opacity-100", "block");
-        placementContainerUpdate.classList.add("hidden", "opacity-0");
+//         gridRoleOutletUpdate.classList.remove("grid-cols-1");
+//         gridRoleOutletUpdate.classList.add("grid-cols-2");
+//     } else {
+//         placementContainerUpdate.classList.remove("opacity-100", "block");
+//         placementContainerUpdate.classList.add("hidden", "opacity-0");
 
-        gridRoleOutletUpdate.classList.remove("grid-cols-2");
-        gridRoleOutletUpdate.classList.add("grid-cols-1");
-    }
-});
+//         gridRoleOutletUpdate.classList.remove("grid-cols-2");
+//         gridRoleOutletUpdate.classList.add("grid-cols-1");
+//     }
+// });
 
 // Preview image
 function previewImageProfilePic(event, imgId) {
@@ -270,13 +270,31 @@ function closeDeleteModal() {
 document.addEventListener("DOMContentLoaded", function () {
 
     const printUserButton = document.getElementById("printUserButton");
+    const userReportModal = document.getElementById("userReportModal");
+    const laporanContainer = document.getElementById("laporanContainer");
+    const userReportTable = document.getElementById("userReportTable");
     if (printUserButton) {
         printUserButton.addEventListener("click", function () {
-            const userReportModal = document.getElementById("userReportModal");
+            laporanContainer.innerHTML = userReportTable.innerHTML;
+            // printData(userReportTable, userReportTableHeader);
             userReportModal.classList.remove("hidden");
             userReportModal.classList.add("flex");
+            // userReportTable.classList.add('block');
             // const rafiTableHeader = document.getElementById("rafiTableHeader").innerHTML;
             // printTable(rafiTable, rafiTableHeader);
+        });
+
+        const closeButton = document.getElementById("userReportClose");
+        closeButton.addEventListener("click", function () {
+            userReportModal.classList.add("hidden");
+            userReportModal.classList.remove("flex");
+        });
+
+        userReportModal.addEventListener("click", function (e) {
+            if (e.target === userReportModal) {
+                userReportModal.classList.add("hidden");
+                userReportModal.classList.remove("flex");
+            }
         });
     }
 
