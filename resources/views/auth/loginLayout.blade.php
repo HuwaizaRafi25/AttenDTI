@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/icons/dti_icon.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- <script src="https://unpkg.com/@tailwindcss/browser@4"></script> --}}
     <style>
         body {
             background-image: url('{{ asset('assets/images/small_login_pic.jpg') }}');

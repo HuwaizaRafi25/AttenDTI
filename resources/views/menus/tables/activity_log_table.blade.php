@@ -17,13 +17,6 @@
             <div class="flex items-center">
                 <img src="{{ $activityLog->user->profile_pic ? asset('storage/profilePics/' . $activityLog->user->profile_pic) : asset('assets/images/userPlaceHolder.png') }}"
                         alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
-                    <div class="w-4 h-4 mt-5 -ml-2.5 flex items-center justify-center rounded-full bg-white">
-                        @if ($activityLog->user->isOnline())
-                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                        @else
-                            <div class="w-3 h-3 rounded-full bg-gray-400"></div>
-                        @endif
-                    </div>
                 <div class="flex flex-col items-left ml-2 gap-y-1">
                     <span
                     class="block font-semibold text-gray-800">{{ $activityLog->user ? $activityLog->user->username : 'Not found' }}</span>

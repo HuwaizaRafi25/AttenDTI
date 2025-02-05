@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="shortcut icon" href="{{ asset('assets/images/icons/dti_icon.png') }}" type="image/x-icon">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {{-- <script src="https://unpkg.com/@tailwindcss/browser@4"></script> --}}
         <link rel="stylesheet" href="{{ asset('assets/css/clock.css') }}">
         @notifyCss
         <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
@@ -168,6 +169,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="shortcut icon" href="{{ asset('assets/images/icons/dti_icon.png') }}" type="image/x-icon">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {{-- <script src="https://unpkg.com/@tailwindcss/browser@4"></script> --}}
         <link rel="stylesheet" href="{{ asset('assets/css/clock.css') }}">
         @notifyCss
         <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
@@ -380,7 +382,7 @@
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/activityLog.svg')) !!}
                             </span>
-                            <span class="text nav-text">Log Aktivitas</span>
+                            <span class="text nav-text">Activity Logs</span>
                         </div>
                     </li>
                 </div>

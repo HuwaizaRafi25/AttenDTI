@@ -9,29 +9,36 @@ class Job extends Model
 {
     use HasFactory;
 
+    protected $table = 'job';
+
     protected $fillable = [
         'job_title',
-        'company_id',
-        'job_type_id',
+        'company_name',
+        'company_address',
+        'company_email',
         'job_description',
         'location',
-        'min_salary',
-        'max_salary',
+        'salary',
         'is_active',
     ];
 
-    public function company()
+    public function jobTypes()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsToMany(JobType::class, 'pivot_job_type', 'job_id', 'job_type_id');
     }
 
-    public function jobType()
+    public function qualifications()
     {
-        return $this->belongsTo(JobType::class);
+        return $this->belongsToMany(Qualification::class, 'pivot_qualification');
     }
 
-    public function pinned()
+    public function responsibilities()
     {
-        return $this->hasMany(Pinned::class);
+        return $this->belongsToMany(Responsibility::class, 'pivot_responsibility');
+    }
+
+    public function pinnedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'pinned_job');
     }
 }

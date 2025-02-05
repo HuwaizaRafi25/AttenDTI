@@ -129,7 +129,7 @@ class UserController extends Controller
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
-            if (!str_ends_with($request['itb_account'], '@itb.ac.id')) {
+            if (!str_ends_with($request->itb_account, '@itb.ac.id')) {
                 notify()->error('Email harus menggunakan domain @itb.ac.id.', 'Gagal!');
                 return back();
             }

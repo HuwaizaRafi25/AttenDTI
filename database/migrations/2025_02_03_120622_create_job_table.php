@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('job', function (Blueprint $table) {
             $table->id();
             $table->string('job_title', 255);
-            $table->foreignId('company_id')->constrained('company')->onDelete('cascade');
-            $table->foreignId('job_type_id')->constrained('job_type')->onDelete('cascade');
-            $table->foreignId('qualification_id')->constrained('qualification')->onDelete('cascade');
-            $table->foreignId('responbility_id')->constrained('responbility')->onDelete('cascade');
+            $table->string('company_name', 255);
+            $table->text('company_address')->nullable();
+            $table->string('company_email', 255)->nullable()->unique();
             $table->text('job_description')->nullable();
             $table->string('location', 255)->nullable();
             $table->decimal('salary', 10, 2)->nullable();

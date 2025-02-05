@@ -79,4 +79,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Location::class, 'placement_id');
     }
+
+    public function pinnedJobs()
+    {
+        return $this->belongsToMany(Job::class, 'pinned_job');
+    }
 }

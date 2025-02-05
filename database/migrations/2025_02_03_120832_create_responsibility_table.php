@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('responbility', function (Blueprint $table) {
+        Schema::create('responsibility', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('company')->onDelete('cascade');
-            $table->text('responbility');
+            $table->text('responsibility');
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('responbility');
+        Schema::dropIfExists('responsibility');
     }
 };

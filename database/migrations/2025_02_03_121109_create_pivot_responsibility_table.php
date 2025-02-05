@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('qualification', function (Blueprint $table) {
+        Schema::create('pivot_responsibility', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('company')->onDelete('cascade');
-            $table->text('qualification');
+            $table->foreignId('job_id')->constrained('job')->onDelete('cascade');
+            $table->foreignId('responsibility_id')->constrained('responsibility')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('qualification');
+        Schema::dropIfExists('pivot_responsibility');
     }
 };

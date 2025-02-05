@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -7,11 +8,13 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\AccountSettingsController;
-use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\PrintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +71,16 @@ Route::middleware(['auth'])->group(
 
         Route::get('/attendance/request/{id}', [AttendanceController::class, 'requestAttendance'])->name('attendance.request');
         Route::post('/attendance/verify-location', [AttendanceController::class, 'verifyLocation'])->name('attendance.verifyLocation');
+        Route::post('/api/verify-wifi', function (Request $request) {
+            $ssid = $request->input('ssid');
+            $validSSIDs = ['eduroam']; // Daftar SSID yang valid
+
+            if (in_array($ssid, $validSSIDs)) {
+                return response()->json(['message' => 'Verifikasi Wi-Fi berhasil.']);
+            } else {
+                return response()->json(['message' => 'Verifikasi Wi-Fi gagal.'], 400);
+            }
+        });
 
         Route::get('/announcement', function () {
             return view('menus.announcement');
@@ -77,22 +90,21 @@ Route::middleware(['auth'])->group(
             return view('menus.task');
         });
 
-        Route::get('/job', function () {
-            return view('menus.job');
+        Route::get('/job', [JobController::class, 'index'])->name('job.view');
+        Route::post('/job-types', [JobController::class, 'addJobType'])->name('job-types.store');
 
-        });
 
         Route::get('/job_detail', function () {
             return view('menus.job_detail');
-
         });
 
         Route::get('/test_print', function () {
             return view('test-print');
-
         });
 
         Route::get('/users/{username}', [UserController::class, 'view'])->name('user.view');
+        Route::get('/users/print/interview_magang_pkl', [PrintController::class, 'index_interview'])->name('print.interview_magang_pkl');
+        Route::get('/users/print/exit_clearance', [PrintController::class, 'index_exit'])->name('print.exit_clearance');
 
         Route::get('/users', [UserController::class, 'index'])->name('users.list');
         Route::post('/users/store', [UserController::class, 'store'])->middleware(['Permission:manage-user', 'method.check:POST'])->name('users.store');
@@ -113,8 +125,5 @@ Route::middleware(['auth'])->group(
         // Route::get('/general-setting', [SettingController::class, 'generalSetting'])->name('setelanUmum');
 
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activityLogs.index');
-
     }
 );
-
-

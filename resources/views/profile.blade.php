@@ -75,7 +75,8 @@
                                     </h2>
                                     <div class="flex items-center gap-4">
                                         @if (Auth::check() && Auth::user()->username === $user->username)
-                                            <a href="{{ route('users.updateView', ['id' => $user->id]) }}" class="text-gray-600 hover:text-blue-500">
+                                            <a href="{{ route('users.updateView', ['id' => $user->id]) }}"
+                                                class="text-gray-600 hover:text-blue-500">
                                                 <i class="fas fa-edit text-xl"></i>
                                             </a>
                                             <div class="relative" x-data="{ isOpen: false }">
@@ -90,17 +91,17 @@
                                                     x-transition:enter-start="transform opacity-0 scale-95"
                                                     x-transition:enter-end="transform opacity-100 scale-100">
                                                     <div class="py-1">
-                                                        <a href=""
-                                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                            Form Exit Clearance
-                                                        </a>
-                                                        <a href=""
-                                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                        <div class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                                            onclick="openModal()">
                                                             Formulir Perjanjian Kerahasiaan
-                                                        </a>
-                                                        <a href=""
-                                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                        </div>
+                                                        <a href="{{ route('print.interview_magang_pkl') }}"
+                                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                                                             Interview Magang PKL
+                                                        </a>
+                                                        <a href="{{ route('print.exit_clearance') }}"
+                                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                                                            Form Exit Clearance
                                                         </a>
                                                     </div>
                                                 </div>
@@ -120,13 +121,13 @@
                                         <p class="text-sm font-medium text-gray-500">
                                             <i class="fas fa-map-marker-alt mr-2"></i>Address
                                         </p>
-                                        <p class="mt-1 text-sm text-gray-800">{{ $user->address }}</p>
+                                        <p class="mt-1 text-sm text-gray-800">{{ $user->address ?: '-' }}</p>
                                     </div>
                                     <div>
                                         <p class="text-sm font-medium text-gray-500">
                                             <i class="fas fa-university mr-2"></i>Institution
                                         </p>
-                                        <p class="mt-1 text-sm text-gray-800">{{ $user->institution }}</p>
+                                        <p class="mt-1 text-sm text-gray-800">{{ $user->institution ?: '-' }}</p>
                                     </div>
                                     <div>
                                         <p class="text-sm font-medium text-gray-500">
@@ -163,6 +164,161 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Add User -->
+        <div id="userReportModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-70 z-50 hidden">
+            <div class="bg-gray-50 text-white rounded-lg shadow-lg m-6 p-6 h-[95vh] max-w-xl md:max-w-4xl w-full">
+                <div class="overflow-y-auto h-[80vh] space-y-4">
+                    {{-- Printed Container --}}
+                    <div id="laporanTransaksi"
+                        class="laporanTransaksi h-auto p-8 rounded-md max-width-full border-2 bg-white text-black overflow-auto"
+                        style="aspect-ratio: 2480 / 3508;">
+                        <table class="w-full border border-gray-800 table-fixed opacity-70">
+                            <tr>
+                                <td class="w-1/6 border-r border-gray-800 text-center p-2">
+                                    <img src="{{ asset('assets/images/logo_itb_512.png') }}" alt="Logo"
+                                        class="w-20 mx-auto my-2">
+                                </td>
+                                <td class="w-5/6">
+                                    <table class="w-full">
+                                        <tr>
+                                            <td class="text-center p-2">
+                                                <div class="text-base font-bold">DIREKTORAT TEKNOLOGI INFORMASI ITB
+                                                </div>
+                                                <div class="text-sm text-gray-600">Gedung CRCS Lantai 4, Jalan Ganesha
+                                                    Nomor 10 Bandung 40132 Telp: +6222 86010037</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-blue-600 text-white text-center p-2">
+                                                <div class="font-bold">SURAT PERNYATAAN MENJAGA KERAHASIAAN INFORMASI
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-0">
+                                                <table class="w-full text-sm border-t border-gray-800">
+                                                    <tr>
+                                                        <td class="border-r border-gray-800 p-1">Nomor : FRM.07-OPL.01
+                                                        </td>
+                                                        <td class="border-r border-gray-800 p-1">Revisi : 0</td>
+                                                        <td class="border-r border-gray-800 p-1">Tanggal:
+                                                            {{ date('d M Y') }}</td>
+                                                        <td class="p-1">Halaman : 1 dari 1</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Body Laporan -->
+                        <div class="p-8" id="laporanContainer">
+                            <div class="mt-2 text-sm">
+                                <p class="mb-4">Pada hari ini, Jumat, Tanggal 22, Bulan September, Tahun 2023; saya
+                                    yang bertanda tangan dibawah ini :</p>
+                                <table class="w-full mb-4">
+                                    <tr>
+                                        <td class="w-48">Nama</td>
+                                        <td>: {{ Auth::user()->full_name ?: '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No. Identitas</td>
+                                        <td>: {{ Auth::user()->nisn ?: '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alamat</td>
+                                        <td>: {{ Auth::user()->address ?: '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Instansi/Perusahaan</td>
+                                        <td>: {{ Auth::user()->institution ?: '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Keperluan</td>
+                                        <td>: Praktik Kerja Lapangan (PKL)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Periode Penugasan</td>
+                                        <td>: {{ Auth::user()->period_start_date }} s.d.
+                                            {{ Auth::user()->period_end_date }}</td>
+                                    </tr>
+                                </table>
+
+                                <p class="mb-4">Dengan ini menyatakan hal-hal sebagai berikut:</p>
+                                <ul class="list-decimal pl-6 mb-4 space-y-2">
+                                    <li>Menjaga kerahasiaan semua atau setiap bagian dari informasi maupun data yang
+                                        diperoleh berkaitan dengan DTI ITB maupun ITB secara langsung maupun tidak
+                                        langsung.</li>
+                                    <li>Tidak mengungkapkan Informasi rahasia kepada pihak lain atau memanfaatkan atau
+                                        menggunakannya untuk maksud apapun terkait dengan segala sesuatu yang diketahui
+                                        dan di kerjakan dalam melaksanakan tugas yang dapat berpotensi merugikan DTI ITB
+                                        maupun ITB.</li>
+                                    <li>Tidak menyalahgunakan wewenang atas akses ke Sistem Teknologi Informasi yang ada
+                                        di DTI ITB maupun ITB.</li>
+                                    <li>Tidak membagikan (share) User ID dan Password kepada pihak lain yang tidak
+                                        berhak.</li>
+                                </ul>
+                                <p class="mb-4">Apabila terbukti melakukan pelanggaran atas butir di atas, maka saya
+                                    bersedia dituntut dan dikenakan sanksi sesuai dengan peraturan perundang-undangan
+                                    yang berlaku.</p>
+                                <p class="mb-4">Pernyataan ini tetap berlaku walaupun penugasan saya sudah berakhir
+                                    atau diakhiri.</p>
+                                <p class="mb-16">Demikian, Surat Pernyataan ini saya buat dalam keadaan sadar dan
+                                    tanpa paksaan dari pihak manapun.</p>
+
+                                <div class="flex justify-between mt-8">
+                                    <div class="w-64 text-center">
+                                        <p class="mb-20">Pembuat pernyataan</p>
+                                        <p class="text-sm italic mb-4 text-gray-300">(materai Rp 10.000,-)</p>
+                                        <p>{{ Auth::user()->full_name }}</p>
+                                        <p>(NIP.)</p>
+                                    </div>
+                                    <div class="w-64 text-center">
+                                        <p class="mb-4">Mengetahui,</p>
+                                        <p class="mb-16">Direktur Teknologi Informasi ITB</p>
+                                        <p class="underline">Mugi Sugiarto, S.Si., M.A.B.</p>
+                                        <p>(NIP. 106000608)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-x-2 py-3">
+                    <button
+                        class="w-full px-4 py-2 text-sm font-medium text-gray-800 rounded-md hover:text-gray-900 border-2"
+                        id="userReportClose" onclick="closeModal()">Kembali</button>
+                    <button
+                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
+                        onclick="printDiv('laporanTransaksi')">Cetak Laporan</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openModal() {
+                document.getElementById('userReportModal').classList.remove('hidden');
+                document.getElementById('userReportModal').classList.add('flex');
+            }
+
+            function closeModal() {
+                document.getElementById('userReportModal').classList.add('hidden');
+                document.getElementById('userReportModal').classList.remove('flex');
+            }
+
+            function printDiv(divId) {
+                var printContents = document.getElementById(divId).innerHTML;
+                var originalContents = document.body.innerHTML;
+
+                document.body.innerHTML = printContents;
+                window.print();
+                document.body.innerHTML = originalContents;
+            }
+        </script>
+
     </body>
 
     </html>

@@ -47,7 +47,7 @@
     <div class="min-w-screen space-y-4 pb-12">
         <!-- Back Button -->
         <div class="flex items-center justify-start w-full px-6 py-4">
-            <a href="{{ Auth::user()->hasRole('admin') ? url('/users/list') : url('/' . Auth::user()->username) }}"
+            <a href="{{ Auth::user()->hasRole('admin') ? url('/users') : url('/users/' . Auth::user()->username) }}"
                 class="flex w-min items-center text-gray-600 hover:text-gray-800">
                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">

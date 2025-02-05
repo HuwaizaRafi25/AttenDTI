@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Qualification extends Model
+class Responsibility extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'qualification',
+        'responsibility',
     ];
 
     public function jobs()
     {
-        return $this->belongsToMany(Job::class, 'job_qualification');
+        return $this->belongsToMany(Job::class, 'job_responsibility');
     }
 }

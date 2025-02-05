@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Location;
-use App\Models\User;
 use Illuminate\Http\Request;
 
-class profileController extends Controller
+class PrintController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index() {}
+    public function index_interview()
+    {
+        return view('menus.print_interview');
+    }
+
+    public function index_exit()
+    {
+        return view('menus.print_exit');
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -34,8 +40,7 @@ class profileController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::findOrFail($id);
-        return view('profile', compact('user'));
+        //
     }
 
     /**
