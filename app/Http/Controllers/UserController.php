@@ -7,13 +7,16 @@ use App\Models\User;
 use App\Models\Location;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\PDF;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
+use App\Exports\UsersExcelExport;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
@@ -22,7 +25,6 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-
         $query = User::with('placement');
 
         if ($request->has('role')) {
@@ -64,18 +66,10 @@ class UserController extends Controller
         return view('profile', compact('users'));
     }
 
-    public function export()
-    {
-        $users = User::with('outlet')->get();
-
-        // Logika untuk mengekspor data ke CSV atau Excel
-        // Gunakan package seperti maatwebsite/excel untuk implementasi
-    }
-
     public function print()
     {
         $users = User::with('outlet')->get();
-        return view('menus.user_print', compact('users'));
+        return view('menus.components.user_table_print', compact('users'));
     }
 
     public function search(Request $request)
@@ -117,6 +111,12 @@ class UserController extends Controller
         return response()->json(['availableEmail' => !$exists]);
     }
 
+    public function getPlacements()
+    {
+        $locations = Location::all();
+        return response()->json($locations);
+    }
+
     public function store(Request $request)
     {
         try {
@@ -125,8 +125,12 @@ class UserController extends Controller
                 'itb_account' => ['required', 'string', 'email', 'max:100', 'unique:users,itb_account'],
                 'placement_id' => ['nullable', 'exists:locations,id'],
                 'role' => ['required', Rule::in(['admin', 'alumni', 'user'])],
-                'userProfilePic' => ['nullable', 'image|mimes:jpeg,png,jpg,webp|max:2048', 'dimensions:min_width=100,min_height=100'],
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'userProfilePic' => [
+                    'nullable',
+                    'image|mimes:jpeg,png,jpg,webp|max:2048',
+                    'dimensions:min_width=100,min_height=100',
+                    'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                ]
             ]);
 
             if (!str_ends_with($request->itb_account, '@itb.ac.id')) {
@@ -322,5 +326,76 @@ class UserController extends Controller
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
+    }
+
+    // public function exportPDF($users)
+    // {
+    //     $users = User::with('placement')->get();
+    // }
+
+    public function exportExcel(Request $request)
+    {
+        // Ambil parameter filter dari query string
+        $filters = [
+            'role' => $request->query('role'),
+            'sort' => $request->query('sort', 'id'), // Default sort by 'id'
+            'direction' => $request->query('direction', 'asc'), // Default direction 'asc'
+            'status' => $request->query('status'),
+        ];
+
+        // Ekspor data ke Excel
+        return Excel::download(new UsersExcelExport($filters), 'users_filtered.xlsx');
+    }
+    public function export(Request $request, $type)
+    {
+        // Validasi format ekspor
+        if (!in_array($type, ['pdf', 'xlsx', 'csv'])) {
+            notify()->error('Invalid export format.', 'Error!');
+            return redirect()->back();
+        }
+
+        // Mulai query dasar
+        $query = User::with('placement');
+
+        // Filter berdasarkan role
+        if ($request->has('role')) {
+            $role = $request->role;
+            if ($role !== 'all' && !empty($role)) {
+                $query->with('roles')
+                    ->whereHas('roles', function ($query) use ($role) {
+                        $query->where('name', $role);
+                    });
+            }
+        }
+
+        // Filter berdasarkan status
+        if ($request->has('status')) {
+            $status = $request->status;
+            $query->where('last_seen', '>=', Carbon::now()->subMinutes(1));
+        }
+
+        // Sorting
+        $sortColumn = $request->get('sort', 'full_name');
+        $sortDirection = $request->get('direction', 'asc');
+        if ($sortColumn === 'placement_id') {
+            $query->with('placement')
+                ->orderBy('full_name', $sortDirection);
+        } else {
+            $query->orderBy($sortColumn, $sortDirection);
+        }
+
+        // Ambil semua data yang difilter
+        $users = $query->get();
+
+        // Tentukan nama file berdasarkan format
+        $fileName = 'users_filtered.' . $type;
+
+        // Ekspor data sesuai format
+        if ($type === 'pdf') {
+            $pdf = PDF::loadView('menus.components.user_table_print', compact('users'));
+            return $pdf->download('users.pdf');
+        } elseif ($type === 'xlsx' || $type === 'csv') {
+            return Excel::download(new UsersExcelExport($users), $fileName);
+        }
     }
 }

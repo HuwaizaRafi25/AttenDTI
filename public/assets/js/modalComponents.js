@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     } else {
         // Fetch data dari endpoint
-        fetch("/users/getPlacements")
+        fetch("/users/get/placement")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(

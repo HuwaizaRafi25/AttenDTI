@@ -463,7 +463,7 @@
             emailTimeoutId = setTimeout(async () => {
                 try {
                     const response = await fetch(
-                        `../check-itb-account?itb_account=${email}&id=${id}`
+                        `../check/itb-account?itb_account=${email}&id=${id}`
                     );
                     const data = await response.json();
 
@@ -534,7 +534,7 @@
             timeoutId = setTimeout(async () => {
                 try {
                     const response = await fetch(
-                        `../check-username?username=${username}&id=${id}`
+                        `../check/username?username=${username}&id=${id}`
                     );
                     const data = await response.json();
 

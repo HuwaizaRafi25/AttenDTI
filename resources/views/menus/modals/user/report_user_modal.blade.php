@@ -1,12 +1,11 @@
 <!-- Modal Add User -->
 <div id="userReportModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-70 z-50 hidden">
-    <div class="bg-gray-50 text-white rounded-lg shadow-lg m-6 p-6 h-[95vh] max-w-xl md:max-w-4xl w-full">
+    <div class="bg-gray-50 text-white rounded-lg shadow-lg m-6 p-6 h-[95vh] w-min">
         <div class="overflow-y-auto h-[80vh] space-y-4">
             {{-- Printed Container --}}
             <div id="laporanTransaksi"
-                class="laporanTransaksi h-auto p-8 rounded-md max-width-full border-2 bg-white text-black overflow-auto"
-                style="
-                aspect-ratio: 2480 / 3508;">
+                class="laporanTransaksi h-auto p-8 rounded-md w-[80vw] md:w-[64vw] border-2 bg-white text-black"
+                style="aspect-ratio: 2480 / 3508;">
                 <table class="w-full border border-gray-800 table-fixed opacity-70">
                     <tr>
                         <td class="w-1/6 border-r border-gray-800 text-center p-2">

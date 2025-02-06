@@ -112,9 +112,12 @@ Route::middleware(['auth'])->group(
         Route::get('/users/update/{id}', [UserController::class, 'updateView'])->name('users.updateView');
         Route::put('/users/updateAct/{id}', [UserController::class, 'update'])->name('users.updateAct');
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
-        Route::get('/users/getPlacements', [LocationController::class, 'getPlacements'])->name('users.getPlacements');
-        Route::get('/users/check-username', [UserController::class, 'checkUsername'])->name('checkUsername');
-        Route::get('/users/check-itb-account', [UserController::class, 'checkITBAccount'])->name('checkItbAccount');
+        Route::get('/users/get/placement', [UserController::class, 'getPlacements'])->name('users.getPlacements');
+        Route::get('/users/check/username', [UserController::class, 'checkUsername'])->name('checkUsername');
+        Route::get('/users/check/itb-account', [UserController::class, 'checkITBAccount'])->name('checkItbAccount');
+        // Route::get('/users/export/pdf', [UserController::class, 'exportPDF'])->name('users.exportPDF');
+        Route::get('/users/export/{type}', [UserController::class, 'export'])->name('users.export');
+        // Route::get('/users/export/csv', [UserController::class, 'exportCsv'])->name('users.exportCsv');
 
         Route::get('/roles-permissions', [RolePermissionController::class, 'index'])->name('rolesPermissions.index');
 

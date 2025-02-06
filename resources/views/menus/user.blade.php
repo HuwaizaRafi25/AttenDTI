@@ -165,18 +165,15 @@
                                 <div x-show="open" x-cloak @click.away="open = false"
                                     class="fixed -mt-6 md:mt-2 md:ml-0 ml-[116px] w-48 bg-white border-t rounded-md shadow-lg z-10">
                                     <div class="py-1">
-                                        <a href=""
+                                        <a href="{{ route('users.export', ['type' => 'pdf']) . '?' . http_build_query(request()->query()) }}"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
                                             <b>PDF</b></a>
-                                        <a href=""
+                                        <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
                                             <b>Excel</b></a>
-                                        <a href=""
+                                        <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
                                             <b>CSV</b></a>
-                                        <a href=""
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
-                                            <b>JSON</b></a>
                                     </div>
                                 </div>
                             </div>
@@ -249,10 +246,10 @@
                         <p><strong>Disusun Oleh:</strong> Admin Wasuhin</p>
                     </div>
 
-                    <table class="w-full border-collapse border border-gray-300 text-sm">
+                    <table class="w-full table-fixed border-collapse border border-gray-300 text-sm">
                         <thead>
                             <tr class="bg-gray-200">
-                                <th class="border border-gray-300 p-2">No</th>
+                                <th class="border border-gray-300 w-12 p-2">No</th>
                                 <th class="border border-gray-300 p-2">Nomor Identitas</th>
                                 <th class="border border-gray-300 p-2">Nama</th>
                                 <th class="border border-gray-300 p-2">Akun ITB</th>
@@ -269,14 +266,14 @@
                             @else
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td class="border border-gray-300 p-2 text-center">{{ $loop->iteration }}</td>
-                                        <td class="border border-gray-300 p-2">{{ $user->identity_number ? $user->identity_number : '-' }}
+                                        <td class="border border-gray-300 whitespace-nowrap w-min p-2 text-center">{{ $loop->iteration }}</td>
+                                        <td class="border border-gray-300 text-wrap flex-wrap p-2">{{ $user->identity_number ? $user->identity_number : '-' }}
                                         </td>
-                                        <td class="border border-gray-300 p-2">{{ $user->full_name }}
+                                        <td class="border border-gray-300 text-wrap p-2">{{ $user->full_name }}
                                         </td>
-                                        <td class="border border-gray-300 p-2">{{ $user->itb_account }}
+                                        <td class="border border-gray-300 text-wrap flex-wrap p-2">{{ $user->itb_account }}
                                         </td>
-                                        <td class="border border-gray-300 p-2">{{ $user->institution ? $user->institution : '-' }}
+                                        <td class="border border-gray-300 text-wrap p-2">{{ $user->institution ? $user->institution : '-' }}
                                         </td>
                                     </tr>
                                 @endforeach

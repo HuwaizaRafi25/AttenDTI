@@ -15,6 +15,27 @@ function getURLParam(param) {
     return currentUrl.searchParams.get(param);
 }
 
+function buildExportUrl(type) {
+    // Ambil parameter dari URL
+    let role = getURLParam('role');
+    let sort = getURLParam('sort') || 'full_name'; // Default sort: 'full_name'
+    let direction = getURLParam('direction') || 'asc'; // Default direction: 'asc'
+    let status = getURLParam('status');
+
+    // Bangun query string
+    let queryParams = new URLSearchParams();
+    if (role) queryParams.append('role', role);
+    if (sort) queryParams.append('sort', sort);
+    if (direction) queryParams.append('direction', direction);
+    if (status) queryParams.append('status', status);
+
+    // Bangun URL ekspor
+    let url = `/users/export/${type}?${queryParams.toString()}`;
+    // Redirect ke URL ekspor
+    console.log("Redirecting to:", url); // Debugging: Cek URL yang dihasilkan
+    window.location.href = url;
+}
+
 // ===== Toggle Sort ===== //
 function applySort(column, direction) {
     let currentUrl = new URL(window.location.href);
@@ -268,7 +289,6 @@ function closeDeleteModal() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-
     const printUserButton = document.getElementById("printUserButton");
     const userReportModal = document.getElementById("userReportModal");
     const laporanContainer = document.getElementById("laporanContainer");
@@ -360,15 +380,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     let modalLihat = document.getElementById("userModal");
 
                     if (gender == 1) {
-                        document.getElementById("gradientGenderColor").classList.remove("from-pink-600", "to-pink-300")
-                        document.getElementById("gradientGenderColor").classList.add("from-blue-600", "to-blue-300")
-                    }else {
-                        document.getElementById("gradientGenderColor").classList.remove("from-blue-600", "to-blue-300")
-                        document.getElementById("gradientGenderColor").classList.add("from-pink-600", "to-pink-300")
+                        document
+                            .getElementById("gradientGenderColor")
+                            .classList.remove("from-pink-600", "to-pink-300");
+                        document
+                            .getElementById("gradientGenderColor")
+                            .classList.add("from-blue-600", "to-blue-300");
+                    } else {
+                        document
+                            .getElementById("gradientGenderColor")
+                            .classList.remove("from-blue-600", "to-blue-300");
+                        document
+                            .getElementById("gradientGenderColor")
+                            .classList.add("from-pink-600", "to-pink-300");
                     }
 
                     if (pic) {
-                        document.getElementById("userProfileImage").src = `/storage/profilePics/${pic}`;
+                        document.getElementById(
+                            "userProfileImage"
+                        ).src = `/storage/profilePics/${pic}`;
                     }
                     document.getElementById("userName").innerText =
                         username || "Tidak ada";
@@ -378,18 +408,25 @@ document.addEventListener("DOMContentLoaded", function () {
                         role || "Tidak ada";
                     document.getElementById("userITBAccount").innerText =
                         ITBAccount || "Tidak ada";
-                        if (major) {
-                            document.getElementById("majorContainer").classList.remove("hidden");
-                            document.getElementById("majorContainer").classList.add("flex");
-                            document.getElementById("userMajor").innerText =
-                                major || "Tidak ada";
-                        }else{
-                            document.getElementById("majorContainer").classList.remove("flex");
-                            document.getElementById("majorContainer").classList.add("hidden");
-                        }
-                        document.getElementById("userInstitution").innerText =
-                            institution || "Tidak ada";
-
+                    if (major) {
+                        document
+                            .getElementById("majorContainer")
+                            .classList.remove("hidden");
+                        document
+                            .getElementById("majorContainer")
+                            .classList.add("flex");
+                        document.getElementById("userMajor").innerText =
+                            major || "Tidak ada";
+                    } else {
+                        document
+                            .getElementById("majorContainer")
+                            .classList.remove("flex");
+                        document
+                            .getElementById("majorContainer")
+                            .classList.add("hidden");
+                    }
+                    document.getElementById("userInstitution").innerText =
+                        institution || "Tidak ada";
 
                     modalLihat.classList.remove("hidden");
                     modalLihat.classList.add("flex");
@@ -403,7 +440,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
 
                     // Tombol "Back" untuk menutup modal
-                    let tombolViewBack = document.getElementById("closeViewUserModal");
+                    let tombolViewBack =
+                        document.getElementById("closeViewUserModal");
                     tombolViewBack.addEventListener("click", function () {
                         modalLihat.classList.remove("flex");
                         modalLihat.classList.add("hidden");
@@ -521,11 +559,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 let picUser = this.getAttribute("data-user-pic");
                 let modalHapus = document.getElementById("deleteModal");
 
-                document.getElementById("imageDelete").src = `/storage/profilePics/${picUser}`;
+                document.getElementById(
+                    "imageDelete"
+                ).src = `/storage/profilePics/${picUser}`;
                 document.getElementById("nameDelete").textContent = namaUser;
                 document.getElementById("emailDelete").textContent = emailUser;
                 console.log(idUser);
-                document.getElementById("deleteUserForm").action = `/users/destroy/${idUser}`;
+                document.getElementById(
+                    "deleteUserForm"
+                ).action = `/users/destroy/${idUser}`;
 
                 modalHapus.classList.remove("hidden");
                 modalHapus.classList.add("flex");
@@ -576,7 +618,7 @@ function validateITBAccount(email) {
     feedback2.classList.add("hidden");
     feedback2.textContent = "";
 
-    function checkDomain(){
+    function checkDomain() {
         if (!email.endsWith("@itb.ac.id")) {
             feedback2.textContent = "Email harus menggunakan domain @itb.ac.id";
             feedback2.classList.remove("hidden");
@@ -589,7 +631,7 @@ function validateITBAccount(email) {
     emailTimeoutId = setTimeout(async () => {
         try {
             const response = await fetch(
-                `check-itb-account?itb_account=${email}`
+                `users/check/itb-account?itb_account=${email}`
             );
             const data = await response.json();
 
@@ -659,9 +701,8 @@ async function checkUsername(username) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(async () => {
         try {
-            const response = await fetch(
-                `check-username?username=${username}`
-            );
+            const response = await fetch(`/users/check/username?username=${username}`);
+            console.log(response);
             const data = await response.json();
 
             if (data.available) {
