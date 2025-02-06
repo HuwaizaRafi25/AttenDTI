@@ -173,6 +173,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/clock.css') }}">
         @notifyCss
         <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
+        <link rel="stylesheet" href="{{ asset('node_modules/cropperjs/dist/cropper.min.css') }}">
 
     </head>
 
@@ -543,6 +544,7 @@
         <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/js/app.js') }}"></script>
         <script src="{{ asset('assets/js/modalComponents.js') }}"></script>
+        <script src="{{ asset('node_modules/cropperjs/dist/cropper.min.js') }}"></script>
 
         <x-notify::notify />
         @notifyJs

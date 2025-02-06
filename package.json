@@ -13,6 +13,17 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "alpinejs": "^3.14.8"
-    }
+        "alpinejs": "^3.14.8",
+        "cropperjs": "^2.0.0-rc.2"
+    },
+    "name": "attendti",
+    "version": "1.0.0",
+    "description": "AttenDTI adalah aplikasi berbasis web yang dirancang untuk mempermudah proses **absensi siswa PKL** di **Direktorat Teknologi Informasi ITB**. Aplikasi ini tidak hanya fokus pada presensi, tetapi juga mencakup berbagai fitur lainnya, seperti **pengelolaan data siswa**, **manajemen tugas**, **pengumuman**, dan **rekrutmen kerja**.",
+    "main": "postcss.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
 }

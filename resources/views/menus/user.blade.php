@@ -280,7 +280,7 @@
                             @endif
                         </tbody>
                     </table>
-                    <div class="mt-10 flex flex-col items-end">
+                    <div class="mt-10 flex flex-col items-end w-full h-min justify-end">
                         <div class="text-right flex gap-x-1">
                                 <p class="text-base text-gray-800">Admin</p>
                                 <p class="text-base text-gray-800">DTI ITB,</p>
@@ -288,7 +288,7 @@
 
                         <!-- Nama Lengkap -->
                         <div class="mt-10 text-right">
-                            <p class="text-md font-medium text-gray-700">{{ Auth::user()->nama }}</p>
+                            <p class="text-md font-medium text-gray-700">{{ Auth::user()->full_name }}</p>
                             <div class="border-b border-gray-400 w-32 mt-2"></div>
                         </div>
                     </div>

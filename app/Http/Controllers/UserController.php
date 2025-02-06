@@ -125,12 +125,8 @@ class UserController extends Controller
                 'itb_account' => ['required', 'string', 'email', 'max:100', 'unique:users,itb_account'],
                 'placement_id' => ['nullable', 'exists:locations,id'],
                 'role' => ['required', Rule::in(['admin', 'alumni', 'user'])],
-                'userProfilePic' => [
-                    'nullable',
-                    'image|mimes:jpeg,png,jpg,webp|max:2048',
-                    'dimensions:min_width=100,min_height=100',
-                    'password' => ['required', 'confirmed', Rules\Password::defaults()],
-                ]
+                'userProfilePic' => 'image|mimes:jpeg,png,jpg,gif|max:4096',
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
             if (!str_ends_with($request->itb_account, '@itb.ac.id')) {
@@ -147,20 +143,16 @@ class UserController extends Controller
             $profilePicPath = null;
 
             if ($request->hasFile('userProfilePic')) {
-                $image = $request->file('userProfilePic');
-                $image->fit(500, 500, function ($constraint) {
-                    $constraint->upsize();
-                });
-                $image->encode('jpg', 75);
-                $path = $image->store('profilePics', 'public');
-                $profilePicPath = 'storage/' . $path;
+                // $image = $request->file('userProfilePic');
+                $newFileName = uniqid() . '.' . $request->file('userProfilePic')->getClientOriginalExtension();
+                $request->file('userProfilePic')->storeAs('profilePics', $newFileName, 'public');
             }
 
             $user = User::create([
                 'username' => $request->username,
                 'itb_account' => $request->itb_account,
                 'placement_id' => $placement,
-                'profile_pic' => $profilePicPath,
+                'profile_pic' => $newFileName,
                 'password' => Hash::make($request->password),
             ]);
 

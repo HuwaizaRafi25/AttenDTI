@@ -92,11 +92,8 @@ Route::middleware(['auth'])->group(
 
         Route::get('/job', [JobController::class, 'index'])->name('job.view');
         Route::post('/job-types', [JobController::class, 'addJobType'])->name('job-types.store');
-
-
-        Route::get('/job_detail', function () {
-            return view('menus.job_detail');
-        });
+        Route::post('/addjobs', [JobController::class, 'store'])->name('jobs.store');
+        Route::get('/job_detail/{job}', [JobController::class, 'detail'])->name('job.detail');
 
         Route::get('/test_print', function () {
             return view('test-print');

@@ -2,27 +2,29 @@
 @section('content')
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <!-- <div class="flex items-center mb-8">
-            <a href="/job">
-                <h1><i class="fa-solid fa-arrow-left"></i></h1>
-            </a>
-            <h1 class="text-2xl font-bold text-gray-900 ml-6">Job Details</h1>
-        </div> -->
+                                        <a href="/job">
+                                            <h1><i class="fa-solid fa-arrow-left"></i></h1>
+                                        </a>
+                                        <h1 class="text-2xl font-bold text-gray-900 ml-6">Job Details</h1>
+                                    </div> -->
         <div class="px-4 sm:px-0">
             <div class="flex flex-col lg:flex-row gap-6">
                 <div class="lg:w-2/3">
                     <div class="bg-white rounded-lg shadow p-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
                             <div>
-                                <h1 class="text-2xl font-bold text-gray-900">UI/UX Designer</h1>
+                                <h1 class="text-2xl font-bold text-gray-900">{{ $job->job_title }}</h1>
                                 <div class="mt-2 flex items-center text-sm text-gray-500">
                                     <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span>Yogyakarta, Indonesia</span>
+                                    <span>{{ $job->location }}</span>
                                 </div>
                             </div>
                             <div class="mt-4 sm:mt-0 flex space-x-3">
-                                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                                    Apply Now
-                                </button>
+                                <a href="mailto:{{ $job->company_email }}" >
+                                    <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                                        Apply Now
+                                    </button>
+                                </a>
                                 <button class="border border-gray-300 p-2 rounded-lg hover:bg-gray-50">
                                     <i class="far fa-bookmark"></i>
                                 </button>
@@ -33,46 +35,32 @@
                         </div>
 
                         <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Fulltime</span>
-                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Remote</span>
-                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">2-4 Years</span>
+                            @foreach ($job->jobTypes as $jobType)
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                                    {{ $jobType->job_type_name }}
+                                </span>
+                            @endforeach
                         </div>
 
                         <div class="space-y-6">
                             <section>
                                 <h2 class="text-lg font-semibold mb-3">About this role</h2>
                                 <p class="text-gray-600">
-                                    As an UI/UX Designer on Pixelz Studio, you'll focus on design user-friendly on
-                                    several platform (web, mobile, dashboard, etc) to our users needs. Your innovative
-                                    solution will enhance the user experience on several platforms. Join us and let's
-                                    making impact on user engagement at Pixelz Studio.
+                                    {{ $job->job_description }}
                                 </p>
                             </section>
 
                             <section>
                                 <h2 class="text-lg font-semibold mb-3">Qualification</h2>
                                 <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                    <li>At least 2-4 years of relevant experience in product design or related roles.
-                                    </li>
-                                    <li>Knowledge of design validation, either through quantitative or qualitative
-                                        research.</li>
-                                    <li>Have good knowledge using Figma and Figjam</li>
-                                    <li>Experience with analytics tools to gather data from users.</li>
+                                    <!--  -->
                                 </ul>
                             </section>
 
                             <section>
                                 <h2 class="text-lg font-semibold mb-3">Responsibility</h2>
                                 <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                    <li>Create design and user journey on every features and product/business units
-                                        across multiples devices (Web+App)</li>
-                                    <li>Identifying design problems through user journey and devising elegant solutions
-                                    </li>
-                                    <li>Develop low and hi fidelity designs, user experience flow, & prototype,
-                                        translate it into highly-polished visual composites following style and brand
-                                        guidelines.</li>
-                                    <li>Brainstorm and works together with Design Lead, UX Engineers, and PMs to execute
-                                        a design sprint on specific story or task</li>
+                                    <!--  -->
                                 </ul>
                             </section>
                         </div>

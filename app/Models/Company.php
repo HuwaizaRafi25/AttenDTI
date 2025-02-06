@@ -27,6 +27,6 @@ class Company extends Model
 
     public function responsibilities()
     {
-        return $this->hasMany(Responbility::class);
+        return $this->hasMany(Responsibility::class);
     }
 }
