@@ -165,7 +165,6 @@
             </div>
         </div>
 
-        <!-- Modal Add User -->
         <div id="userReportModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-70 z-50 hidden">
             <div class="bg-gray-50 text-white rounded-lg shadow-lg m-6 p-6 h-[95vh] max-w-xl md:max-w-4xl w-full">
                 <div class="overflow-y-auto h-[80vh] space-y-4">

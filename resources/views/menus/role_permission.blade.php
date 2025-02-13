@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<style>
+    <style>
         #userModal {
             position: fixed;
             inset: 0;
@@ -75,6 +75,23 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
+        #optionsMenu.show {
+            display: block;
+            position: absolute !important;
+            left: 44px;
+            margin-top: 24px;
+            z-index: 50;
+            width: 128px;
+        }
+
+        #moreButton.open+#optionsMenu {
+            display: block;
+        }
+
+        [x-cloak] {
+            display: none;
+        }
     </style>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -112,18 +129,10 @@
             <div class="flex flex-col ml-8">
                 <div class="flex">
                     <button id="work" class="ml-1.5 mr-4 text-blue-500 font-semibold">
-                        @if (Auth()->User()->hasRole('admin'))
-                            Ongoing Ops
-                        @else
-                            My Jobs
-                        @endif
+                        Role Permission
                     </button>
                     <button id="done" class="mr-4">
-                        @if (Auth()->User()->hasRole('admin'))
-                            Accomplished Ops
-                        @else
-                            Jobs History
-                        @endif
+                        User Permission
                     </button>
                 </div>
                 <!-- Tambahkan hr setelah button pertama -->
@@ -131,119 +140,1024 @@
                     style="border-width: 1.5px; transition: 0.5s ease;">
             </div>
             <div id="qcOps" class="max-w-7xl mx-auto sm:px-6 lg:px-8 transition-all duration-500 opacity-100">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex">
-                            <h3 class="text-lg font-medium pt-1 mr-3">
-                                @if (Auth()->User()->hasRole('admin'))
-                                    Qc Ops
-                                @else
-                                    My Jobs
-                                @endif
-                            </h3>
-                            <!-- Filter and Sort Section -->
-                            <div class="flex pb-4 items-center space-x-4">
-                                <div class="w-px h-6 bg-gray-300"></div>
-                                <div class="flex items-center">
-                                    <i class="bx bx-filter text-lg"></i>
-                                    <span class="ml-1">Filter</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="bx bx-sort text-lg"></i>
-                                    <span class="ml-1">Sort</span>
-                                </div>
-                                <div class="w-px h-6 bg-gray-300"></div>
-                                <button
-                                    class="flex items-center text-black-500 py-2 rounded hover:text-blue-600 transition duration-200">
-                                    <i class="bx bx-export mr-1"></i>
-                                    <span>Export</span>
-                                </button>
-                                <button
-                                    class="flex items-center text-black-500 py-2 rounded hover:text-green-600 transition duration-200">
-                                    <i class="bx bx-printer mr-1"></i>
-                                    <span>Print</span>
-                                </button>
-                            </div>
+                <div class="bg-white shadow-xl sm:rounded-lg p-6 flex w-full flex-col h-auto  items-center">
+                    <div class="w-full flex justify-between h-auto px-4">
+                        <div class="w-4/6">
+                            <span class="text-gray-600">Action</span>
                         </div>
-
-                        <!-- Search Bar -->
-                        <div class="relative inline-block h-12 w-12 ml-4">
-                            <input
-                                class="-mr-3 search expandright absolute right-[49px] rounded bg-white border-none h-8 w-0 focus:w-[240px] transition-all duration-400 outline-none z-10 focus:px-4"
-                                id="searchright" type="text" name="q" placeholder="Search">
-                            <label class="z-20 button searchbutton absolute text-[22px] w-full cursor-pointer"
-                                for="searchright">
-                                <span class="-ml-3 inline-block">
-                                    <i class="bx bx-search"></i>
-                                </span>
-                            </label>
+                        <div class="space-x-7 w-2/6 flex justify-end">
+                            <span>Alumni</span>
+                            <span>User</span>
+                            <span>Admin</span>
                         </div>
                     </div>
-
-
+                    <hr class="w-full border-gray-300 mt-1">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/user_group.svg') }}" class="w-6 opacity-85" alt="">
+                        <span class="font-semibold opacity-90">Accounts Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Read User Account</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Manage User Account</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Manage Role Permission</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Read Activity Log</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/attendance_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Attendances Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Read Attendance</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Record Attendance</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Manage Attendance</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/building_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Locations Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Read Location</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Manage Location</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/job_blue.svg') }}" class="w-5 opacity-85" alt="">
+                        <span class="font-semibold opacity-90">Jobs Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Read Job Vacancy</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Manage Job Vacancy</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/announcement_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Announcements Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Read Announcement</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Manage Announcement</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/document_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Documents Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Create Document</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Read Users Document</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal">
+                                <span class="">Manage Users Document</span>
+                            </div>
+                            <div class="space-x-14 mr-4 w-2/6 flex justify-end">
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled>
+                                <input type="checkbox" class="w-4 opacity-85 hover:opacity-100 cursor-pointer rounded-lg"
+                                    name="" id="" disabled checked>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="accomplishedQcTable"
                 class="max-w-7xl mx-auto sm:px-6 lg:px-8 transition-all transform ease-in-out duration-500 opacity-0 hidden">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex">
-
-                            <h3 class="text-lg font-medium pt-1 mr-3">
-                                @if (Auth()->User()->hasRole('admin'))
-                                    Accomplished Jobs
+                    <div class="w-full flex justify-between h-auto px-4">
+                        <div class="w-4/6">
+                            <span class="text-gray-600">Action</span>
+                        </div>
+                        <div class="space-x-7 w-2/6 flex justify-end">
+                            <span>User Account</span>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-1">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/user_group.svg') }}" class="w-6 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Accounts Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        {{-- Read User Account --}}
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Read User Account</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['read_user']) || $groupedPermissions['read_user']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
                                 @else
-                                    Jobs History
+                                    @foreach ($groupedPermissions['read_user'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 @endif
-                            </h3>
-                            <!-- Filter and Sort Section -->
-                            <div class="flex pb-4 items-center space-x-4">
-                                <div class="w-px h-6 bg-gray-300"></div>
-                                <div class="flex items-center">
-                                    <i class="bx bx-filter text-lg"></i>
-                                    <span class="ml-1">Filter</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="bx bx-sort text-lg"></i>
-                                    <span class="ml-1">Sort</span>
-                                </div>
-                                <div class="w-px h-6 bg-gray-300"></div>
-                                <button
-                                    class="flex items-center text-black-500 py-2 rounded hover:text-blue-600 transition duration-200">
-                                    <i class="bx bx-export mr-1"></i>
-                                    <span>Export</span>
-                                </button>
-                                <button
-                                    class="flex items-center text-black-500 py-2 rounded hover:text-green-600 transition duration-200">
-                                    <i class="bx bx-printer mr-1"></i>
-                                    <span>Print</span>
-                                </button>
                             </div>
                         </div>
-                        <!-- Search Bar -->
-                        <div class="relative inline-block h-12 w-12 ml-4">
-                            <input
-                                class="-mr-3 search expandright absolute right-[49px] rounded bg-white border-none h-8 w-0 focus:w-[240px] transition-all duration-400 outline-none z-10 focus:px-4"
-                                id="searchright" type="text" name="q" placeholder="Search">
-                            <label class="z-20 button searchbutton absolute text-[22px] w-full cursor-pointer"
-                                for="searchright">
-                                <span class="-ml-3 inline-block">
-                                    <i class="bx bx-search"></i>
-                                </span>
-                            </label>
+                        <hr>
+
+                        {{-- Manage User Account --}}
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Manage User Account</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['manage_user_account']) || $groupedPermissions['manage_user_account']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['manage_user_account'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+
+                        {{-- Manage Role Permission --}}
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Manage Role Permission</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['manage_role_permission']) || $groupedPermissions['manage_role_permission']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['manage_role_permission'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Read Activity Log</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['read_activity_log']) || $groupedPermissions['read_activity_log']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['read_activity_log'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
                     </div>
 
-
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/attendance_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Attendances Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Read Attendance</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['read_attendance']) || $groupedPermissions['read_attendance']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['read_attendance'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Record Attendance</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['record_attendance']) || $groupedPermissions['record_attendance']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['record_attendance'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Manage Attendance</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['manage_attendance']) || $groupedPermissions['manage_attendance']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['manage_attendance'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/building_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Locations Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Read Location</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['read_location']) || $groupedPermissions['read_location']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['read_location'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Manage Location</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['manage_location']) || $groupedPermissions['manage_location']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['manage_location'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/job_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Jobs Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Read Job Vacancy</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['read_job']) || $groupedPermissions['read_job']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['read_job'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Manage Job Vacancy</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['manage_job']) || $groupedPermissions['manage_job']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['manage_job'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/announcement_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Announcements Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Read Announcement</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['read_announcement']) || $groupedPermissions['read_announcement']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['read_announcement'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Manage Announcement</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['manage_announcement']) || $groupedPermissions['manage_announcement']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['manage_announcement'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="w-full border-gray-300 mt-4">
+                    <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
+                        <img src="{{ asset('assets/images/icons/document_blue.svg') }}" class="w-5 opacity-85"
+                            alt="">
+                        <span class="font-semibold opacity-90">Documents Management</span>
+                    </div>
+                    <hr class="w-full border-gray-300 mb-4">
+                    <div class="flex flex-col space-y-4 w-full">
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Create Document</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['create_document']) || $groupedPermissions['create_document']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['create_document'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Read Users Document</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['read_document']) || $groupedPermissions['read_document']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['read_document'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="w-full flex justify-between h-auto px-4">
+                            <div class="w-4/6 font-normal flex items-center">
+                                <span>Manage User Document</span>
+                            </div>
+                            <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
+                                @if (!isset($groupedPermissions['manage_user_document']) || $groupedPermissions['manage_user_document']->isEmpty())
+                                    <span class="text-gray-400">User Not Found</span>
+                                @else
+                                    @foreach ($groupedPermissions['manage_user_document'] as $mp)
+                                        <div class="flex w-full justify-between items-center">
+                                            <div class="flex items-center space-x-3">
+                                                <img src="{{ $mp->user->profile_pic
+                                                    ? asset('storage/profilePics/' . $mp->user->profile_pic)
+                                                    : asset('assets/images/userPlaceHolder.png') }}"
+                                                    alt="Profile Picture" class="object-cover w-10 h-10 rounded-full">
+                                                <div class="flex flex-col ml-2">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $mp->user->username }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <button type="submit"
+                                                        class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
+                                                        <span class="icon">
+                                                            <img width="18"
+                                                                src="{{ asset('assets/images/icons/unlink_blue.svg') }}"
+                                                                alt="unlinkButton">
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -295,136 +1209,4 @@
             setActiveButton(workButton, doneButton);
         });
     </script>
-
-    {{-- Script Work --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const approveButtons = document.querySelectorAll('.work-button');
-            const workModal = document.getElementById('workModal');
-            const closeWorkModal = document.getElementById('closeWorkModal');
-            const workForm = document.getElementById('workForm');
-
-            approveButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const designId = this.getAttribute('data-qcOp-id');
-                    const designIdReq = this.getAttribute('data-qcOp-idReq');
-                    const designPic = this.getAttribute('data-qcOp-pic');
-                    const designName = this.getAttribute('data-qcOp-name');
-                    const designMax = this.getAttribute('data-qcOp-maxStore');
-                    const operatorId = this.getAttribute('data-qcOp-operatorId');
-                    const qcName = this.getAttribute('data-qcOp-qcName');
-
-                    workForm.querySelector('img#designReference').src = `/${designPic}`;
-                    workForm.querySelector('input[name="designName"]').value = designName;
-                    workForm.querySelector('input[name="Qc"]').value = qcName;
-                    workForm.querySelector('input[name="operatorId"]').value = operatorId;
-                    workForm.querySelector('input[name="designId"]').value = designId;
-                    workForm.querySelector('input[name="designReqId"]').value = designIdReq;
-                    workForm.querySelector('#maxValue').textContent = designMax;
-                    workForm.querySelector('input[name="quantity"]').max =
-                        designMax; // Tampilkan modal
-                    workModal.classList.remove('hidden');
-                    workModal.classList.add('flex');
-                    console.log(referenceImage); // Debugging
-                });
-            });
-
-            // Tutup modal saat tombol "Close" diklik
-            closeWorkModal.addEventListener('click', function() {
-                workModal.classList.add('hidden');
-                workModal.classList.remove('flex');
-            });
-
-            // Tutup modal saat area di luar modal diklik
-            workModal.addEventListener('click', function(e) {
-                if (e.target === workModal) {
-                    workModal.classList.add('hidden');
-                    workModal.classList.remove('flex');
-                }
-            });
-        });
-    </script>
-
-    {{-- Script View Request --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewButton = document.querySelectorAll('.view-button');
-            const viewModal = document.getElementById('viewModal');
-            const closeModal = document.getElementById('closeViewModal');
-
-            viewButton.forEach(button => {
-                button.addEventListener('click', function() {
-                    const pic = this.getAttribute('data-pic');
-                    const name = this.getAttribute('data-name');
-                    const sizeW = this.getAttribute('data-sizeW');
-                    const sizeH = this.getAttribute('data-sizeH');
-                    const colors = this.getAttribute('data-colors');
-                    const desc = this.getAttribute('data-desc');
-                    viewModal.querySelector('img#requestPic').src = `/${pic}`;
-                    viewModal.querySelector('#requestName').textContent = name;
-                    viewModal.querySelector('#sizeW').textContent = sizeW + 'CM';
-                    viewModal.querySelector('#sizeH').textContent = sizeH + 'CM';
-                    viewModal.querySelector('#requestColors').textContent = colors;
-                    viewModal.querySelector('#requestDesc').textContent = desc;
-
-                    viewModal.classList.remove('hidden');
-                    viewModal.classList.add(
-                        'flex');
-                });
-            });
-
-            closeModal.addEventListener('click', function() {
-                viewModal.classList.add('hidden');
-                viewModal.classList.remove('flex');
-            });
-
-            viewModal.addEventListener('click', function(e) {
-                if (e.target === viewModal) {
-                    viewModal.classList.add('hidden');
-                    viewModal.classList.remove('flex');
-                }
-            });
-        });
-    </script>
-
-    {{-- Script View Machine Ops Request --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewOpsButton = document.querySelectorAll('.viewOps-button');
-            const viewOpsModal = document.getElementById('viewOpsModal');
-            const closeModal = document.getElementById('closeViewModal');
-
-            viewOpsButton.forEach(button => {
-                button.addEventListener('click', function() {
-                    const pic = this.getAttribute('data-pic');
-                    const name = this.getAttribute('data-name');
-                    const operator = this.getAttribute('data-operator');
-                    const worked = this.getAttribute('data-worked');
-                    const comment = this.getAttribute('data-comment');
-                    viewOpsModal.querySelector('img#designReference').src = `/${pic}`;
-                    viewOpsModal.querySelector('#requestName').textContent = name;
-                    viewOpsModal.querySelector('#operatorName').textContent = operator;
-                    viewOpsModal.querySelector('#piecesWorked').textContent = worked;
-                    viewOpsModal.querySelector('#comment').textContent = comment;
-
-                    viewOpsModal.classList.remove('hidden');
-                    viewOpsModal.classList.add(
-                        'flex');
-                });
-            });
-
-            closeModal.addEventListener('click', function() {
-                viewOpsModal.classList.add('hidden');
-                viewOpsModal.classList.remove('flex');
-            });
-
-            viewOpsModal.addEventListener('click', function(e) {
-                if (e.target === viewOpsModal) {
-                    viewOpsModal.classList.add('hidden');
-                    viewOpsModal.classList.remove('flex');
-                }
-            });
-        });
-    </script>
-
 @endsection

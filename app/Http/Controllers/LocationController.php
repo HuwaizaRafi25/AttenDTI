@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
+    public function index()
+    {
+        $locations = Location::all();
+        return view('menus.location', compact('locations'));
+    }
     public function getPlacements(){
         $locations = User::all();
         // dd($locations);

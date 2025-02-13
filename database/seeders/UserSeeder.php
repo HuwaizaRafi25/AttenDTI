@@ -23,18 +23,22 @@ class UserSeeder extends Seeder
             'name' => 'CRCS',
             'campus' => 'ITB Kampus Ganesha',
             'address' => 'Jl. Ganesha No. 10',
+            'email_address' => 'crcs@itb.ac.id',
             'latitude' => -6.887633,
             'longitude' => 107.611791,
             'radius' => 25,
+            'pic' => 'CRCS-2018.jpg',
         ]);
 
         Location::create([
             'name' => 'Labtek I',
             'campus' => 'ITB Kampus Ganesha',
             'address' => 'Jl. G ITB',
+            'email_address' => 'labtekI@gmail.com',
             'latitude' => -6.889032,
             'longitude' => 107.611147,
             'radius' => 25,
+            'pic' => 'LABTEK.jpg',
         ]);
 
 

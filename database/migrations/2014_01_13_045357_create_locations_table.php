@@ -16,9 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('campus');
             $table->text('address');
+            $table->string('email_address');
             $table->decimal('latitude', 10, 8);
             $table->decimal('longitude', 11, 8);
             $table->unsignedSmallInteger('radius');
+            $table->string('pic');
             $table->timestamps();
         });
     }

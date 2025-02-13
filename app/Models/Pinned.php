@@ -9,6 +9,8 @@ class Pinned extends Model
 {
     use HasFactory;
 
+    protected $table = 'pinned_jobs';
+
     protected $fillable = [
         'job_id',
         'user_id',
@@ -16,7 +18,7 @@ class Pinned extends Model
 
     public function job()
     {
-        return $this->belongsTo(Job::class);
+        return $this->belongsTo(Jobs::class);
     }
 
     public function user()

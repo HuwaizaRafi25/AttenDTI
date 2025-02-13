@@ -27,7 +27,7 @@ class AttendanceController extends Controller
         foreach ($location as $loc) {
             $distance = $this->haversineGreatCircleDistance($userLat, $userLng, $loc->latitude, $loc->longitude);
             if ($distance <= $loc->radius){
-                $matchedLocation = $loc;
+                $matchedLocation = $loc->name;
                 break;
             }
         }

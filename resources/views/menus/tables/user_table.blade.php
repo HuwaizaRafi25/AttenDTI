@@ -39,7 +39,7 @@
                         @endif
                     </div>
                     <div class="ml-2">
-                        <span class="block font-semibold text-gray-800">{{ $user->full_name }}</span>
+                        <span class="block font-semibold text-gray-800">{{ $user->full_name ? $user->full_name : 'N/A' }}</span>
                         <span class="block text-sm text-gray-500 no-print">{{ '@'.$user->username }}</span>
                     </div>
                 </div>

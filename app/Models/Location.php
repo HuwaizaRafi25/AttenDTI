@@ -13,9 +13,11 @@ class Location extends Model
         'name',     // Nama lokasi
         'campus',   // Kampus lokasi
         'address',  // Letak lokasi
+        'email_address', // Email
         'latitude', // Garis lintang
         'longitude',// Garis bujur
-        'radius'    // Radius lokasi
+        'radius',   // Radius lokasi
+        'pic'       // Foto lokasi
     ];
 
     public function users()

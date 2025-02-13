@@ -23,20 +23,23 @@ class RolePermissionSeeder extends Seeder
         $roleAlumni = Role::create(['name' => 'alumni']);
 
         $permissions = [
-            'read-user',
-            'manage-user',
-            'manage_roll_permission',
+            'read_user',
+            'manage_user',
+            'manage_role_permission',
             'read_activity_log',
-            'manage-activity_log',
+            'manage_activity_log',
             'read_announcement',
             'manage_announcement',
             'read_attendance',
             'record_attendance',
             'manage_attendance',
+            'create_document',
+            'read_document',
             'manage_document',
+            'read_location',
             'manage_location',
             'read_job',
-            'manage-job',
+            'manage_job',
         ];
 
         foreach ($permissions as $permission) {
@@ -48,7 +51,7 @@ class RolePermissionSeeder extends Seeder
 
         $roleUser = Role::where('name', 'user')->first();
         $roleUser->givePermissionTo([
-            'read-user',            // Untuk melihat data diri sendiri
+            'read_user',            // Untuk melihat data diri sendiri
             'read_activity_log',    // Untuk melihat log aktivitas
             'read_announcement',    // Untuk melihat pengumuman
             'read_attendance',      // Untuk rekapan kehadiran
@@ -58,7 +61,7 @@ class RolePermissionSeeder extends Seeder
 
         $roleAlumni = Role::where('name', 'alumni')->first();
         $roleAlumni->givePermissionTo([
-            'read-user',            // Untuk melihat data diri sendiri
+            'read_user',            // Untuk melihat data diri sendiri
             'read_activity_log',    // Untuk melihat log aktivitas
             'read_announcement',    // Untuk melihat pengumuman
             'read_job'              // Untuk melihat lowongan kerja
@@ -73,6 +76,6 @@ class RolePermissionSeeder extends Seeder
         $user4 = User::find(4);
         $user4->assignRole('user');
 
-        
+
     }
 }

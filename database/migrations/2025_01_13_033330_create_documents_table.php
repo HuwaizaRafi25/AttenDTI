@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('file_path');
             $table->string('file_type');
             $table->bigInteger('file_size');
+            $table->integer('revision')->default(0);
             $table->text('description')->nullable();
             $table->boolean('remove_status')->default(false);
             $table->timestamps();

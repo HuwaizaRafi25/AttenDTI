@@ -171,6 +171,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         {{-- <script src="https://unpkg.com/@tailwindcss/browser@4"></script> --}}
         <link rel="stylesheet" href="{{ asset('assets/css/clock.css') }}">
+
         @notifyCss
         <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
         <link rel="stylesheet" href="{{ asset('node_modules/cropperjs/dist/cropper.min.css') }}">
@@ -329,7 +330,18 @@
                 </div>
 
                 <div class="menu">
-                    <li class="nav-link" data-navLink="1">
+                    <li class="nav-link" data-navLink="4">
+                        <div class="navhead">
+                            <span class="icon">
+                                {!! file_get_contents(public_path('assets/images/icons/job.svg')) !!}
+                            </span>
+                            <span class="text nav-text">Jobs</span>
+                        </div>
+                    </li>
+                </div>
+
+                <div class="menu">
+                    <li class="nav-link" data-navLink="5">
                         <div class="navhead">
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/documents.svg')) !!}
@@ -357,17 +369,17 @@
                     <div class="submenu">
                         <ul class="submenu-links flex flex-col gap-y-4 mt-2">
                             <li class="sub-nav-link">
-                                <span class="text sub-nav-text" data-subNavText="9">Help Center</span>
+                                <span class="text sub-nav-text" data-subNavText="4">Help Center</span>
                             </li>
                             <li class="sub-nav-link">
-                                <span class="text sub-nav-text" data-subNavText="10">Contact Support</span>
+                                <span class="text sub-nav-text" data-subNavText="5">Contact Support</span>
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="menu">
-                    <li class="nav-link" data-navLink="5">
+                    <li class="nav-link" data-navLink="6">
                         <div class="navhead">
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/setting.svg')) !!}
@@ -378,7 +390,7 @@
                 </div>
 
                 <div class="menu">
-                    <li class="nav-link" data-navLink="6">
+                    <li class="nav-link" data-navLink="7">
                         <div class="navhead">
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/activityLog.svg')) !!}

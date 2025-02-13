@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job', function (Blueprint $table) {
+        Schema::create('jobs', function (Blueprint $table) {
             $table->id();
             $table->string('job_title', 255);
-            $table->string('company_name', 255);
-            $table->text('company_address')->nullable();
-            $table->string('company_email', 255)->nullable()->unique();
+            $table->string('job_type', 255);
             $table->text('job_description')->nullable();
-            $table->string('location', 255)->nullable();
+            $table->text('qualification')->nullable();
+            $table->text('responsibility')->nullable();
             $table->decimal('salary', 10, 2)->nullable();
             $table->boolean('is_active')->default(true);
+            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->date('end_date')->nullable();
             $table->timestamps();
         });
     }

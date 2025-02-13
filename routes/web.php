@@ -2,10 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
@@ -13,8 +16,6 @@ use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\AccountSettingsController;
-use App\Http\Controllers\JobController;
-use App\Http\Controllers\PrintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,9 +92,11 @@ Route::middleware(['auth'])->group(
         });
 
         Route::get('/job', [JobController::class, 'index'])->name('job.view');
-        Route::post('/job-types', [JobController::class, 'addJobType'])->name('job-types.store');
         Route::post('/addjobs', [JobController::class, 'store'])->name('jobs.store');
         Route::get('/job_detail/{job}', [JobController::class, 'detail'])->name('job.detail');
+        Route::get('/jobs/search', [JobController::class, 'search'])->name('jobs.search');
+        Route::post('/jobs/{job}/pin', [JobController::class, 'pin'])->name('jobs.pin');
+        Route::post('/jobs/{job}/remove', [JobController::class, 'remove'])->name('jobs.remove');
 
         Route::get('/test_print', function () {
             return view('test-print');
@@ -104,7 +107,7 @@ Route::middleware(['auth'])->group(
         Route::get('/users/print/exit_clearance', [PrintController::class, 'index_exit'])->name('print.exit_clearance');
 
         Route::get('/users', [UserController::class, 'index'])->name('users.list');
-        Route::post('/users/store', [UserController::class, 'store'])->middleware(['Permission:manage-user', 'method.check:POST'])->name('users.store');
+        Route::post('/users/store', [UserController::class, 'store'])->middleware(['Permission:manage_user', 'method.check:POST'])->name('users.store');
         Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::get('/users/update/{id}', [UserController::class, 'updateView'])->name('users.updateView');
         Route::put('/users/updateAct/{id}', [UserController::class, 'update'])->name('users.updateAct');
@@ -117,9 +120,15 @@ Route::middleware(['auth'])->group(
         // Route::get('/users/export/csv', [UserController::class, 'exportCsv'])->name('users.exportCsv');
 
         Route::get('/roles-permissions', [RolePermissionController::class, 'index'])->name('rolesPermissions.index');
+        Route::post('/roles-permissions/store', [RolePermissionController::class, 'store'])->name('rolesPermissions.store');
+        Route::delete('/user-permission/unlink/{id}', [RolePermissionController::class, 'unlinkUserPermission'])->name('userPermission.unlink');
 
-        Route::get('/support/help-center', [SupportController::class, 'index'])->name('helpCenter');
-        Route::get('/support/contact-support', [SupportController::class, 'contactSupport'])->name('contactSupport');
+        Route::get('/locations', [LocationController::class, 'index'])->name('location.index');
+
+        Route::get('/documents', [DocumentController::class, 'index'])->name('document.index');
+
+        Route::get('/help-center', [SupportController::class, 'index'])->name('helpCenter');
+        Route::get('/contact-support', [SupportController::class, 'contactSupport'])->name('contactSupport');
 
         Route::get('/application-settings', [SettingController::class, 'applicationSetting'])->name('setelanUmum');
         // Route::get('/general-setting', [SettingController::class, 'generalSetting'])->name('setelanUmum');

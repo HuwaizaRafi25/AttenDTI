@@ -80,8 +80,13 @@ class User extends Authenticatable
         return $this->belongsTo(Location::class, 'placement_id');
     }
 
-    public function pinnedJobs()
+    public function jobs()
     {
-        return $this->belongsToMany(Job::class, 'pinned_job');
+        return $this->hasMany(Jobs::class);
+    }
+
+    public function pinned()
+    {
+        return $this->belongsToMany(Jobs::class, 'pinned_jobs', 'user_id', 'job_id');
     }
 }
