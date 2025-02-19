@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
+use App\Models\FaceUser;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -88,5 +89,20 @@ class User extends Authenticatable
     public function pinned()
     {
         return $this->belongsToMany(Jobs::class, 'pinned_jobs', 'user_id', 'job_id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function faceUser()
+    {
+        return $this->hasOne(FaceUser::class, 'user_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Tasks::class);
     }
 }

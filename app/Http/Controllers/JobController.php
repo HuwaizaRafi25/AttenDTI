@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\JobType;
 use Carbon\Carbon;
 use App\Models\Jobs;
-use App\Models\Companies;
 use App\Models\Pinned;
+use App\Models\JobType;
+use App\Models\Companies;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class JobController extends Controller
 {
@@ -18,6 +20,8 @@ class JobController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $selectedJobTypes = $request->input('jobType', []);
+        $selectedExperienceLevels = $request->input('experienceLevel', []);
 
         $jobs = Jobs::with(['companies', 'pinnedUsers'])
             ->when($search, function ($query, $search) {
@@ -27,8 +31,36 @@ class JobController extends Controller
                             ->orWhere('company_address', 'like', '%' . $search . '%');
                     });
             })
+            ->when(!empty($selectedJobTypes), function ($query) use ($selectedJobTypes) {
+                $query->where(function ($q) use ($selectedJobTypes) {
+                    foreach ($selectedJobTypes as $type) {
+                        $q->orWhere('job_type', 'like', '%' . $type . '%');
+                    }
+                });
+            })
+            ->when(!empty($selectedExperienceLevels), function ($query) use ($selectedExperienceLevels) {
+                $query->where(function ($q) use ($selectedExperienceLevels) {
+                    foreach ($selectedExperienceLevels as $level) {
+                        $q->orWhere('job_type', 'like', '%' . $level . '%');
+                    }
+                });
+            })
+            ->where('is_active', true)
             ->latest()
             ->get();
+
+        $activeJobs = Jobs::select('job_type')->where('is_active', true)->get();
+        $jobTypeCounts = [];
+
+        foreach ($activeJobs as $job) {
+            $types = explode(',', $job->job_type);
+            foreach ($types as $type) {
+                $type = trim($type);
+                if ($type !== '') {
+                    $jobTypeCounts[$type] = ($jobTypeCounts[$type] ?? 0) + 1;
+                }
+            }
+        }
 
         if ($request->ajax()) {
             return response()->json([
@@ -36,17 +68,16 @@ class JobController extends Controller
             ]);
         }
 
-        $maxSalary = Jobs::max('salary');
-        $formattedMaxSalary = number_format($maxSalary, 0, ',', '.');
-
-        return view('menus.job', compact('jobs', 'formattedMaxSalary'));
+        return view('menus.job', compact('jobs', 'jobTypeCounts'));
     }
+
 
     public function detail(Jobs $job)
     {
         $keywords = preg_split('/\s+/', $job->job_title, -1, PREG_SPLIT_NO_EMPTY);
 
         $similarJobs = Jobs::where('id', '!=', $job->id)
+            ->where('is_active', true)
             ->where(function ($query) use ($keywords) {
                 foreach ($keywords as $keyword) {
                     $query->orWhere('job_title', 'LIKE', '%' . $keyword . '%');
@@ -54,8 +85,12 @@ class JobController extends Controller
             })
             ->get();
 
-        return view('menus.job_detail', compact('job', 'similarJobs'));
+        $selectedJobTypes = explode(',', $job->job_type);
+        $selectedJobTypes = array_map('trim', $selectedJobTypes);
+
+        return view('menus.job_detail', compact('job', 'similarJobs', 'selectedJobTypes'));
     }
+
 
 
     public function pin(Request $request, Jobs $job)
@@ -75,7 +110,7 @@ class JobController extends Controller
             return response()->json(['status' => 'removed']);
         } else {
             Pinned::create([
-                'job_id'  => $job->id,
+                'job_id' => $job->id,
                 'user_id' => $user->id,
             ]);
             return response()->json(['status' => 'success']);
@@ -87,7 +122,7 @@ class JobController extends Controller
 
         $job->update(['is_active' => false]);
 
-        return redirect('menus.job');
+        return redirect('job');
     }
 
     /**
@@ -116,6 +151,9 @@ class JobController extends Controller
             'responsibilities' => 'array|max:10',
         ]);
 
+        // Hapus separator ribuan (titik) dari input salary
+        $salary = str_replace('.', '', $validated['salary']);
+
         $jobType = implode(',', $validated['jobType']);
         $qualifications = implode(',', array_filter($validated['qualifications'] ?? []));
         $responsibilities = implode(',', array_filter($validated['responsibilities'] ?? []));
@@ -134,7 +172,7 @@ class JobController extends Controller
             'job_type' => $jobType,
             'qualification' => $qualifications,
             'responsibility' => $responsibilities,
-            'salary' => $validated['salary'],
+            'salary' => $salary, // gunakan nilai salary yang sudah dibersihkan
             'company_id' => $company->id,
             'user_id' => auth()->id(),
             'end_date' => $validated['end_date'],
@@ -143,6 +181,7 @@ class JobController extends Controller
 
         return redirect()->back()->with('success', 'Job posted successfully');
     }
+
 
 
     /**
@@ -164,10 +203,61 @@ class JobController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $request->validate([
+                'jobTitle' => ['required', 'string', 'max:255'],
+                'companyName' => ['required', 'string', 'max:255'],
+                'location' => ['required', 'string', 'max:255'],
+                'companyEmail' => ['required', 'email'],
+                'salary' => ['required'],
+                'end_date' => ['required', 'date'],
+                'description' => ['required', 'string'],
+                'jobType' => ['required', 'array'],
+                'qualifications' => ['required', 'array'],
+                'responsibilities' => ['required', 'array'],
+            ]);
+
+            // dd($request->all());
+
+            $salary = str_replace('.', '', $request['salary']);
+
+            $job = Jobs::find($id);
+
+            $job->update([
+                'job_title' => $request['jobTitle'],
+                'salary' => $salary,
+                'end_date' => $request['end_date'],
+                'job_description' => $request['description'],
+                'job_type' => implode(',', $request['jobType']),
+            ]);
+
+            $company = $job->companies()->first();
+
+            $company->update([
+                'company_name' => $request['companyName'],
+                'company_address' => $request['location'],
+                'company_email' => $request['companyEmail'],
+            ]);
+
+            $job->update([
+                'qualification' => implode(',', $request['qualifications']),
+                'responsibility' => implode(',', $request['responsibilities']),
+            ]);
+
+            return redirect()->route('jobs.show', $job->id);
+        } catch (\Exception $e) {
+            Log::error('Failed to create user: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
+
+            notify()->error('Failed to create user. Please try again.', 'Failed!');
+            return redirect()->back();
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ProfileController;
@@ -66,30 +67,19 @@ Route::middleware(['auth'])->group(
         Route::get('/overview', [DashboardController::class, 'index'])->name('overview');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        Route::get('/attendances', function () {
-            return view('menus.attendance');
-        });
-
+        Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('/attendances/export/{type}', [AttendanceController::class, 'export'])->name('attendances.export');
         Route::get('/attendance/request/{id}', [AttendanceController::class, 'requestAttendance'])->name('attendance.request');
         Route::post('/attendance/verify-location', [AttendanceController::class, 'verifyLocation'])->name('attendance.verifyLocation');
-        Route::post('/api/verify-wifi', function (Request $request) {
-            $ssid = $request->input('ssid');
-            $validSSIDs = ['eduroam']; // Daftar SSID yang valid
-
-            if (in_array($ssid, $validSSIDs)) {
-                return response()->json(['message' => 'Verifikasi Wi-Fi berhasil.']);
-            } else {
-                return response()->json(['message' => 'Verifikasi Wi-Fi gagal.'], 400);
-            }
-        });
+        Route::post('/register-face', [AttendanceController::class, 'registerFace']);
+        Route::post('/verify-face', [AttendanceController::class, 'verifyFace']);
 
         Route::get('/announcement', function () {
             return view('menus.announcement');
         });
 
-        Route::get('/task', function () {
-            return view('menus.task');
-        });
+        Route::get('/task', [TaskController::class, 'index'])->name('task.view');
+        Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
 
         Route::get('/job', [JobController::class, 'index'])->name('job.view');
         Route::post('/addjobs', [JobController::class, 'store'])->name('jobs.store');
@@ -97,9 +87,21 @@ Route::middleware(['auth'])->group(
         Route::get('/jobs/search', [JobController::class, 'search'])->name('jobs.search');
         Route::post('/jobs/{job}/pin', [JobController::class, 'pin'])->name('jobs.pin');
         Route::post('/jobs/{job}/remove', [JobController::class, 'remove'])->name('jobs.remove');
+        Route::put('/jobs/update/{id}', [JobController::class, 'update'])->name('jobs.update');
 
         Route::get('/test_print', function () {
             return view('test-print');
+        });
+        Route::get('/addface', function () {
+            return view('menus.add_face');
+        });
+        // routes/web.php
+        Route::get('/models/{file}', function ($file) {
+            $path = public_path("models/$file");
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            return response()->file($path);
         });
 
         Route::get('/users/{username}', [UserController::class, 'view'])->name('user.view');
@@ -115,9 +117,7 @@ Route::middleware(['auth'])->group(
         Route::get('/users/get/placement', [UserController::class, 'getPlacements'])->name('users.getPlacements');
         Route::get('/users/check/username', [UserController::class, 'checkUsername'])->name('checkUsername');
         Route::get('/users/check/itb-account', [UserController::class, 'checkITBAccount'])->name('checkItbAccount');
-        // Route::get('/users/export/pdf', [UserController::class, 'exportPDF'])->name('users.exportPDF');
         Route::get('/users/export/{type}', [UserController::class, 'export'])->name('users.export');
-        // Route::get('/users/export/csv', [UserController::class, 'exportCsv'])->name('users.exportCsv');
 
         Route::get('/roles-permissions', [RolePermissionController::class, 'index'])->name('rolesPermissions.index');
         Route::post('/roles-permissions/store', [RolePermissionController::class, 'store'])->name('rolesPermissions.store');

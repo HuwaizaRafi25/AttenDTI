@@ -11,7 +11,7 @@
     @notifyCss
     <style>
         #vid {
-            filter: contrast(1.3) sepia(-1) grayscale(1) saturate(1.5);
+            filter: contrast(1.2) brightness(1.1) sepia(0.2) grayscale(0.1) saturate(1.3) hue-rotate(10deg);
         }
     </style>
 </head>
@@ -66,11 +66,14 @@
                 <p class="text-lg font-semibold absolute bottom-6">Mencari lokasi Anda...</p>
             </div>
             <div>
-                <video id="vid" class="rounded-lg shadow-md w-96 h-64 object-cover bg-black -scale-x-[1] hidden"></video>
+                <video id="vid"
+                    class="rounded-lg shadow-md w-96 h-64 object-cover bg-black -scale-x-[1] hidden"></video>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@capacitor/network@7.0.0/dist/plugin.cjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
     <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         // Tampilkan loading gif
@@ -158,7 +161,7 @@
 
                             markStepWorking('stepContainer2', 'stepSubcontainer2', 'stepCircle2');
                             // Selanjutnya, munculkan instruksi untuk verifikasi gerakan
-                            checkWiFi();
+                            verifyFace()
                             // showMotionVerification();
                         } else {
                             document.getElementById('content').innerHTML = `<p>${data.message}</p>`;
@@ -177,92 +180,6 @@
             // loadingGif.style.display = 'none';
             // console.error('Error mendapatkan lokasi: ', error);
             // document.getElementById('content').innerHTML = `<p>Gagal mendapatkan lokasi Anda. Silakan periksa pengaturan GPS dan coba lagi.</p>`;
-        }
-
-        async function checkWiFi() {
-            const status = await Network.getStatus();
-            if (status.connected && status.ssid === "ITB Hotspot") {
-                console.log("Terhubung ke Wi-Fi yang valid:", status.ssid);
-                // Kirim data ke backend Laravel
-                fetch('/api/verify-wifi', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ssid: status.ssid
-                    })
-                });
-            } else {
-                console.log("Tidak terhubung ke Wi-Fi yang valid.");
-                alert("Silakan hubungkan ke jaringan Wi-Fi kantor.");
-            }
-        }
-
-        // Fungsi untuk menampilkan verifikasi gerakan
-        function showMotionVerification() {
-            // Contoh sederhana: tampilkan pesan instruksi untuk menggeser layar
-            const contentDiv = document.getElementById('content');
-            contentDiv.innerHTML += `
-            <p>Geser layar dari kiri ke kanan untuk verifikasi gerakan.</p>
-                <!-- Tempat animasi untuk verifikasi gerakan -->
-                <img id="motionLoadingGif" src="/images/motion_loading.gif" alt="Loading Motion..." style="display: none; width:50px;">
-                <div id="motionArea" style="border: 1px solid #ccc; padding: 20px; margin-top: 10px;">
-                    Geser di area ini...
-                </div>
-            `;
-
-            // Inisialisasi mekanisme pengambilan koordinat gerakan
-            initMotionDetection();
-        }
-
-        // Contoh sederhana pendeteksi gerakan menggunakan touch events
-        function initMotionDetection() {
-            const motionArea = document.getElementById('motionArea');
-            const motionLoadingGif = document.getElementById('motionLoadingGif');
-            let positions = [];
-
-            motionArea.addEventListener('touchstart', function(e) {
-                positions = []; // reset posisi
-            });
-
-            motionArea.addEventListener('touchmove', function(e) {
-                // Tangkap koordinat sentuhan
-                const touch = e.touches[0];
-                positions.push({
-                    x: touch.clientX,
-                    y: touch.clientY
-                });
-                // Tampilkan animasi loading kecil jika ingin memberi umpan balik visual
-                motionLoadingGif.style.display = 'block';
-            });
-
-            motionArea.addEventListener('touchend', function(e) {
-                motionLoadingGif.style.display = 'none';
-                // Validasi apakah posisi gerakan cukup bervariasi (contoh: minimal 3 koordinat berbeda)
-                if (positions.length >= 3 && isMotionValid(positions)) {
-                    markStepCompleted('step2');
-                    document.getElementById('content').innerHTML += `<p>Verifikasi gerakan berhasil!</p>`;
-                    // Lanjutkan ke langkah selanjutnya (misalnya simpan data attendance atau tampilkan instruksi tambahan)
-                } else {
-                    document.getElementById('content').innerHTML +=
-                        `<p>Verifikasi gerakan gagal. Silakan coba lagi.</p>`;
-                }
-            });
-        }
-
-        // Fungsi sederhana untuk validasi koordinat gerakan (cek apakah gerakan tidak monoton)
-        function isMotionValid(positions) {
-            // Misal: hitung jarak total yang ditempuh minimal
-            let totalDistance = 0;
-            for (let i = 1; i < positions.length; i++) {
-                totalDistance += Math.hypot(
-                    positions[i].x - positions[i - 1].x,
-                    positions[i].y - positions[i - 1].y
-                );
-            }
-            // Misal ambil nilai threshold 100px sebagai validasi awal
-            return totalDistance > 100;
         }
     </script>
     <script>
@@ -284,6 +201,85 @@
                     });
                 })
                 .catch(alert);
+        });
+    </script>
+
+    <script>
+        let modelsLoaded = false; // Track whether models are loaded
+
+        async function verifyFace() {
+            if (!modelsLoaded) {
+                console.warn('Models are not loaded yet. Skipping verification.');
+                return;
+            }
+
+            const videoEl = document.getElementById('vid');
+            try {
+                const detection = await faceapi.detectSingleFace(videoEl)
+                    .withFaceLandmarks()
+                    .withFaceDescriptor();
+
+                if (detection) {
+                    const descriptor = new Float32Array(detection.descriptor);
+                    const binaryString = btoa(String.fromCharCode(...new Uint8Array(descriptor.buffer)));
+                    const response = await fetch('/verify-face', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        },
+                        body: JSON.stringify({
+                            face_code: binaryString
+                        })
+                    });
+                    const result = await response.json();
+                    if (result.match) {
+                        // Lanjutkan proses presensi
+                        markStepCompleted('stepContainer2', 'stepSubcontainer2', 'stepCircle2');
+                        document.getElementById('content').innerHTML = '<p>Verifikasi wajah berhasil!</p>';
+                        markStepCompleted('stepContainer2', 'stepSubcontainer2', 'stepCircle2');
+                        const stepLine2 = document.getElementById('stepLine2');
+                        const vidContainer = document.getElementById('vid');
+                        vidContainer.classList.remove('hidden');
+                        stepLine2.classList.remove('border-gray-500');
+                        stepLine2.classList.remove('opacity-60');
+                        stepLine2.classList.add('border-blue-500');
+                        markStepWorking('stepContainer3', 'stepSubcontainer3', 'stepCircle3');
+                        // nonaktifkan initFaceVerification
+
+                    } else {
+                        // Tampilkan pesan error
+                        document.getElementById('content').innerHTML =
+                            '<p>Verifikasi wajah gagal. Wajah tidak cocok.</p>';
+                    }
+                } else {
+                    console.warn('No face detected.');
+                }
+            } catch (error) {
+                console.error('Error during face verification:', error);
+            }
+        }
+
+        async function initFaceVerification() {
+            try {
+                console.log('Loading face-api models...');
+                await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
+                await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+                await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+                console.log('Models loaded successfully.');
+                modelsLoaded = true; // Mark models as loaded
+
+                // Start periodic face verification
+                setInterval(verifyFace, 2000); // Cek setiap 5 detik
+            } catch (error) {
+                console.error('Error loading models:', error);
+            }
+        }
+
+        // Initialize face verification when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initFaceVerification();
         });
     </script>
 </body>

@@ -168,7 +168,7 @@
                     </div>
                 @endforeach
                 <div
-                    class="cursor-pointer w-full h-auto rounded-lg p-6 border-blue-500 border-2 bg-blue-500/30 hover:bg-blue-500/55 transition-all flex items-center justify-center">
+                    class="cursor-pointer w-full h-auto rounded-lg p-6 border-blue-500 opacity-65 border-2 bg-blue-500/30 hover:bg-blue-500/55 transition-all flex items-center justify-center">
                     <img src="{{ asset('assets/images/icons/plus_blue.svg') }}" class="w-8 h-8 opacity-85" alt="">
                     <span class="text-blue-600 text-lg font-semibold">Add New Location</span>
                 </div>

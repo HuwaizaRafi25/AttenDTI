@@ -202,7 +202,7 @@
                             </label>
                         </div>
                         <button
-                            class="add-button -mt-1 max-h-10 flex items-center bg-[#545DB0ff] text-white font-semibold px-4 text-sm rounded hover:bg-[#4f57a5] transition duration-200">
+                            class="add-button -mt-1 max-h-10 flex items-center bg-[#187bcd] text-white font-semibold px-4 text-sm rounded hover:bg-[#4f57a5] transition duration-200">
                             <span class="icon mr-2 scale-150">
                                 {!! file_get_contents(public_path('assets/images/icons/plus.svg')) !!}
                             </span>

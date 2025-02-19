@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Jobs extends Model
 {
@@ -44,5 +45,10 @@ class Jobs extends Model
     public function pinnedUsers()
     {
         return $this->belongsToMany(User::class, 'pinned_jobs', 'job_id', 'user_id');
+    }
+
+    public function getActiveStatusAttribute()
+    {
+        return Carbon::now()->lte(Carbon::parse($this->end_date));
     }
 }

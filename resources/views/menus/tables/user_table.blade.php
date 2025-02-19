@@ -48,7 +48,7 @@
                 <p class="font-semibold text-gray-800">{{ $user->itb_account }}</p>
             </td>
             <td class="py-3 pl-6 text-left">
-                <span class="text-[#545DB0ff] text-base font-semibold rounded-md">
+                <span class="text-[#187bcd] text-base font-semibold rounded-md">
                     {!! $user->hasRole('admin')
                         ? '<p class="p-1 px-2 bg-[#6770c6]/30 rounded-md w-fit">DTI ITB</p>'
                         : ($user->institution

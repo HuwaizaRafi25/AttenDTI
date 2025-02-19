@@ -401,7 +401,7 @@
                 </div>
             </div>
 
-            <div class="sticky bottom-3 z-20">
+            <div class="sticky -bottom-6 mt-2.5 z-20">
                 <div class="p-2 rounded-md bg-[#bec2eb]">
                     <div class="flex items-center justify-between w-full">
                         <div class="flex items-center gap-x-2">

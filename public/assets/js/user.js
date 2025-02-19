@@ -437,21 +437,31 @@ document.addEventListener("DOMContentLoaded", function () {
                     let major = baris.getAttribute("data-major");
                     let modalLihat = document.getElementById("userModal");
 
+                    document.getElementById("gradientGenderColor").classList.remove("from-blue-600", "to-blue-300");
+
                     if (gender == 1) {
                         document
                             .getElementById("gradientGenderColor")
-                            .classList.remove("from-pink-600", "to-pink-300");
+                            .classList.remove("from-red-600", "to-red-300");
                         document
                             .getElementById("gradientGenderColor")
                             .classList.add("from-blue-600", "to-blue-300");
+                    } else if (gender == 0) {
+                        document
+                            .getElementById("gradientGenderColor")
+                            .classList.remove("from-blue-600", "to-blue-300");
+                        document
+                            .getElementById("gradientGenderColor")
+                            .classList.add("from-red-600", "to-red-300");
                     } else {
                         document
                             .getElementById("gradientGenderColor")
                             .classList.remove("from-blue-600", "to-blue-300");
                         document
                             .getElementById("gradientGenderColor")
-                            .classList.add("from-pink-600", "to-pink-300");
+                            .classList.remove("from-red-600", "to-red-300");
                     }
+
 
                     if (pic) {
                         document.getElementById(

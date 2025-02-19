@@ -1,10 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+
+    <style>
+        .filter-checkbox:checked+div {
+            @apply bg-blue-100 border-blue-500;
+        }
+    </style>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-lg mt-4 p-4 sm:p-6">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Job Listings</h2>
+                <div class="flex">
+                    <h2 class="text-2xl font-bold text-gray-900 mr-10 cursor-pointer">Job Listings</h2>
+                    <!-- <h2 class="text-2xl font-bold text-gray-900 cursor-pointer">Liked Jobs</h2> -->
+                </div>
                 <button id="openModal"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
                     <i class="fas fa-plus mr-2"></i>
@@ -64,7 +73,7 @@
                                             <label for="salary"
                                                 class="block text-sm font-medium text-gray-700 mb-1">Salary <span
                                                     class="text-red-700">*</span></label>
-                                            <input type="number" id="salary" name="salary"
+                                            <input type="text" id="salary" name="salary"
                                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                 required>
                                         </div>
@@ -80,6 +89,7 @@
 
                                 <div>
                                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Job Type and Experience</h2>
+                                    <div id="jobTypeValidation" class="space-y-2 mb-4"></div>
                                     <div class="space-y-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Job Type <span
@@ -159,6 +169,7 @@
                                 <div>
                                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Qualifications and
                                         Responsibilities</h2>
+                                    <div id="respQualValidation" class="space-y-2 mb-4"></div>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Qualifications
@@ -191,6 +202,7 @@
                                         Post Job
                                     </button>
                                 </div>
+                                <div id="validationWarnings" class="space-y-2 mb-4"></div>
                             </div>
                         </form>
                     </div>
@@ -215,7 +227,7 @@
                 <div class="w-full lg:w-64 flex-shrink-0">
                     <div class="flex justify-between items-center mb-4 lg:hidden">
                         <button class="text-gray-700 text-sm flex items-center space-x-1 transition-all duration-200"
-                            onclick="toggleDropdown()">
+                            onclick="toggleDropdown(event)">
                             <h3 class="font-semibold">Filter Jobs</h3>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-200"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -223,61 +235,60 @@
                                     d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
+
                     </div>
 
+                    @php
+                        // Daftar job types (kategori utama)
+                        $jobTypes = ['Full Time', 'Part Time', 'Internship', 'Project Work', 'Volunteering'];
+
+                        // Daftar experience levels (tingkatan pengalaman)
+                        $jobLevels = ['Entry Level', 'Intermediate', 'Expert'];
+                    @endphp
+
+                    <!-- Di dalam bagian filter -->
                     <div id="jobTypeDropdown" class="hidden md:block space-y-3 transition-all duration-200">
                         <div class="flex items-center space-x-2 justify-between">
                             <h3 class="font-semibold">Job Type</h3>
-                            <a href="#" class="text-blue-500 text-sm lg:block">Clear all</a>
+                            <a href="{{ route('job.view') }}" class="text-blue-500 text-sm lg:block">Clear all</a>
                         </div>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" class="rounded text-blue-500">
-                            <span>Full time</span>
-                        </label>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" class="rounded text-blue-500">
-                            <span>Part time</span>
-                        </label>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" class="rounded text-blue-500">
-                            <span>Internship</span>
-                        </label>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" class="rounded text-blue-500">
-                            <span>Project work</span>
-                        </label>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" class="rounded text-blue-500">
-                            <span>Volunteering</span>
-                        </label>
+                        <div class="space-y-2">
+                            @foreach ($jobTypes as $jobType)
+                                <label class="flex items-center space-x-2 mb-1">
+                                    <input type="checkbox" name="jobType[]" value="{{ $jobType }}"
+                                        {{ in_array($jobType, (array) request('jobType', [])) ? 'checked' : '' }}
+                                        class="rounded text-blue-500 filter-checkbox">
+                                    <div class="flex space-x-4 w-full justify-between">
+                                        <span>{{ $jobType }}</span>
+                                        <span>{{ $jobTypeCounts[$jobType] ?? 0 }}</span>
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+
                         <div class="flex items-center space-x-2 justify-between">
                             <h3 class="font-semibold">Experience Level</h3>
                         </div>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" class="rounded text-blue-500">
-                            <span>Entry Level</span>
-                        </label>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" class="rounded text-blue-500">
-                            <span>Intermediate</span>
-                        </label>
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" class="rounded text-blue-500">
-                            <span>Expert</span>
-                        </label>
-                        <div class="mt-8">
-                            <h3 class="font-semibold mb-4">Salary Range</h3>
-                            <input type="range" class="w-full" min="50000" max="120000">
-                            <div class="flex justify-between text-sm text-gray-600">
-                                <span>Rp 0,00</span>
-                                <span>Rp {{ $formattedMaxSalary }}</span>
-                            </div>
-                        </div>
+                        @foreach ($jobLevels as $jobLevel)
+                            <label class="flex items-center space-x-2 mb-1">
+                                <input type="checkbox" name="experienceLevel[]" value="{{ $jobLevel }}"
+                                    {{ in_array($jobLevel, (array) request('experienceLevel', [])) ? 'checked' : '' }}
+                                    class="rounded text-blue-500 filter-checkbox">
+                                <div class="flex space-x-4 w-full justify-between">
+                                    <span>{{ $jobLevel }}</span>
+                                    <span>{{ $jobTypeCounts[$jobLevel] ?? 0 }}</span>
+                                </div>
+                            </label>
+                        @endforeach
                     </div>
-
                 </div>
                 <div id="jobList" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    @foreach ($jobs as $job)
+                    @forelse ($jobs as $job)
+                        @if (!$job->active_status)
+                            {{-- Jika job sudah tidak aktif, Anda bisa menampilkan label "Closed" atau bahkan melewati render --}}
+                            @continue
+                        @endif
+
                         @php
                             $isPinned =
                                 auth()->check() &&
@@ -286,8 +297,6 @@
                                     ->where('users.id', auth()->user()->id)
                                     ->exists();
                         @endphp
-
-
                         <div class="relative">
                             <a href="{{ route('job.detail', $job->id) }}">
                                 <div class="border rounded-lg p-4 hover:shadow-lg transition-shadow">
@@ -325,21 +334,188 @@
                                     </div>
                                 </div>
                             </a>
-                            <!-- Tombol heart dengan pengecekan status pinned -->
                             <div class="absolute top-4 right-4 pin-job cursor-pointer
-            {{ $isPinned ? 'text-red-500' : 'text-gray-400 hover:text-gray-600' }}"
+                {{ $isPinned ? 'text-red-500' : 'text-gray-400 hover:text-gray-600' }}"
                                 data-job-id="{{ $job->id }}">
                                 <i class="{{ $isPinned ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <p class="text-gray-600">No jobs found.</p>
+                    @endforelse
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        function fetchJobs() {
+            const searchTerm = document.getElementById('searchInput')?.value || '';
+            const selectedJobTypes = Array.from(document.querySelectorAll('input[name="jobType[]"]:checked'))
+                .map(cb => cb.value);
+            const selectedExperienceLevels = Array.from(document.querySelectorAll(
+                    'input[name="experienceLevel[]"]:checked'))
+                .map(cb => cb.value);
+
+            const params = new URLSearchParams();
+            params.append('search', searchTerm);
+            selectedJobTypes.forEach(type => params.append('jobType[]', type));
+            selectedExperienceLevels.forEach(level => params.append('jobType[]', level));
+
+            // Tampilkan loading state
+            const jobList = document.getElementById('jobList');
+            if (jobList) {
+                jobList.innerHTML = '<div class="col-span-full text-center py-4">Loading...</div>';
+            }
+
+            fetch(`${window.location.pathname}?${params.toString()}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    updateJobList(data.jobs);
+                    updateURL(params);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (jobList) {
+                        jobList.innerHTML =
+                            '<div class="col-span-full text-center py-4 text-red-500">Error loading jobs. Please try again.</div>';
+                    }
+                });
+        }
+
+        function updateJobList(jobs) {
+            const jobList = document.getElementById('jobList');
+            if (!jobList) return;
+
+            if (!jobs.length) {
+                jobList.innerHTML = '<div class="col-span-full text-center py-4">No jobs found.</div>';
+                return;
+            }
+
+            jobList.innerHTML = jobs.map(job => {
+                const companyName = job.companies?.company_name || '';
+                const firstLetter = companyName.charAt(0).toUpperCase();
+                const jobTypes = job.job_type?.split(',').map(type =>
+                    `<span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">${type.trim()}</span>`
+                ).join('') || '';
+
+                const isPinned = job.pinned_users?.some(user => user.id === window.userId);
+
+                return `
+                <div class="relative">
+                    <a href="/job_detail/${job.id}">
+                        <div class="border rounded-lg p-4 hover:shadow-lg transition-shadow">
+                            <div class="flex justify-between items-start">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg overflow-hidden flex items-center justify-center">
+                                        <span class="text-blue-600 font-bold">${firstLetter}</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold">${job.job_title}</h3>
+                                        <p class="text-sm text-gray-600">${companyName}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                ${jobTypes}
+                            </div>
+                            <p class="mt-3 text-sm text-gray-600 line-clamp-2">${job.job_description}</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="font-semibold">
+                                    Rp ${parseInt(job.salary).toLocaleString('id-ID')}/month
+                                </span>
+                                <span class="text-sm text-gray-500">
+                                    Closing on ${job.end_date}
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="absolute top-4 right-4 pin-job cursor-pointer ${isPinned ? 'text-red-500' : 'text-gray-400 hover:text-gray-600'}"
+                         data-job-id="${job.id}">
+                        <i class="${isPinned ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                    </div>
+                </div>
+            `;
+            }).join('');
+
+            // Pasang ulang event listener untuk pin job
+            attachPinJobListeners();
+        }
+
+        function attachPinJobListeners() {
+            document.querySelectorAll('.pin-job').forEach(element => {
+                element.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    const jobId = this.getAttribute('data-job-id');
+                    const heartContainer = this;
+                    const icon = this.querySelector('i');
+
+                    fetch(`/jobs/${jobId}/pin`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .content
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                icon.classList.replace('fa-regular', 'fa-solid');
+                                heartContainer.classList.remove('text-gray-400', 'hover:text-gray-600');
+                                heartContainer.classList.add('text-red-500');
+                            } else if (data.status === 'removed') {
+                                icon.classList.replace('fa-solid', 'fa-regular');
+                                heartContainer.classList.remove('text-red-500');
+                                heartContainer.classList.add('text-gray-400', 'hover:text-gray-600');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+        }
+
+        function updateURL(params) {
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            window.history.pushState({}, '', newUrl);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Inisialisasi event listener untuk filter dan pencarian
         document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', fetchJobs);
+            });
+
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(fetchJobs, 300));
+            }
+
+            // Lakukan fetch awal jika ada filter yang dipilih
+            if (document.querySelectorAll('.filter-checkbox:checked').length > 0) {
+                fetchJobs();
+            }
+        });
+
+
+        /* === Modal, Form Input, dan Validasi (Kode Kedua) === */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal dan penanganan form job posting
             const modal = document.getElementById('modal');
             const openModalBtn = document.getElementById('openModal');
             const backButton = document.getElementById('backButton');
@@ -348,10 +524,12 @@
             const qualificationsContainer = document.getElementById('qualificationsContainer');
             const responsibilitiesContainer = document.getElementById('responsibilitiesContainer');
 
-            openModalBtn.addEventListener('click', () => {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            });
+            if (openModalBtn) {
+                openModalBtn.addEventListener('click', () => {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                });
+            }
 
             modal.addEventListener('click', function(e) {
                 if (e.target === this || e.target === backButton) {
@@ -404,11 +582,11 @@
                 }
             });
 
+            // Penanganan pemilihan job type
             document.querySelectorAll('.job-type-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const checkbox = this.querySelector('input[type="checkbox"]');
                     checkbox.checked = !checkbox.checked;
-
                     if (checkbox.checked) {
                         this.classList.add('bg-blue-500', 'text-white');
                         this.classList.remove('border-gray-300', 'hover:bg-blue-50');
@@ -418,212 +596,193 @@
                     }
                 });
             });
-        });
 
-        function toggleDropdown() {
-            const dropdown = document.getElementById('jobTypeDropdown');
-            const button = document.querySelector('button[onclick="toggleDropdown()"]');
-            const icon = button.querySelector('svg');
-
-            if (dropdown.classList.contains('hidden')) {
-                dropdown.classList.remove('hidden');
-                dropdown.classList.add('block');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                dropdown.classList.add('hidden');
-                dropdown.classList.remove('block');
-                icon.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('jobTypeDropdown');
-            const button = document.querySelector('button[onclick="toggleDropdown()"]');
-
-            if (button && !button.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-                dropdown.classList.remove('block');
+            // Dropdown untuk filter job type
+            function toggleDropdown(e) {
+                e.stopPropagation(); // Hentikan propagasi event agar tidak ditangani oleh listener dokumen
+                const dropdown = document.getElementById('jobTypeDropdown');
+                // Gunakan e.currentTarget untuk mendapatkan tombol yang diklik
+                const button = e.currentTarget;
                 const icon = button.querySelector('svg');
-                if (icon) {
+                if (dropdown.classList.contains('hidden')) {
+                    dropdown.classList.remove('hidden');
+                    dropdown.classList.add('block');
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    dropdown.classList.add('hidden');
+                    dropdown.classList.remove('block');
                     icon.style.transform = 'rotate(0deg)';
                 }
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const dropdownIcon = document.querySelector('button[onclick="toggleDropdown()"] svg');
+            // Pastikan tombol dropdown menggunakan event listener daripada inline JS jika memungkinkan
+            const dropdownToggleBtn = document.querySelector('button[onclick^="toggleDropdown"]');
+            if (dropdownToggleBtn) {
+                dropdownToggleBtn.addEventListener('click', toggleDropdown);
+            }
+
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('jobTypeDropdown');
+                const button = document.querySelector('button[onclick^="toggleDropdown"]');
+                if (button && !button.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.classList.add('hidden');
+                    dropdown.classList.remove('block');
+                    const icon = button.querySelector('svg');
+                    if (icon) {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                }
+            });
+
+            const dropdownIcon = document.querySelector('button[onclick^="toggleDropdown"] svg');
             if (dropdownIcon) {
                 dropdownIcon.style.transition = 'transform 0.2s ease-in-out';
             }
+
+            // Atur tanggal minimum untuk input end date
+            const endDateInput = document.getElementById('end_date');
+            if (endDateInput) {
+                const today = new Date();
+                const minDate = new Date();
+                minDate.setDate(today.getDate() + 3);
+                const year = minDate.getFullYear();
+                const month = String(minDate.getMonth() + 1).padStart(2, '0');
+                const day = String(minDate.getDate()).padStart(2, '0');
+                endDateInput.setAttribute('min', `${year}-${month}-${day}`);
+            }
         });
 
-        const endDateInput = document.getElementById('end_date');
-
-        const today = new Date();
-
-        const minDate = new Date();
-        minDate.setDate(today.getDate() + 3);
-
-        const year = minDate.getFullYear();
-        const month = String(minDate.getMonth() + 1).padStart(2, '0');
-        const day = String(minDate.getDate()).padStart(2, '0');
-
-        endDateInput.setAttribute('min', `${year}-${month}-${day}`);
-
+        // Validasi form job posting
         document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
+            const jobTypeContainer = document.getElementById('jobTypeContainer');
+            const responsibilitiesContainer = document.getElementById('responsibilitiesContainer');
+            const qualificationsContainer = document.getElementById('qualificationsContainer');
+            const jobTypeValidation = document.getElementById('jobTypeValidation');
+            const respQualValidation = document.getElementById('respQualValidation');
+            const jobPostingForm = document.getElementById('jobPostingForm');
+            const addResponsibilityBtn = document.getElementById('addResponsibilityBtn');
+            const addQualificationBtn = document.getElementById('addQualificationBtn');
 
-            let timeout = null;
+            function validateForm() {
+                let isValid = true;
+                let jobTypeWarnings = [];
+                let respQualWarnings = [];
 
-            searchInput.addEventListener('input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(function() {
-                    const query = searchInput.value;
-                    fetch(`{{ route('job.view') }}?search=` + encodeURIComponent(query), {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById('jobsContainer').innerHTML = data.html;
-                        })
-                        .catch(error => console.error('Error fetching jobs:', error));
-                }, 300);
+                const selectedJobTypes = jobTypeContainer.querySelectorAll('input[type="checkbox"]:checked');
+                if (selectedJobTypes.length === 0) {
+                    jobTypeWarnings.push('Please select at least one Job Type');
+                    isValid = false;
+                }
+
+                const responsibilities = responsibilitiesContainer.querySelectorAll('input[type="text"]');
+                const qualifications = qualificationsContainer.querySelectorAll('input[type="text"]');
+
+                if (responsibilities.length === 0 || qualifications.length === 0) {
+                    respQualWarnings.push('Please add at least one Responsibility and one Qualification');
+                    isValid = false;
+                } else {
+                    const emptyResponsibilities = Array.from(responsibilities).some(input => !input.value.trim());
+                    const emptyQualifications = Array.from(qualifications).some(input => !input.value.trim());
+                    if (emptyResponsibilities || emptyQualifications) {
+                        respQualWarnings.push('Please fill in all Responsibilities and Qualifications');
+                        isValid = false;
+                    }
+                }
+
+                jobTypeValidation.innerHTML = jobTypeWarnings
+                    .map(warning => `<div class="text-red-500 text-sm">${warning}</div>`)
+                    .join('');
+                respQualValidation.innerHTML = respQualWarnings
+                    .map(warning => `<div class="text-red-500 text-sm">${warning}</div>`)
+                    .join('');
+
+                return isValid;
+            }
+
+            jobTypeContainer.addEventListener('click', validateForm);
+            responsibilitiesContainer.addEventListener('input', validateForm);
+            qualificationsContainer.addEventListener('input', validateForm);
+
+            jobPostingForm.addEventListener('submit', function(e) {
+                if (!validateForm()) {
+                    e.preventDefault();
+                    jobTypeValidation.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+
+            addResponsibilityBtn.addEventListener('click', () => setTimeout(validateForm, 0));
+            addQualificationBtn.addEventListener('click', () => setTimeout(validateForm, 0));
+
+            responsibilitiesContainer.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON') {
+                    setTimeout(validateForm, 0);
+                }
+            });
+
+            qualificationsContainer.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON') {
+                    setTimeout(validateForm, 0);
+                }
             });
         });
 
-        function debounce(func, delay) {
-            let timeout;
-            return function(...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), delay);
-            };
+        // Format input salary (tetap dipertahankan)
+        const salaryInput = document.getElementById('salary');
+        if (salaryInput) {
+            salaryInput.addEventListener('input', function(e) {
+                let numericValue = this.value.replace(/\D/g, '');
+                if (numericValue) {
+                    let formattedValue = new Intl.NumberFormat('id-ID').format(numericValue);
+                    this.value = formattedValue;
+                } else {
+                    this.value = '';
+                }
+            });
         }
 
-        const searchInput = document.getElementById('searchInput');
-        const jobList = document.getElementById('jobList');
+        // Penanganan pin job (jika diperlukan)
+        document.querySelectorAll('.pin-job').forEach(function(element) {
+            element.addEventListener('click', function(event) {
+                event.preventDefault();
 
-        const fetchJobs = () => {
-            const searchTerm = searchInput.value;
-            fetch(`{{ route('job.view') }}?search=${encodeURIComponent(searchTerm)}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    jobList.innerHTML = '';
+                const jobId = this.getAttribute('data-job-id');
+                const heartContainer = this;
+                const icon = this.querySelector('i');
+                const url = "{{ url('/jobs') }}/" + jobId + "/pin";
 
-                    if (data.jobs.length > 0) {
-                        data.jobs.forEach(job => {
-                            const card = document.createElement('a');
-                            card.href = `/job_detail/${job.id}`;
-                            card.className = 'block';
-
-                            const companyName = job.companies ? job.companies.company_name : '';
-                            const firstLetter = companyName ? companyName.charAt(0).toUpperCase() : '';
-
-                            let jobTypes = '';
-                            if (job.job_type) {
-                                jobTypes = job.job_type.split(',').map(type => {
-                                    return `<span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">${type.trim()}</span>`;
-                                }).join('');
-                            }
-
-                            card.innerHTML = `
-                        <div class="border rounded-lg p-4 hover:shadow-lg transition-shadow">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-lg overflow-hidden flex items-center justify-center">
-                                        <span class="text-blue-600 font-bold">${firstLetter}</span>
-                                    </div>
-                                    <div>
-                                        <h3 class="font-semibold">${job.job_title}</h3>
-                                        <p class="text-sm text-gray-600">${companyName}</p>
-                                    </div>
-                                </div>
-                                <div class="flex">
-                                    <div class="text-gray-400 hover:text-gray-600 mr-2">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex flex-wrap gap-2 mt-3">
-                                ${jobTypes}
-                            </div>
-                            <p class="mt-3 text-sm text-gray-600 line-clamp-2">
-                                ${job.job_description}
-                            </p>
-                            <div class="flex justify-between items-center mt-4">
-                                <span class="font-semibold">
-                                    Rp ${parseInt(job.salary).toLocaleString('id-ID')}/month
-                                </span>
-                                <span class="text-sm text-gray-500">
-                                    Closing on ${job.end_date}
-                                </span>
-                            </div>
-                        </div>
-                    `;
-                            jobList.appendChild(card);
-                        });
-                    } else {
-                        jobList.innerHTML = '<p class="text-gray-600">No jobs found.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        };
-
-        const debouncedFetchJobs = debounce(fetchJobs, 300);
-        searchInput.addEventListener('input', debouncedFetchJobs);
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.pin-job').forEach(function(element) {
-                element.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    const jobId = this.getAttribute('data-job-id');
-                    const heartContainer = this;
-                    const icon = this.querySelector('i');
-
-                    const url = "{{ url('/jobs') }}/" + jobId + "/pin";
-
-                    fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                            },
-                            body: JSON.stringify({
-                                job_id: jobId
-                            })
+                fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            job_id: jobId
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Toggle pin response:', data);
-                            if (data.status === 'success') {
-                                icon.classList.remove('fa-regular');
-                                icon.classList.add('fa-solid');
-                                heartContainer.classList.remove('text-gray-400',
-                                    'hover:text-gray-600');
-                                heartContainer.classList.add('text-red-500');
-                            } else if (data.status === 'removed') {
-                                icon.classList.remove('fa-solid');
-                                icon.classList.add('fa-regular');
-                                heartContainer.classList.remove('text-red-500');
-                                heartContainer.classList.add('text-gray-400',
-                                    'hover:text-gray-600');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                });
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Toggle pin response:', data);
+                        if (data.status === 'success') {
+                            icon.classList.remove('fa-regular');
+                            icon.classList.add('fa-solid');
+                            heartContainer.classList.remove('text-gray-300', 'hover:bg-gray-50');
+                            heartContainer.classList.add('text-red-500');
+                        } else if (data.status === 'removed') {
+                            icon.classList.remove('fa-solid');
+                            icon.classList.add('fa-regular');
+                            heartContainer.classList.remove('text-red-500');
+                            heartContainer.classList.add('text-gray-300', 'hover:bg-gray-50');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
         });
     </script>
+
+
 @endsection
