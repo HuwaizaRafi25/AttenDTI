@@ -211,22 +211,22 @@
                     </div>
                 </div>
                 <div id="user-table" class="w-full overflow-x-scroll">
-                        <table class="min-w-full w-full table-auto" id="userTable">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                                    <th class="py-3 pl-3 text-center">NO</th>
-                                    <th class="py-3 pl-6 text-left">User</th>
-                                    <th class="py-3 pl-6 text-left hidden printable">Email</th>
-                                    <th class="py-3 pl-6 text-left">Institution</th>
-                                    {{-- <th class="py-3 px-6 text-center no-print">Status</th> --}}
-                                    <th class="py-3 px-6 text-center">Role</th>
-                                    <th class="py-3 px-6 text-center no-print">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="content" class="text-gray-600 text-sm font-light">
-                                @include('menus.tables.user_table', ['users' => $users])
-                            </tbody>
-                        </table>
+                    <table class="min-w-full w-full table-auto" id="userTable">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                <th class="py-3 pl-3 text-center">NO</th>
+                                <th class="py-3 pl-6 text-left">User</th>
+                                <th class="py-3 pl-6 text-left hidden printable">Email</th>
+                                <th class="py-3 pl-6 text-left">Institution</th>
+                                {{-- <th class="py-3 px-6 text-center no-print">Status</th> --}}
+                                <th class="py-3 px-6 text-center">Role</th>
+                                <th class="py-3 px-6 text-center no-print">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="content" class="text-gray-600 text-sm font-light">
+                            @include('menus.tables.user_table', ['users' => $users])
+                        </tbody>
+                    </table>
                 </div>
                 <div id="pagination-container" class="mt-4">
                     {{ $users->links() }}
@@ -236,11 +236,11 @@
                     <div class="mb-6">
                         <p>
                             <strong>Waktu Laporan:</strong>
-                            {{-- @if($start_date && $end_date)
+                            {{-- @if ($start_date && $end_date)
                                 {{ \Carbon\Carbon::parse($start_date)->translatedFormat('d M Y') }} -
                                 {{ \Carbon\Carbon::parse($end_date)->translatedFormat('d M Y') }}
                             @else --}}
-                                Semua waktu
+                            Semua waktu
                             {{-- @endif --}}
                         </p>
                         <p><strong>Disusun Oleh:</strong> Admin Wasuhin</p>
@@ -266,14 +266,17 @@
                             @else
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td class="border border-gray-300 whitespace-nowrap w-min p-2 text-center">{{ $loop->iteration }}</td>
-                                        <td class="border border-gray-300 text-wrap flex-wrap p-2">{{ $user->identity_number ? $user->identity_number : '-' }}
+                                        <td class="border border-gray-300 whitespace-nowrap w-min p-2 text-center">
+                                            {{ $loop->iteration }}</td>
+                                        <td class="border border-gray-300 text-wrap flex-wrap p-2">
+                                            {{ $user->identity_number ? $user->identity_number : '-' }}
                                         </td>
                                         <td class="border border-gray-300 text-wrap p-2">{{ $user->full_name }}
                                         </td>
                                         <td class="border border-gray-300 text-wrap flex-wrap p-2">{{ $user->itb_account }}
                                         </td>
-                                        <td class="border border-gray-300 text-wrap p-2">{{ $user->institution ? $user->institution : '-' }}
+                                        <td class="border border-gray-300 text-wrap p-2">
+                                            {{ $user->institution ? $user->institution : '-' }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -282,8 +285,8 @@
                     </table>
                     <div class="mt-10 flex flex-col items-end w-full h-min justify-end">
                         <div class="text-right flex gap-x-1">
-                                <p class="text-base text-gray-800">Admin</p>
-                                <p class="text-base text-gray-800">DTI ITB,</p>
+                            <p class="text-base text-gray-800">Admin</p>
+                            <p class="text-base text-gray-800">DTI ITB,</p>
                         </div>
 
                         <!-- Nama Lengkap -->
@@ -296,7 +299,6 @@
             </div>
         </div>
     </div>
-
 
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
     <script>
@@ -315,5 +317,6 @@
             }
         });
     </script>
+    <script src="{{ asset('assets/js/previewImageInput.js') }}"></script>
     <script src="{{ asset('assets/js/user.js') }}"></script>
 @endsection

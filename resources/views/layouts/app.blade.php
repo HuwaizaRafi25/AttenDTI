@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/clock.css') }}">
         @notifyCss
         <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
 
     <body class="bg-gray-50 overflow-y-scroll">
@@ -174,7 +174,11 @@
 
         @notifyCss
         <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
-        <link rel="stylesheet" href="{{ asset('node_modules/cropperjs/dist/cropper.min.css') }}">
+        @if (Route::currentRouteName() === 'user.index')
+            <link rel="stylesheet" href="{{ asset('node_modules/cropperjs/dist/cropper.min.css') }}">
+        @endif
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     </head>
 
@@ -432,6 +436,7 @@
         @include('menus.modals.user.view_user_modal')
         {{-- @include('menus.modals.user.edit_user_modal') --}}
         @include('menus.modals.user.delete_user_modal')
+        @include('menus.modals.attendance.view_attendance_modal')
 
         <div
             class="home absolute top-0 lg:left-[296px] w-screen left-0 min-h-screen h-screen bg-gray-50 transition-all transform duration-300">
@@ -556,7 +561,6 @@
         <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/js/app.js') }}"></script>
         <script src="{{ asset('assets/js/modalComponents.js') }}"></script>
-        <script src="{{ asset('node_modules/cropperjs/dist/cropper.min.js') }}"></script>
 
         <x-notify::notify />
         @notifyJs

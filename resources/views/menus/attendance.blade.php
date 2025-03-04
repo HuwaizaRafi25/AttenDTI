@@ -55,6 +55,108 @@
                             <div id="optionsMenu"
                                 class="hidden md:relative md:flex md:flex-row md:space-y-0 md:space-x-4 bg-white md:bg-transparent p-3 md:p-0 rounded-md md:rounded-none shadow-xl md:border-none border-t-2 md:shadow-none items-center space-y-2 mt-3 md:mt-0 ml-4 !relative"
                                 style="">
+                                <div class="relative" x-data="{
+                                    open: false,
+                                    filters: { role: getURLParam('role'), status: getURLParam('status') },
+                                    toggleFilter(type, value) {
+                                        let currentUrl = new URL(window.location.href);
+                                        let currentValue = currentUrl.searchParams.get(type);
+                                        if (currentValue === value) {
+                                            currentUrl.searchParams.delete(type);
+                                        } else {
+                                            currentUrl.searchParams.set(type, value);
+                                        }
+                                        window.location.href = currentUrl.toString();
+                                    }
+                                }">
+                                    <button @click="open = !open"
+                                        class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
+                                        <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/filter.svg')) !!}</span>
+                                        <span>Filter</span>
+                                    </button>
+
+                                    <div x-show="open" x-cloak @click.away="open = false"
+                                        class="fixed -mt-6 md:mt-2 w-48 md:ml-0 ml-[116px] bg-white border-t rounded-md shadow-lg z-50">
+                                        <div class="py-1">
+                                            <a href="#" :class="{ 'bg-blue-100': filters.role === 'all' }"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="toggleFilter('role', 'all')">All</a>
+                                            <a href="#" :class="{ 'bg-blue-100': filters.role === 'admin' }"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="toggleFilter('role', 'admin')">Admin</a>
+                                            <a href="#" :class="{ 'bg-blue-100': filters.role === 'alumni' }"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="toggleFilter('role', 'alumni')">Alumni</a>
+                                            <a href="#" :class="{ 'bg-blue-100': filters.role === 'user' }"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="toggleFilter('role', 'user')">User</a>
+                                            <div class="border-t mx-2"></div>
+                                            <a href="#" :class="{ 'bg-blue-100': filters.status === '1' }"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="toggleFilter('status', '1')">Online</a>
+                                            <a href="#" :class="{ 'bg-blue-100': filters.status === '0' }"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="toggleFilter('status', '0')">Offline</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="relative" x-data="{
+                                    open: false,
+                                    activeSort: getURLParam('sort'),
+                                    activeDirection: getURLParam('direction'),
+                                    applySort(column, direction) {
+                                        let currentUrl = new URL(window.location.href);
+                                        currentUrl.searchParams.set('sort', column);
+                                        currentUrl.searchParams.set('direction', direction);
+                                        window.location.href = currentUrl.toString();
+                                    }
+                                }">
+                                    <button @click="open = !open"
+                                        class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
+                                        <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/sort.svg')) !!}</span>
+                                        <span>Sort</span>
+                                    </button>
+                                    <div x-show="open" x-cloak @click.away="open = false"
+                                        class="fixed md:ml-0 ml-[116px] md:mt-2 -mt-6 w-48 bg-white border-t rounded-md shadow-lg z-10">
+                                        <div class="py-1">
+                                            <a href="#"
+                                                :class="activeSort === 'full_name' && activeDirection === 'asc' ?
+                                                    'bg-blue-100' : ''"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="applySort('full_name', 'asc')">Full Name (A-Z)</a>
+                                            <a href="#"
+                                                :class="activeSort === 'full_name' && activeDirection === 'desc' ?
+                                                    'bg-blue-100' : ''"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="applySort('full_name', 'desc')">Full Name (Z-A)</a>
+                                            <a href="#"
+                                                :class="activeSort === 'username' && activeDirection === 'asc' ?
+                                                    'bg-blue-100' : ''"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="applySort('username', 'asc')">Username (A-Z)</a>
+                                            <a href="#"
+                                                :class="activeSort === 'username' && activeDirection === 'desc' ?
+                                                    'bg-blue-100' : ''"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="applySort('username', 'desc')">Username (Z-A)</a>
+                                            <a href="#"
+                                                :class="activeSort === 'institution' && activeDirection === 'asc' ?
+                                                    'bg-blue-100' : ''"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="applySort('institution', 'asc')">Institution (A-Z)</a>
+                                            <a href="#"
+                                                :class="activeSort === 'institution' && activeDirection === 'desc' ?
+                                                    'bg-blue-100' : ''"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                @click.prevent="applySort('institution', 'desc')">Institution (Z-A)</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="w-px h-6 bg-gray-300 hidden"></div>
+
+
                                 <div class="relative" x-data="{ open: false }">
                                     <button @click="open = !open"
                                         class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
@@ -64,17 +166,14 @@
                                     <div x-show="open" x-cloak @click.away="open = false"
                                         class="fixed -mt-6 md:mt-2 md:ml-0 ml-[116px] w-48 bg-white border-t rounded-md shadow-lg z-10">
                                         <div class="py-1">
-                                            <a href="{{ route('attendances.export', ['type' => 'pdf']) . '?' . http_build_query(request()->query()) }}"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
-                                                sebagai
+                                            <a href="{{ route('users.export', ['type' => 'pdf']) . '?' . http_build_query(request()->query()) }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
                                                 <b>PDF</b></a>
-                                            <a href="{{ route('attendances.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
-                                                sebagai
+                                            <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
                                                 <b>Excel</b></a>
-                                            <a href="{{ route('attendances.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
-                                                sebagai
+                                            <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
                                                 <b>CSV</b></a>
                                         </div>
                                     </div>
@@ -86,19 +185,29 @@
                                     <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/printer.svg')) !!}</span>
                                     <span>Print</span>
                                 </button>
-
-                                <hr class="h-6 border-gray-800 md:block">
-
-
                             </div>
                         </div>
                         <div class="flex">
+                            <!-- Search Bar -->
+                            <div class="relative inline-block h-12 w-12 -mr-6">
+                                <input {{-- lg:w-64 md:w-[196px] w-[164px] transition-all transform duration-300 --}}
+                                    class="-mr-3 search expandright absolute right-[49px] rounded bg-white border border-white h-8 w-0 lg:focus:w-[190px] md:focus:w-[164px] focus:w-[148px]  transition-all duration-400 outline-none z-10 focus:px-4 focus:border-blue-500"
+                                    id="searchright" type="text" name="q" placeholder="Cari">
+                                <label class="z-20 button searchbutton absolute text-[22px] w-full cursor-pointer"
+                                    for="searchright">
+                                    <span class="-ml-3 mt-1 inline-block">
+                                        <span class="icon ">
+                                            {!! file_get_contents(public_path('assets/images/icons/search.svg')) !!}
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
                             <button
-                                class="add-button -mt-1 h-10 flex items-center bg-[#187bcd] text-white font-semibold px-4 text-sm rounded hover:bg-[#4f57a5] transition duration-200">
+                                class="add-button -mt-1 max-h-10 flex items-center bg-[#187bcd] text-white font-semibold px-4 text-sm rounded hover:bg-[#4f57a5] transition duration-200">
                                 <span class="icon mr-2 scale-150">
                                     {!! file_get_contents(public_path('assets/images/icons/plus.svg')) !!}
                                 </span>
-                                Attend
+                                Attend User
                             </button>
                         </div>
                     </div>
@@ -110,11 +219,18 @@
                                     <th class="px-4 py-3 text-center">NISN</th>
                                     <th class="px-4 py-3 text-center">Name</th>
                                     <th class="px-4 py-3 text-center">Institution</th>
-                                    {{-- Kolom tanggal berdasarkan jumlah hari dalam bulan terpilih --}}
+
+                                    <!-- Kolom tanggal berdasarkan jumlah hari dalam bulan terpilih -->
                                     @foreach ($dates as $date)
-                                        <th class="px-4 py-3 text-center">
-                                            {{ \Carbon\Carbon::parse($date)->translatedFormat('d') }} </th>
+                                        <th class="px-4 py-3 text-center
+                                            {{ \Carbon\Carbon::parse($date)->isToday() ? 'text-blue-800 text-lg' : '' }}
+                                            {{ \Carbon\Carbon::parse($date)->isWeekend() ? 'text-gray-600' : '' }}
+                                            {{(in_array(\Carbon\Carbon::parse($date)->format('Y-m-d'), $holidays)) ? 'text-red-600' : ''}}
+                                            {{ (!\Carbon\Carbon::parse($date)->isToday() && !\Carbon\Carbon::parse($date)->isWeekend()) ? 'text-gray-800' : '' }}">
+                                            {{ \Carbon\Carbon::parse($date)->translatedFormat('d') }}
+                                        </th>
                                     @endforeach
+
                                     <th class="px-4 py-3 text-center">Present</th>
                                     <th class="px-4 py-3 text-center">Total Days</th>
                                     <th class="px-4 py-3 text-center">Attendance</th>
@@ -208,7 +324,7 @@
                 }
             });
         </script>
-        <script src="{{ asset('assets/js/user.js') }}"></script>
+        <script src="{{ asset('assets/js/attendance.js') }}"></script>
     @else
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-8">

@@ -33,7 +33,7 @@ function buildExportUrl(type) {
     let url = `/users/export/${type}?${queryParams.toString()}`;
     // Redirect ke URL ekspor
     console.log("Redirecting to:", url); // Debugging: Cek URL yang dihasilkan
-    window.location.href = url;
+    window.location.href = url
 }
 
 // ===== Toggle Sort ===== //
@@ -241,76 +241,6 @@ document.getElementById("role").addEventListener("change", function () {
 // });
 
 // Preview image
-let cropper;
-
-    // Fungsi untuk menampilkan pratinjau gambar
-    function previewImageProfilePic(event, imgId) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                // Tampilkan modal Cropper.js
-                const modal = document.getElementById('cropperModal');
-                const cropperImage = document.getElementById('cropperImage');
-
-                // Set sumber gambar untuk Cropper.js
-                cropperImage.src = e.target.result;
-                modal.classList.remove('hidden');
-
-                // Inisialisasi Cropper.js
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(cropperImage, {
-                    aspectRatio: 1, // Rasio aspek 1:1 (persegi)
-                    viewMode: 1,   // Batasi area potong di dalam gambar
-                    autoCropArea: 1, // Potong seluruh gambar secara default
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    // Tombol Batal
-    document.getElementById('cancelCropButton').addEventListener('click', function () {
-        const modal = document.getElementById('cropperModal');
-        modal.classList.add('hidden');
-
-        // Hapus input file
-        document.getElementById('profileImageInput').value = '';
-    });
-
-    // Tombol Potong & Simpan
-    document.getElementById('cropImageButton').addEventListener('click', function () {
-        if (cropper) {
-            // Dapatkan gambar yang sudah dipotong sebagai data URL
-            const croppedCanvas = cropper.getCroppedCanvas({
-                width: 500,  // Lebar gambar hasil potongan
-                height: 500, // Tinggi gambar hasil potongan
-            });
-
-            // Konversi canvas ke Blob
-            croppedCanvas.toBlob(function (blob) {
-                // Buat file baru dari Blob
-                const croppedFile = new File([blob], 'cropped_' + document.getElementById('profileImageInput').files[0].name, {
-                    type: 'image/jpeg',
-                });
-
-                // Ganti file input dengan file yang sudah dipotong
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(croppedFile);
-                document.getElementById('profileImageInput').files = dataTransfer.files;
-
-                // Tampilkan gambar yang sudah dipotong di pratinjau
-                const imgElement = document.getElementById('profileImage');
-                imgElement.src = croppedCanvas.toDataURL();
-
-                // Tutup modal
-                const modal = document.getElementById('cropperModal');
-                modal.classList.add('hidden');
-            }, 'image/jpeg', 0.75); // Kualitas gambar 75%
-        }
-    });
 
 
 function previewImageProfilePic2(event, imgId) {

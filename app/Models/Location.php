@@ -24,4 +24,9 @@ class Location extends Model
     {
         return $this->hasMany(User::class, 'placement_id');
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'location_id');
+    }
 }

@@ -73,15 +73,19 @@
                                     <h2 class="text-xl font-semibold text-gray-800">
                                         <i class="fas fa-info-circle mr-2"></i>Detailed Information
                                     </h2>
-                                    <div class="flex items-center gap-4">
+                                    <div class="flex items-center gap-4 transition-all duration-500 transform">
                                         @if (Auth::check() && Auth::user()->username === $user->username)
+                                            <a href="{{ url('addface') }}"
+                                                class="text-gray-600 hover:scale-125">
+                                                <img src="{{ asset('assets/images/icons/face.svg') }}" class="w-6 h-6 opacity-85" alt="">
+                                            </a>
                                             <a href="{{ route('users.updateView', ['id' => $user->id]) }}"
-                                                class="text-gray-600 hover:text-blue-500">
+                                                class="text-gray-600 hover:scale-125">
                                                 <i class="fas fa-edit text-xl"></i>
                                             </a>
                                             <div class="relative" x-data="{ isOpen: false }">
                                                 <button @click="isOpen = !isOpen" @click.away="isOpen = false"
-                                                    class="text-gray-600 hover:text-blue-500">
+                                                    class="text-gray-600 hover:scale-125">
                                                     <i class="fas fa-print text-xl"></i>
                                                 </button>
 

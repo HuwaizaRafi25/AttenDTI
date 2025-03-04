@@ -3,28 +3,22 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Jobs;
+use Carbon\Carbon;
 
 class UpdateJobStatus extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:update-job-status';
+    protected $signature = 'jobs:update-status';
+    protected $description = 'Update status is_active menjadi false jika end_date sudah lewat';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        //
+        $now = Carbon::now();
+
+        $affectedRows = Jobs::where('is_active', true)
+            ->where('end_date', '<', $now)
+            ->update(['is_active' => 0]);
+
+        $this->info("Berhasil mengupdate {$affectedRows} job(s).");
     }
 }

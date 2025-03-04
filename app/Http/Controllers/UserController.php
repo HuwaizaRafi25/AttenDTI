@@ -195,7 +195,11 @@ class UserController extends Controller
         try {
 
             $user = User::findOrFail($id);
-            $role = $user->roles->first()->name;
+            if ($user->roles->first() != null) {
+                $role = $user->roles->first()->name;
+            }else{
+                $role = null;
+            }
             $request->validate([
                 'userProfilePic' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10000',
                 'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $id],

@@ -93,7 +93,7 @@ class JobController extends Controller
 
 
 
-    public function pin(Request $request, Jobs $job)
+    public function pin(Jobs $job)
     {
         $user = Auth::user();
 
@@ -172,7 +172,7 @@ class JobController extends Controller
             'job_type' => $jobType,
             'qualification' => $qualifications,
             'responsibility' => $responsibilities,
-            'salary' => $salary, // gunakan nilai salary yang sudah dibersihkan
+            'salary' => $salary,
             'company_id' => $company->id,
             'user_id' => auth()->id(),
             'end_date' => $validated['end_date'],

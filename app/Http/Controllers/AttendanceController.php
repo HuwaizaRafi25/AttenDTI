@@ -29,9 +29,17 @@ class AttendanceController extends Controller
             $dates[] = $selectedYear . '-' . $selectedMonth . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
         }
 
-        $apiUrl = "https://dayoff-api-xi.vercel.app/api?month={$selectedMonth}&year={$selectedYear}";
-        $response = file_get_contents($apiUrl);
-        $holidayData = json_decode($response, true); // Mengubah ke array asosiatif
+        $apiUrl = "https://dayoffapi.vercel.app/api?month={$selectedMonth}&year={$selectedYear}";
+        // $response = file_get_contents($apiUrl);
+        // $holidayData = json_decode($response, true);
+        $jsonFilePath = public_path('assets/json/dayoff.json');
+    if (file_exists($jsonFilePath)) {
+        $response = file_get_contents($jsonFilePath);
+        $holidayData = json_decode($response, true);
+    } else {
+        // Handle the case where the file doesn't exist
+        $holidayData = [];
+    }
 
         $holidays = [];
         $holidaysNames = [];
@@ -46,6 +54,10 @@ class AttendanceController extends Controller
 
         //  List tanggal pada bulan terpilih
         return view('menus.attendance', compact('users', 'dates', 'holidays', 'holidaysNames'));
+    }
+
+    public function store(Request $request){
+        echo"masuk";
     }
 
     public function requestAttendance($id)
@@ -65,6 +77,7 @@ class AttendanceController extends Controller
             $distance = $this->haversineGreatCircleDistance($userLat, $userLng, $loc->latitude, $loc->longitude);
             if ($distance <= $loc->radius) {
                 $matchedLocation = $loc->name;
+                $matchedLocationId = $loc->id;
                 break;
             }
         }
@@ -73,6 +86,7 @@ class AttendanceController extends Controller
             return response()->json([
                 'success' => true,
                 'location' => $matchedLocation,
+                'locationId' => $matchedLocationId,
                 'message' => 'Lokasi terverifikasi'
             ]);
         } else {

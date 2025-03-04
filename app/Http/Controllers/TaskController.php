@@ -15,18 +15,26 @@ class TaskController extends Controller
     {
         $userId = auth()->id();
 
-        $todoTasks = Tasks::where('status', 'todo')->where('user_id', $userId)->get();
-        $inProgressTasks = Tasks::where('status', 'in_progress')->where('user_id', $userId)->get();
-        $inReviewTasks = Tasks::where('status', 'in_review')->where('user_id', $userId)->get();
-        $completedTasks = Tasks::where('status', 'completed')->where('user_id', $userId)->get();
-        $backlogTasks = Tasks::where('status', 'backlog')->where('user_id', $userId)->get();
+        // Mengambil hanya task yang aktif (is_active true) untuk user tertentu
+        $allTasks = Tasks::where('user_id', $userId)
+            ->where('is_active', true)
+            ->get();
+
+        $todoTasks = $allTasks->where('status', 'todo');
+        $inProgressTasks = $allTasks->where('status', 'in_progress');
+        $completedTasks = $allTasks->where('status', 'completed');
+        $backlogTasks = $allTasks->where('status', 'backlog');
+
+        $minStartDate = $allTasks->min('start_date');
+        $maxDueDate = $allTasks->max('due_date');
 
         return view('menus.task', compact(
             'todoTasks',
             'inProgressTasks',
-            'inReviewTasks',
             'completedTasks',
-            'backlogTasks'
+            'backlogTasks',
+            'minStartDate',
+            'maxDueDate'
         ));
     }
 
@@ -87,10 +95,21 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Tasks $task)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'priority' => 'required|in:low,medium,high',
+            'start_date' => 'nullable|date',
+            'due_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $task->update($request->all());
+
+        return response()->json(['success' => true, 'task' => $task]);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -98,5 +117,40 @@ class TaskController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function in_progress(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:in_progress'
+        ]);
+
+        $task = Tasks::findOrFail($id);
+        $task->status = $request->input('status');
+        $task->save();
+
+        return redirect()->back();
+    }
+    public function completed(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:completed'
+        ]);
+
+        $task = Tasks::findOrFail($id);
+        $task->status = $request->input('status');
+        $task->save();
+
+        return redirect()->back();
+    }
+
+    public function deactivate(Tasks $task)
+    {
+        $task->update(['is_active' => false]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Task deactivated successfully'
+        ]);
     }
 }

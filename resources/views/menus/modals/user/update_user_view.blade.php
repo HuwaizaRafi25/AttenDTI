@@ -76,7 +76,7 @@
                         <!-- Profile Image Input -->
                         <div class="flex justify-center md:w-2/6">
                             <input type="file" name="userProfilePic" id="profileImageInput" accept="image/*"
-                                class="hidden" onchange="previewImageProfilePic(event, 'profileImage')">
+                                class="hidden" onchange="previewImageProfilePic(event, 'profileImage', 'cropperUpdateUserModal', 'cropperUpdateUserImage')">
                             <label for="profileImageInput" class="relative cursor-pointer inline-block">
                                 <img id="profileImage"
                                     src="{{ $user->profile_pic ? asset('storage/profilePics/' . $user->profile_pic) : asset('assets/images/userPlaceHolder.png') }}"
@@ -89,6 +89,20 @@
                                     </span>
                                 </div>
                             </label>
+                            <div id="cropperUpdateUserModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden">
+                                <div class="flex items-center justify-center h-screen">
+                                    <div class="bg-white p-4 rounded-lg">
+                                        <!-- Area Pratinjau Gambar -->
+                                        <img id="cropperUpdateUserImage" src="#" alt="Crop Image" class="max-w-full max-h-[50vh]">
+
+                                        <!-- Tombol Aksi -->
+                                        <div class="flex justify-end mt-4">
+                                            <button id="cancelCropButton" type="button" class="px-4 py-2 bg-gray-300 rounded mr-2">Batal</button>
+                                            <button id="cropImageButton" type="button" class="px-4 py-2 bg-green-600 text-white rounded">Potong & Simpan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- User Info Input Fields -->
                         <div class="flex flex-col gap-y-2 md:w-4/6">
@@ -325,14 +339,15 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- NISN -->
                             <div class="space-y-1">
-                                <label for="identity_number" class="block text-sm font-medium text-gray-700 mb-1">Identity
+                                <label for="identity_number"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Identity
                                     Number
                                     @if (Auth::id() === $user->id && !Auth::user()->hasRole('admin'))
                                         <span class="text-red-600">*</span>
                                     @endif
                                 </label>
-                                <input type="text" name="identity_number" id="identity_number" value="{{ $user->identity_number }}"
-                                    placeholder="Input identity_number"
+                                <input type="text" name="identity_number" id="identity_number"
+                                    value="{{ $user->identity_number }}" placeholder="Input identity_number"
                                     class="w-full border rounded p-2 focus:outline-none focus:border-blue-500"
                                     oninput="checkNISN(this.value, {{ $user->id }});"
                                     onchange="checkNISN(this.value, {{ $user->id }})"
@@ -392,7 +407,7 @@
                                     @else
                                         <input type="text" name="placement" id="placement"
                                             class="w-full border bg-gray-100 rounded p-2 focus:outline-none focus:border-blue-500"
-                                            value="{{ $user->placement->name ??' N/A'}}" readonly>
+                                            value="{{ $user->placement->name ?? ' N/A' }}" readonly>
                                     @endif
                                 </div>
                             @endif
@@ -562,6 +577,9 @@
     </script>
     <script src="{{ asset('assets/js/togglePassword.js') }}"></script>
     <script src="{{ asset('assets/js/previewImageInput.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    @notifyJs
 </body>
 
 </html>
