@@ -10,11 +10,10 @@ class Attendance extends Model
     use HasFactory;
     protected $fillable =[
         'user_id',
+        'approver_id',
         'location_id',
         'attendance',
         'status',
-        'latitude',
-        'longitude',
         'note',
     ];
     protected $casts = [
@@ -25,6 +24,11 @@ class Attendance extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approver_id');
     }
 
     public function location()

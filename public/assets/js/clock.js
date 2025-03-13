@@ -1,9 +1,9 @@
-const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-const mobileMenu = document.getElementById("mobileMenu");
+// const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+// const mobileMenu = document.getElementById("mobileMenu");
 
-mobileMenuBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
-});
+// mobileMenuBtn.addEventListener("click", () => {
+//     mobileMenu.classList.toggle("hidden");
+// });
 
 function updateClock() {
     const now = new Date();

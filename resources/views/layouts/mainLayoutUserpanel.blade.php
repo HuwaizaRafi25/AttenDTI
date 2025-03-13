@@ -106,7 +106,7 @@
                                 <span
                                     class="{{ Request::is(patterns: 'announcement') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
                             </a>
-                            <a href="/task"
+                            <a href="/tasks"
                                 class="{{ Request::is(patterns: 'task') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
                                 <span>Task</span>
                                 <span

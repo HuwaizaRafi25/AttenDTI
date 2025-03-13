@@ -47,7 +47,7 @@ class JobController extends Controller
             })
             ->where('is_active', true)
             ->latest()
-            ->get();
+            ->paginate(4); // Menggunakan pagination
 
         $activeJobs = Jobs::select('job_type')->where('is_active', true)->get();
         $jobTypeCounts = [];
@@ -60,12 +60,6 @@ class JobController extends Controller
                     $jobTypeCounts[$type] = ($jobTypeCounts[$type] ?? 0) + 1;
                 }
             }
-        }
-
-        if ($request->ajax()) {
-            return response()->json([
-                'jobs' => $jobs,
-            ]);
         }
 
         return view('menus.job', compact('jobs', 'jobTypeCounts'));

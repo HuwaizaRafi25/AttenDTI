@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tasks;
-
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -37,7 +36,6 @@ class TaskController extends Controller
             'maxDueDate'
         ));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -75,7 +73,6 @@ class TaskController extends Controller
         return redirect()->back()->with('success', 'Task berhasil dibuat!');
     }
 
-
     /**
      * Display the specified resource.
      */
@@ -110,38 +107,12 @@ class TaskController extends Controller
         return response()->json(['success' => true, 'task' => $task]);
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         //
-    }
-
-    public function in_progress(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|in:in_progress'
-        ]);
-
-        $task = Tasks::findOrFail($id);
-        $task->status = $request->input('status');
-        $task->save();
-
-        return redirect()->back();
-    }
-    public function completed(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|in:completed'
-        ]);
-
-        $task = Tasks::findOrFail($id);
-        $task->status = $request->input('status');
-        $task->save();
-
-        return redirect()->back();
     }
 
     public function deactivate(Tasks $task)
@@ -152,5 +123,15 @@ class TaskController extends Controller
             'success' => true,
             'message' => 'Task deactivated successfully'
         ]);
+    }
+
+    // Fungsi untuk mengubah status menjadi "in_progress" atau "completed"
+    public function changeStatus(Request $request, $id, $status)
+    {
+        $request->validate(['status' => 'required|in:in_progress,completed']);
+        $task = Tasks::findOrFail($id);
+        $task->status = $request->input('status');
+        $task->save();
+        return response()->json(['success' => true, 'task' => $task]);
     }
 }

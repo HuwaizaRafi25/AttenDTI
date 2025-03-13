@@ -19,6 +19,7 @@
                 display: none;
             }
         </style>
+
         <div class="">
             {{-- <nav class="flex pb-8" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -167,13 +168,16 @@
                                         class="fixed -mt-6 md:mt-2 md:ml-0 ml-[116px] w-48 bg-white border-t rounded-md shadow-lg z-10">
                                         <div class="py-1">
                                             <a href="{{ route('users.export', ['type' => 'pdf']) . '?' . http_build_query(request()->query()) }}"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
+                                                sebagai
                                                 <b>PDF</b></a>
                                             <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
+                                                sebagai
                                                 <b>Excel</b></a>
                                             <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
+                                                sebagai
                                                 <b>CSV</b></a>
                                         </div>
                                     </div>
@@ -185,6 +189,163 @@
                                     <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/printer.svg')) !!}</span>
                                     <span>Print</span>
                                 </button>
+
+                                <div class="h-5 w-0.5 border border-gray-700"></div>
+
+                                {{-- Select Option bulan dan tahun --}}
+                                <!-- Month and Year Selectors -->
+                                <div class="flex items-center gap-2">
+                                    <!-- Month Selector -->
+                                    <div class="relative" id="monthSelector">
+                                        <button id="monthButton"
+                                            class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200 bg-white border border-gray-200 rounded-md px-3 py-1.5">
+                                            <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/calendar.svg')) !!}</span>
+                                            <span id="selectedMonth">January</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        <div id="monthDropdown"
+                                            class="absolute mt-1 w-40 bg-white border rounded-md shadow-lg z-10 hidden">
+                                            <div class="py-1 max-h-60 overflow-y-auto">
+                                                @php
+                                                    $months = [
+                                                        'January',
+                                                        'February',
+                                                        'March',
+                                                        'April',
+                                                        'May',
+                                                        'June',
+                                                        'July',
+                                                        'August',
+                                                        'September',
+                                                        'October',
+                                                        'November',
+                                                        'December',
+                                                    ];
+                                                @endphp
+
+                                                @foreach ($months as $month)
+                                                    <button data-month="{{ $month }}"
+                                                        class="month-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $month === 'January' ? 'bg-blue-50 text-blue-600 font-medium' : '' }}">
+                                                        {{ $month }}
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="month" id="monthInput" value="January">
+                                    </div>
+
+                                    <!-- Year Selector -->
+                                    <div class="relative" id="yearSelector">
+                                        <button id="yearButton"
+                                            class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200 bg-white border border-gray-200 rounded-md px-3 py-1.5">
+                                            <span id="selectedYear">{{ date('Y') }}</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        <div id="yearDropdown"
+                                            class="absolute mt-1 w-32 bg-white border rounded-md shadow-lg z-10 hidden">
+                                            <div class="py-1 max-h-60 overflow-y-auto">
+                                                @php
+                                                    $currentYear = date('Y');
+                                                    $years = range($currentYear, $currentYear - 9);
+                                                @endphp
+
+                                                @foreach ($years as $year)
+                                                    <button data-year="{{ $year }}"
+                                                        class="year-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $year == $currentYear ? 'bg-blue-50 text-blue-600 font-medium' : '' }}">
+                                                        {{ $year }}
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="year" id="yearInput"
+                                            value="{{ date('Y') }}">
+                                    </div>
+                                </div>
+
+                                <script>
+                                    // Month Selector
+                                    const monthButton = document.getElementById('monthButton');
+                                    const monthDropdown = document.getElementById('monthDropdown');
+                                    const selectedMonth = document.getElementById('selectedMonth');
+                                    const monthOptions = document.querySelectorAll('.month-option');
+                                    const monthInput = document.getElementById('monthInput');
+
+                                    // Year Selector
+                                    const yearButton = document.getElementById('yearButton');
+                                    const yearDropdown = document.getElementById('yearDropdown');
+                                    const selectedYear = document.getElementById('selectedYear');
+                                    const yearOptions = document.querySelectorAll('.year-option');
+                                    const yearInput = document.getElementById('yearInput');
+
+                                    // Toggle month dropdown
+                                    monthButton.addEventListener('click', function() {
+                                        monthDropdown.classList.toggle('hidden');
+                                        // Close year dropdown if open
+                                        yearDropdown.classList.add('hidden');
+                                    });
+
+                                    // Toggle year dropdown
+                                    yearButton.addEventListener('click', function() {
+                                        yearDropdown.classList.toggle('hidden');
+                                        // Close month dropdown if open
+                                        monthDropdown.classList.add('hidden');
+                                    });
+
+                                    // Handle month selection
+                                    monthOptions.forEach(option => {
+                                        option.addEventListener('click', function() {
+                                            const month = this.getAttribute('data-month');
+                                            selectedMonth.textContent = month;
+                                            monthInput.value = month;
+
+                                            // Update active class
+                                            monthOptions.forEach(opt => {
+                                                opt.classList.remove('bg-blue-50', 'text-blue-600', 'font-medium');
+                                            });
+                                            this.classList.add('bg-blue-50', 'text-blue-600', 'font-medium');
+
+                                            // Close dropdown
+                                            monthDropdown.classList.add('hidden');
+                                        });
+                                    });
+
+                                    // Handle year selection
+                                    yearOptions.forEach(option => {
+                                        option.addEventListener('click', function() {
+                                            const year = this.getAttribute('data-year');
+                                            selectedYear.textContent = year;
+                                            yearInput.value = year;
+
+                                            // Update active class
+                                            yearOptions.forEach(opt => {
+                                                opt.classList.remove('bg-blue-50', 'text-blue-600', 'font-medium');
+                                            });
+                                            this.classList.add('bg-blue-50', 'text-blue-600', 'font-medium');
+
+                                            // Close dropdown
+                                            yearDropdown.classList.add('hidden');
+                                        });
+                                    });
+
+                                    // Close dropdowns when clicking outside
+                                    document.addEventListener('click', function(event) {
+                                        if (!monthButton.contains(event.target) && !monthDropdown.contains(event.target)) {
+                                            monthDropdown.classList.add('hidden');
+                                        }
+
+                                        if (!yearButton.contains(event.target) && !yearDropdown.contains(event.target)) {
+                                            yearDropdown.classList.add('hidden');
+                                        }
+                                    });
+                                </script>
                             </div>
                         </div>
                         <div class="flex">
@@ -213,20 +374,20 @@
                     </div>
                     <div id="attendance-table" class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200" id="attendanceTable">
-                            <thead class="bg-gray-100 sticky top-0 z-10">
+                            <thead class="bg-gray-100 sticky top-0">
                                 <tr class="text-gray-600 uppercase text-xs font-medium">
                                     <th class="px-4 py-3 text-center">No</th>
                                     <th class="px-4 py-3 text-center">NISN</th>
                                     <th class="px-4 py-3 text-center">Name</th>
                                     <th class="px-4 py-3 text-center">Institution</th>
 
-                                    <!-- Kolom tanggal berdasarkan jumlah hari dalam bulan terpilih -->
                                     @foreach ($dates as $date)
-                                        <th class="px-4 py-3 text-center
+                                        <th
+                                            class="px-4 py-3 text-center
                                             {{ \Carbon\Carbon::parse($date)->isToday() ? 'text-blue-800 text-lg' : '' }}
                                             {{ \Carbon\Carbon::parse($date)->isWeekend() ? 'text-gray-600' : '' }}
-                                            {{(in_array(\Carbon\Carbon::parse($date)->format('Y-m-d'), $holidays)) ? 'text-red-600' : ''}}
-                                            {{ (!\Carbon\Carbon::parse($date)->isToday() && !\Carbon\Carbon::parse($date)->isWeekend()) ? 'text-gray-800' : '' }}">
+                                            {{ in_array(\Carbon\Carbon::parse($date)->format('Y-m-d'), $holidays) ? 'text-red-600' : '' }}
+                                            {{ !\Carbon\Carbon::parse($date)->isToday() && !\Carbon\Carbon::parse($date)->isWeekend() ? 'text-gray-800' : '' }}">
                                             {{ \Carbon\Carbon::parse($date)->translatedFormat('d') }}
                                         </th>
                                     @endforeach
@@ -326,23 +487,59 @@
         </script>
         <script src="{{ asset('assets/js/attendance.js') }}"></script>
     @else
+        <style>
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .animate-fade-in {
+                animation: fadeIn 0.2s ease-out forwards;
+                opacity: 0;
+            }
+
+            /* Ensure the modal has a nice transition */
+            #absentModal {
+                transition: opacity 0.2s ease-out;
+            }
+
+            /* Smooth transitions for the placement container */
+            #placementContainer {
+                transition: opacity 0.3s ease-out;
+            }
+        </style>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-8">
                 <div class="flex flex-col gap-4 md:flex-row items-center justify-between mb-8">
-                    <div class="text-center md:text-left mb-6 md:mb-0">
-                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Hello! Ready to start your day?</h2>
-                        <p class="text-lg text-gray-600">Let's mark your presence and make today count!</p>
-                    </div>
-                    <div class="flex gap-x-4">
-                        <button onclick="window.location.href='{{ route('attendance.request', Auth::id()) }}'"
-                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
-                            <i class="fas fa-check-circle mr-2"></i> I'm Here!
-                        </button>
-                        <button
-                            class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
-                            <i class="fas fa-times-circle mr-2"></i> Not Today
-                        </button>
-                    </div>
+                    @if (Auth::user()->attendances->where('created_at', '>=', today()->startOfDay())->where('created_at', '<=', today()->endOfDay())->count() > 0)
+                        <div class="text-center md:text-left mb-6 md:mb-0">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, {{ Auth::user()->full_name }}!
+                            </h2>
+                            <p class="text-lg text-gray-600">You've marked your presence today. Keep up the good work!</p>
+                        </div>
+                    @else
+                        <div class="text-center md:text-left mb-6 md:mb-0">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Hello! Ready to start your day?</h2>
+                            <p class="text-lg text-gray-600">Let's mark your presence and make today count!</p>
+                        </div>
+                        <div class="flex gap-x-4">
+                            <button onclick="window.location.href='{{ route('attendance.request', Auth::id()) }}'"
+                                class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                                <i class="fas fa-check-circle mr-2"></i> I'm Here!
+                            </button>
+                            <button onclick="showAbsentModal()"
+                                class="absentButton bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                                <i class="fas fa-times-circle mr-2"></i> Not Today
+                            </button>
+                        </div>
+                    @endif
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Attendance Summary</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -412,6 +609,8 @@
                 </div>
             </div>
         </div>
+        @include('menus.modals.attendance.absent_attendance_modal')
         <script src="{{ asset('assets/js/clock.js') }}"></script>
+        <script src="{{ asset('assets/js/userAttendance.js') }}"></script>
     @endif
 @endsection

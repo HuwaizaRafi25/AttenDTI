@@ -55,11 +55,11 @@
                                 <span
                                     class="{{ Request::is(patterns: 'announcement') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
                             </a>
-                            <a href="/task"
-                                class="{{ Request::is(patterns: 'task') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
+                            <a href="/tasks"
+                                class="{{ Request::is(patterns: 'tasks') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
                                 <span>Task</span>
                                 <span
-                                    class="{{ Request::is('task') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
+                                    class="{{ Request::is('tasks') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
                             </a>
                             <a href="/job"
                                 class="{{ Request::is(patterns: 'job') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
@@ -155,6 +155,7 @@
                 mobileMenu.classList.toggle('hidden');
             });
         </script>
+        <x-notify::notify />
         @notifyJs
     </body>
 
@@ -434,10 +435,8 @@
         @include('menus.modals.user.report_user_modal')
         @include('menus.modals.user.add_user_modal')
         @include('menus.modals.user.view_user_modal')
-        {{-- @include('menus.modals.user.edit_user_modal') --}}
         @include('menus.modals.user.delete_user_modal')
         @include('menus.modals.attendance.view_attendance_modal')
-
         <div
             class="home absolute top-0 lg:left-[296px] w-screen left-0 min-h-screen h-screen bg-gray-50 transition-all transform duration-300">
             <!-- Header -->
@@ -561,7 +560,6 @@
         <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/js/app.js') }}"></script>
         <script src="{{ asset('assets/js/modalComponents.js') }}"></script>
-
         <x-notify::notify />
         @notifyJs
     </body>

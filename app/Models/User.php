@@ -96,6 +96,10 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class);
     }
 
+    public function approver(){
+        return $this->hasMany(Attendance::class, 'approver_id');
+    }
+
     public function faceUser()
     {
         return $this->hasOne(FaceUser::class, 'user_id');

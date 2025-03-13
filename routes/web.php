@@ -68,7 +68,9 @@ Route::middleware(['auth'])->group(
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
-        Route::get('/attendances/store', [AttendanceController::class, 'store'])->name('attendances.store');
+        Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
+        Route::post('/attendance/absent', [AttendanceController::class, 'absent'])->name('attendance.absent');
+        Route::get('/attendance/approval/{approval}/{id}', [AttendanceController::class, 'approval'])->name('attendances.approval');
         Route::get('/attendances/export/{type}', [AttendanceController::class, 'export'])->name('attendances.export');
         Route::get('/attendance/request/{id}', [AttendanceController::class, 'requestAttendance'])->name('attendance.request');
         Route::post('/attendance/verify-location', [AttendanceController::class, 'verifyLocation'])->name('attendance.verifyLocation');
@@ -79,12 +81,12 @@ Route::middleware(['auth'])->group(
             return view('menus.announcement');
         });
 
-        Route::get('/task', [TaskController::class, 'index'])->name('task.view');
+
+        Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
         Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
-        Route::put('/tasks/{id}/in_progress', [TaskController::class, 'in_progress'])->name('tasks.in_progress');
-        Route::put('/tasks/{id}/completed', [TaskController::class, 'completed'])->name('tasks.completed');
-        Route::put('/tasks/{task}/deactivate', [TaskController::class, 'deactivate'])->name('tasks.deactivate');
         Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+        Route::put('/tasks/{task}/deactivate', [TaskController::class, 'deactivate'])->name('tasks.deactivate');
+        Route::put('/tasks/{id}/{status}', [TaskController::class, 'changeStatus'])->name('tasks.changeStatus');
 
         Route::get('/job', [JobController::class, 'index'])->name('job.view');
         Route::post('/addjobs', [JobController::class, 'store'])->name('jobs.store');

@@ -30,7 +30,7 @@ class CreateAttendance extends Command
                 Attendance::create([
                     'user_id' => $user->id,
                     'attendance' => 'absent', // Atau sesuaikan dengan status default
-                    'status' => 'rejected',
+                    'status' => 'approved',
                 ]);
             }
         }

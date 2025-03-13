@@ -70,12 +70,18 @@
                                         data-locationAddress="{{ $attendance->location ? $attendance->location->address : '' }}"
                                         data-locationPic="{{ $attendance->location ? $attendance->location->pic : '' }}"
                                         data-note="{{ $attendance->note }}"
+                                        data-approver="{{ $attendance->approver ? $attendance->approver->username : '' }}"
+                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}"
+
                                         >
                                         ✓
+                                        @if ($attendance->status === 'pending')
+                                            <span class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
+                                        @endif
                                     </span>
                                 @elseif ($attendance->attendance === 'permit')
                                     <span
-                                        class="view-attendance-button cursor-pointer hover:scale-125 hover:shadow-md transition-all transform duration-200 hover:bg-yellow-200 px-2 inline-flex text-xs leading-5 font-semibold rounded-full border border-yellow-800 bg-yellow-100 text-yellow-800"
+                                        class="view-attendance-button cursor-pointer hover:scale-125 hover:shadow-md transition-all transform duration-200 hover:bg-blue-200 px-3 inline-flex text-xs leading-5 font-semibold rounded-full border border-blue-800 bg-blue-100 text-blue-800"
                                         data-userId="{{ $user->id }}" data-userFullname="{{ $user->full_name }}"
                                         data-username="{{ $user->username }}" data-userPic="{{ $user->profile_pic }}"
                                         data-date="{{ \Carbon\Carbon::parse($date)->format('F jS, Y') }}"
@@ -86,12 +92,18 @@
                                         data-locationAddress="{{ $attendance->location ? $attendance->location->address : '' }}"
                                         data-locationPic="{{ $attendance->location ? $attendance->location->pic : '' }}"
                                         data-note="{{ $attendance->note }}"
+                                        data-approver="{{ $attendance->approver ? $attendance->approver->username : '' }}"
+                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}"
+
                                         >
                                         ¡
+                                        @if ($attendance->status === 'pending')
+                                        <span class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
+                                    @endif
                                     </span>
                                 @elseif ($attendance->attendance === 'sick')
                                     <span
-                                        class="view-attendance-button cursor-pointer hover:scale-125 hover:shadow-md transition-all transform duration-200 hover:bg-red-200 px-2 inline-flex text-xs leading-5 font-semibold rounded-full border border-red-800 bg-red-100 text-red-800"
+                                        class="view-attendance-button cursor-pointer hover:scale-125 hover:shadow-md transition-all transform duration-200 hover:bg-gray-200 px-2.5 inline-flex text-sm leading-5 font-semibold rounded-full border border-gray-800 bg-gray-100 text-gray-800"
                                         data-userId="{{ $user->id }}" data-userFullname="{{ $user->full_name }}"
                                         data-username="{{ $user->username }}" data-userPic="{{ $user->profile_pic }}"
                                         data-date="{{ \Carbon\Carbon::parse($date)->format('F jS, Y') }}"
@@ -102,12 +114,18 @@
                                         data-locationAddress="{{ $attendance->location ? $attendance->location->address : '' }}"
                                         data-locationPic="{{ $attendance->location ? $attendance->location->pic : '' }}"
                                         data-note="{{ $attendance->note }}"
+                                        data-approver="{{ $attendance->approver ? $attendance->approver->username : '' }}"
+                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}"
+
                                         >
                                         s
+                                        @if ($attendance->status === 'pending')
+                                        <span class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
+                                    @endif
                                     </span>
                                 @elseif ($attendance->attendance === 'absent')
                                     <span
-                                        class="view-attendance-button cursor-pointer hover:scale-125 hover:shadow-md transition-all transform duration-200 hover:bg-gray-200 px-2 inline-flex text-xs leading-5 font-semibold rounded-full border border-gray-800 bg-gray-100 text-gray-800"
+                                        class="view-attendance-button cursor-pointer hover:scale-125 hover:shadow-md transition-all transform duration-200 hover:bg-red-200 px-2 inline-flex text-xs leading-5 font-semibold rounded-full border border-red-800 bg-red-100 text-red-800"
                                         data-userId="{{ $user->id }}" data-userFullname="{{ $user->full_name }}"
                                         data-username="{{ $user->username }}" data-userPic="{{ $user->profile_pic }}"
                                         data-date="{{ \Carbon\Carbon::parse($date)->format('F jS, Y') }}"
@@ -118,6 +136,9 @@
                                         data-locationAddress="{{ $attendance->location ? $attendance->location->address : '' }}"
                                         data-locationPic="{{ $attendance->location ? $attendance->location->pic : '' }}"
                                         data-note="{{ $attendance->note }}"
+                                        data-approver="{{ $attendance->approver ? $attendance->approver->username : '' }}"
+                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}"
+
                                         >
                                         ✕
                                     </span>

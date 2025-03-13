@@ -284,19 +284,6 @@
                 </div>
                 <div id="jobList" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     @forelse ($jobs as $job)
-                        @if (!$job->active_status)
-                            {{-- Jika job sudah tidak aktif, Anda bisa menampilkan label "Closed" atau bahkan melewati render --}}
-                            @continue
-                        @endif
-
-                        @php
-                            $isPinned =
-                                auth()->check() &&
-                                $job
-                                    ->pinnedUsers()
-                                    ->where('users.id', auth()->user()->id)
-                                    ->exists();
-                        @endphp
                         <div class="relative">
                             <a href="{{ route('job.detail', $job->id) }}">
                                 <div class="border rounded-lg p-4 hover:shadow-lg transition-shadow">
@@ -334,21 +321,21 @@
                                     </div>
                                 </div>
                             </a>
-                            <div class="absolute top-4 right-4 pin-job cursor-pointer
-                {{ $isPinned ? 'text-red-500' : 'text-gray-400 hover:text-gray-600' }}"
-                                data-job-id="{{ $job->id }}">
-                                <i class="{{ $isPinned ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
-                            </div>
                         </div>
                     @empty
                         <p class="text-gray-600">No jobs found.</p>
                     @endforelse
                 </div>
+
+            </div>
+            <div class="flex justify-center mt-6">
+                {{ $jobs->links() }} <!-- Menampilkan tombol pagination -->
             </div>
         </div>
     </div>
+    </div>
 
-<script src="{{ asset('assets/js/jobs.js') }}"></script>
+    <script src="{{ asset('assets/js/jobs.js') }}"></script>
 
 
 @endsection

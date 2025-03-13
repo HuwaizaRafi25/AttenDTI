@@ -14,8 +14,8 @@
                 <div class="flex items-center justify-between w-full mb-4">
                     <h2 class="text-xl font-semibold text-gray-600" id="dateText">February 20th, 2025</h2>
                     <div class="flex items-center">
-                        <div class="w-2 h-2 rounded-full bg-green-600 mr-2" id="attendanceBullet"></div>
-                        <h2 class="text-xl font-light text-green-600" id="attendanceText">
+                        <div class="w-2 h-2 rounded-full mr-2" id="attendanceBullet"></div>
+                        <h2 class="text-xl font-light" id="attendanceText">
                             Present
                         </h2>
                     </div>
@@ -26,7 +26,7 @@
                     <hr class="w-full pl-6 bg-gray-200" id="timeLine">
                 </div>
 
-                <hr class="my-3 border-gray-200">
+                <hr class="my-3 border-[1.5px] border-gray-300 border-dashed">
 
                 <!-- User Information -->
                 <div class="flex flex-col items-start space-y-2 w-full mb-4">
@@ -38,7 +38,8 @@
                         <img src="{{ asset('assets/images/english.png') }}" alt="Profile Picture"
                             class="object-cover w-12 h-12 rounded-full shadow-md" id="userProfilePicture">
                         <div>
-                            <span class="block font-semibold text-gray-800" id="userFullnameText">Muhammad Huwaiza Rafi</span>
+                            <span class="block font-semibold text-gray-800" id="userFullnameText">Muhammad Huwaiza
+                                Rafi</span>
                             <span class="block text-sm text-gray-500" id="usernameText">@huwaiza</span>
                         </div>
                     </div>
@@ -55,7 +56,8 @@
                         <img src="{{ asset('assets/images/CRCS-2018.jpg') }}"
                             class="w-12 h-12 object-cover rounded-md shadow-md" id="locationPic" alt="">
                         <div>
-                            <span class="block font-semibold text-gray-800" id="locationText">CRCS - ITB Kampus Ganesha</span>
+                            <span class="block font-semibold text-gray-800" id="locationText">CRCS - ITB Kampus
+                                Ganesha</span>
                             <span class="text-sm text-gray-500 flex items-center gap-x-1" id="locationAddressText">
                                 Jl. Dayang Sumbi
                             </span>
@@ -68,7 +70,8 @@
                             alt="">
                         <p class="text-sm font-medium text-gray-500">Notes</p>
                     </div>
-                    <p class="text-sm font-light text-gray-600" id="noteText">Lorem ipsum dolor sit amet consectetur, adipisicing
+                    <p class="text-sm font-light text-gray-600" id="noteText">Lorem ipsum dolor sit amet consectetur,
+                        adipisicing
                         elit. Maiores quae, voluptas enim dignissimos sed perferendis aut possimus commodi deleniti
                         itaque corporis aliquid. Inventore, omnis? Corrupti tempora dignissimos cumque quibusdam dolor?
                     </p>
@@ -85,23 +88,28 @@
 
         <!-- Footer -->
         <div class="rounded-b-lg p-4 bg-slate-100">
-            <div class="items-center justify-between hidden">
-                <h2 class="text-base font-light text-green-500 flex items-center">
-                    <div class="w-2 h-2 rounded-full bg-green-500 mr-2"></div> Approved by
+            <div class="items-center justify-between hidden" id="approvalContainer">
+                <h2 class="text-base font-light text-green-500 flex items-center" id="approvementStatus">
+                    <div class="w-2 h-2 rounded-full bg-green-500 mr-2" id="approvementStatusBullet"></div>
+                    <span id="approvementStatusText">Approved by</span>
                 </h2>
                 <div class="flex items-center">
-                    <img src="{{ asset('assets/images/sunda.png') }}" alt="Profile Picture"
-                        class="object-cover w-6 h-6 rounded-full shadow-md">
+                    <img src="" alt="Profile Picture" class="object-cover w-6 h-6 rounded-full shadow-md"
+                        id="approverProfilePicture">
                     <div class="ml-2">
-                        <span class="text-base font-semibold text-gray-700">huwaiza</span>
+                        <span class="text-base font-semibold text-gray-700" id="approverText">huwaiza</span>
                     </div>
                 </div>
             </div>
-            <div class=" w-full gap-x-2 flex">
-                <button
-                    class="flex items-center justify-center w-1/2 h-10 border-2 border-red-500 rounded-md hover:border-red-600 text-red-500 hover:text-red-600   transition-colors">Reject</button>
-                <button
-                    class="flex items-center justify-center w-1/2 h-10 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors">Approve</button>
+            <div class=" w-full gap-x-2 hidden" id="actionButtons">
+                <a href=""
+                    class="flex items-center justify-center w-1/2 h-10 border-2 border-red-500 rounded-md hover:border-red-600 text-red-500 hover:text-red-600   transition-colors" id="rejectButton">
+                    Reject</a>
+                <a href=""
+                    class="flex items-center justify-center w-1/2 h-10 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                    id="approveButton">
+                    Approve
+                </a>
             </div>
         </div>
     </div>

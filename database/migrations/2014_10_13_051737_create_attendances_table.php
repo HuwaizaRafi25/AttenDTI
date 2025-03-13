@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('approver_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('location_id')->nullable()->constrained('locations')->onDelete('set null');
             $table->enum('attendance', ['present', 'absent', 'sick', 'permit', 'late'])->default('absent');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->decimal('longitude', 11, 8)->nullable();
             $table->text('note')->nullable();
             $table->timestamps();
 
