@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <style>
         .filter-checkbox:checked+div {
             @apply bg-blue-100 border-blue-500;
@@ -11,8 +10,22 @@
         <div class="bg-white rounded-lg mt-4 p-4 sm:p-6">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex">
-                    <h2 class="text-2xl font-bold text-gray-900 mr-10 cursor-pointer">Job Listings</h2>
-                    <!-- <h2 class="text-2xl font-bold text-gray-900 cursor-pointer">Liked Jobs</h2> -->
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex">
+                            <h2 id="jobListingsBtn"
+                                class="text-2xl font-bold text-gray-500 hover:text-blue-500 cursor-pointer relative group mr-10">
+                                Job Listings
+                                <span
+                                    class="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+                            </h2>
+                            <h2 id="likedJobsBtn"
+                                class="text-2xl font-bold text-gray-500 hover:text-blue-500 cursor-pointer relative group">
+                                Liked Jobs
+                                <span
+                                    class="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+                            </h2>
+                        </div>
+                    </div>
                 </div>
                 <button id="openModal"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
@@ -21,6 +34,7 @@
                 </button>
             </div>
 
+            <!-- Modal untuk Post a Job (tidak berubah) -->
             <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-[50] items-center justify-center hidden">
                 <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-4xl mx-4 relative h-[90vh] flex flex-col">
                     <h2 class="text-3xl font-bold mb-6 text-gray-800">Post a Job</h2>
@@ -67,7 +81,7 @@
                                 </div>
 
                                 <div>
-                                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Job Specifics </h2>
+                                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Job Specifics</h2>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label for="salary"
@@ -128,8 +142,8 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Experience
-                                                Level <span class="text-red-700">*</span></label>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Experience Level
+                                                <span class="text-red-700">*</span></label>
                                             <div id="experienceLevelContainer" class="flex flex-wrap gap-2">
                                                 <div class="w-max p-2 cursor-pointer border border-gray-300 rounded-xl job-type-item hover:bg-blue-50 hover:border-blue-500 transition-colors duration-150"
                                                     data-id="">
@@ -209,6 +223,7 @@
                 </div>
             </div>
 
+            <!-- Search Form -->
             <div class="mb-6 flex items-center">
                 <form id="searchForm" action="{{ route('job.view') }}" method="GET" class="flex-grow mr-2 mb-6"
                     onsubmit="return false;">
@@ -223,6 +238,7 @@
                 </form>
             </div>
 
+            <!-- Filter dan Job List -->
             <div class="flex flex-col lg:flex-row gap-6">
                 <div class="w-full lg:w-64 flex-shrink-0">
                     <div class="flex justify-between items-center mb-4 lg:hidden">
@@ -235,18 +251,13 @@
                                     d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-
                     </div>
 
                     @php
-                        // Daftar job types (kategori utama)
                         $jobTypes = ['Full Time', 'Part Time', 'Internship', 'Project Work', 'Volunteering'];
-
-                        // Daftar experience levels (tingkatan pengalaman)
                         $jobLevels = ['Entry Level', 'Intermediate', 'Expert'];
                     @endphp
 
-                    <!-- Di dalam bagian filter -->
                     <div id="jobTypeDropdown" class="hidden md:block space-y-3 transition-all duration-200">
                         <div class="flex items-center space-x-2 justify-between">
                             <h3 class="font-semibold">Job Type</h3>
@@ -254,11 +265,12 @@
                         </div>
                         <div class="space-y-2">
                             @foreach ($jobTypes as $jobType)
-                                <label class="flex items-center space-x-2 mb-1">
+                                <label
+                                    class="flex items-center space-x-2 mb-1 hover:bg-gray-100 transition duration-200 rounded-md px-3">
                                     <input type="checkbox" name="jobType[]" value="{{ $jobType }}"
                                         {{ in_array($jobType, (array) request('jobType', [])) ? 'checked' : '' }}
                                         class="rounded text-blue-500 filter-checkbox">
-                                    <div class="flex space-x-4 w-full justify-between">
+                                    <div class="flex space-x-4 w-full justify-between cursor-pointer">
                                         <span>{{ $jobType }}</span>
                                         <span>{{ $jobTypeCounts[$jobType] ?? 0 }}</span>
                                     </div>
@@ -270,7 +282,8 @@
                             <h3 class="font-semibold">Experience Level</h3>
                         </div>
                         @foreach ($jobLevels as $jobLevel)
-                            <label class="flex items-center space-x-2 mb-1">
+                            <label
+                                class="flex items-center space-x-2 mb-1 hover:bg-gray-100 transition duration-200 rounded-md px-3">
                                 <input type="checkbox" name="experienceLevel[]" value="{{ $jobLevel }}"
                                     {{ in_array($jobLevel, (array) request('experienceLevel', [])) ? 'checked' : '' }}
                                     class="rounded text-blue-500 filter-checkbox">
@@ -282,59 +295,113 @@
                         @endforeach
                     </div>
                 </div>
+
+                <!-- Job List -->
                 <div id="jobList" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     @forelse ($jobs as $job)
                         <div class="relative">
-                            <a href="{{ route('job.detail', $job->id) }}">
-                                <div class="border rounded-lg p-4 hover:shadow-lg transition-shadow">
-                                    <div class="flex justify-between items-start">
-                                        <div class="flex items-center space-x-3">
-                                            <div
-                                                class="w-10 h-10 bg-blue-100 rounded-lg overflow-hidden flex items-center justify-center">
-                                                <span class="text-blue-600 font-bold">
-                                                    {{ strtoupper(substr($job->companies->company_name, 0, 1)) }}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <h3 class="font-semibold">{{ $job->job_title }}</h3>
-                                                <p class="text-sm text-gray-600">{{ $job->companies->company_name }}</p>
-                                            </div>
+                            <div class="border rounded-lg p-4 hover:shadow-lg transition-shadow job-card"
+                                data-job-id="{{ $job->id }}">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex items-center space-x-3">
+                                        <div
+                                            class="w-10 h-10 bg-blue-100 rounded-lg overflow-hidden flex items-center justify-center">
+                                            <span class="text-blue-600 font-bold">
+                                                {{ strtoupper(substr($job->companies->company_name, 0, 1)) }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold">{{ $job->job_title }}</h3>
+                                            <p class="text-sm text-gray-600">{{ $job->companies->company_name }}</p>
                                         </div>
                                     </div>
-                                    <div class="flex flex-wrap gap-2 mt-3">
-                                        @foreach (explode(',', $job->job_type) as $type)
-                                            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
-                                                {{ trim($type) }}
-                                            </span>
-                                        @endforeach
-                                    </div>
-                                    <p class="mt-3 text-sm text-gray-600 line-clamp-2">
-                                        {{ $job->job_description }}
-                                    </p>
-                                    <div class="flex justify-between items-center mt-4">
-                                        <span class="font-semibold">
-                                            Rp {{ number_format($job->salary, 0, ',', '.') }}/month
-                                        </span>
-                                        <span class="text-sm text-gray-500">
-                                            Closing on {{ $job->end_date }}
-                                        </span>
+                                    <div class="absolute top-4 right-4 pin-job cursor-pointer {{ $job->pinnedUsers->contains(auth()->id()) ? 'text-red-500' : 'text-gray-400 hover:text-gray-600' }}"
+                                        data-job-id="{{ $job->id }}">
+                                        <i
+                                            class="{{ $job->pinnedUsers->contains(auth()->id()) ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                                     </div>
                                 </div>
-                            </a>
+                                <div class="flex flex-wrap gap-2 mt-3">
+                                    @foreach (explode(',', $job->job_type) as $type)
+                                        <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
+                                            {{ trim($type) }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                                <p class="mt-3 text-sm text-gray-600 line-clamp-2">
+                                    {{ $job->job_description }}
+                                </p>
+                                <div class="flex justify-between items-center mt-4">
+                                    <span class="font-semibold">
+                                        Rp {{ number_format($job->salary, 0, ',', '.') }}/month
+                                    </span>
+                                    <span class="text-sm text-gray-500">
+                                        Closing on {{ $job->end_date }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     @empty
                         <p class="text-gray-600">No jobs found.</p>
                     @endforelse
                 </div>
-
+                <div id="pinnedjobs" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 hidden">
+                    @forelse (auth()->user()->pinned as $job)
+                        <div class="relative">
+                            <div class="border rounded-lg p-4 hover:shadow-lg transition-shadow job-card"
+                                data-job-id="{{ $job->id }}">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex items-center space-x-3">
+                                        <div
+                                            class="w-10 h-10 bg-blue-100 rounded-lg overflow-hidden flex items-center justify-center">
+                                            <span class="text-blue-600 font-bold">
+                                                {{ strtoupper(substr($job->companies->company_name, 0, 1)) }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold">{{ $job->job_title }}</h3>
+                                            <p class="text-sm text-gray-600">{{ $job->companies->company_name }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="absolute top-4 right-4 pin-job cursor-pointer {{ $job->pinnedUsers->contains(auth()->id()) ? 'text-red-500' : 'text-gray-400 hover:text-gray-600' }}"
+                                        data-job-id="{{ $job->id }}">
+                                        <i
+                                            class="{{ $job->pinnedUsers->contains(auth()->id()) ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap gap-2 mt-3">
+                                    @foreach (explode(',', $job->job_type) as $type)
+                                        <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
+                                            {{ trim($type) }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                                <p class="mt-3 text-sm text-gray-600 line-clamp-2">
+                                    {{ $job->job_description }}
+                                </p>
+                                <div class="flex justify-between items-center mt-4">
+                                    <span class="font-semibold">
+                                        Rp {{ number_format($job->salary, 0, ',', '.') }}/month
+                                    </span>
+                                    <span class="text-sm text-gray-500">
+                                        Closing on {{ $job->end_date }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-gray-600">No pinned jobs found.</p>
+                    @endforelse
+                </div>
             </div>
+
+            <!-- Pagination -->
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mt-6">
                 <div class="text-sm text-gray-700 mb-2 md:mb-0"></div>
-                <div class="flex justify-center md:justify-end">
+                <div id="paginationContainer" class="flex justify-center md:justify-end">
                     @if ($jobs->hasPages())
-                        <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}" class="">
+                        <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}">
                             <span class="relative z-0 inline-flex rtl:flex-row-reverse shadow-sm rounded-md">
-                                {{-- Previous Page Link --}}
                                 @if ($jobs->onFirstPage())
                                     <span aria-disabled="true" aria-label="{{ __('pagination.previous') }}">
                                         <span
@@ -359,9 +426,7 @@
                                     </a>
                                 @endif
 
-                                {{-- Pagination Elements --}}
                                 @foreach ($jobs->links()->elements as $element)
-                                    {{-- "Three Dots" Separator --}}
                                     @if (is_string($element))
                                         <span aria-disabled="true">
                                             <span
@@ -369,13 +434,12 @@
                                         </span>
                                     @endif
 
-                                    {{-- Array Of Links --}}
                                     @if (is_array($element))
                                         @foreach ($element as $page => $url)
                                             @if ($page == $jobs->currentPage())
                                                 <span aria-current="page">
                                                     <span
-                                                        class="relative inline-flex items-center px-4 py-2 -ml-px text-base font-medium text-white bg-blue-300 border border-gray-300 cursor-default leading-5">{{ $page }}</span>
+                                                        class="relative inline-flex items-center px-4 py-2 -ml-px text-base font-medium bg-gray-200 border border-gray-300 cursor-default leading-5">{{ $page }}</span>
                                                 </span>
                                             @else
                                                 <a href="{{ $url }}"
@@ -418,9 +482,42 @@
             </div>
         </div>
     </div>
-    </div>
 
+    <!-- Scripts -->
     <script src="{{ asset('assets/js/jobs.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const jobListingsBtn = document.getElementById('jobListingsBtn');
+            const likedJobsBtn = document.getElementById('likedJobsBtn');
+            const jobList = document.getElementById('jobList');
+            const pinnedjobs = document.getElementById('pinnedjobs');
+            const paginationContainer = document.getElementById('paginationContainer');
 
+            function setActiveButton(activeBtn, inactiveBtn) {
+                [activeBtn, inactiveBtn].forEach(btn => {
+                    btn.classList.remove('text-blue-500', 'active-tab');
+                    btn.classList.add('text-gray-500');
+                });
 
+                activeBtn.classList.remove('text-gray-500');
+                activeBtn.classList.add('text-blue-500', 'active-tab');
+            }
+
+            jobListingsBtn.addEventListener('click', () => {
+                jobList.classList.remove('hidden');
+                pinnedjobs.classList.add('hidden');
+                paginationContainer.classList.remove('hidden');
+                setActiveButton(jobListingsBtn, likedJobsBtn);
+            });
+
+            likedJobsBtn.addEventListener('click', () => {
+                pinnedjobs.classList.remove('hidden');
+                jobList.classList.add('hidden');
+                paginationContainer.classList.add('hidden');
+                setActiveButton(likedJobsBtn, jobListingsBtn);
+            });
+
+            setActiveButton(jobListingsBtn, likedJobsBtn);
+        });
+    </script>
 @endsection

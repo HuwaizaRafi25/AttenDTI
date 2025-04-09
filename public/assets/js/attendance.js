@@ -11,23 +11,25 @@ function toggleFilter(type, value) {
 }
 
 function getURLParam(param) {
-    let currentUrl = new URL(window.location.href);
-    return currentUrl.searchParams.get(param);
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
 }
 
 function buildExportUrl(type) {
-    // Ambil parameter dari URL
     let role = getURLParam("role");
     let sort = getURLParam("sort") || "full_name"; // Default sort: 'full_name'
     let direction = getURLParam("direction") || "asc"; // Default direction: 'asc'
     let status = getURLParam("status");
+    let month = getURLParam("month");
+    let year = getURLParam("year");
 
     // Bangun query string
     let queryParams = new URLSearchParams();
-    if (role) queryParams.append("role", role);
     if (sort) queryParams.append("sort", sort);
     if (direction) queryParams.append("direction", direction);
     if (status) queryParams.append("status", status);
+    if (month) queryParams.append("month", month);
+    if (year) queryParams.append("year", year);
 
     // Bangun URL ekspor
     let url = `/users/export/${type}?${queryParams.toString()}`;
@@ -44,12 +46,138 @@ function applySort(column, direction) {
     window.location.href = currentUrl.toString();
 }
 
+function setFilter(type, value) {
+    let currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set(type, value);
+    window.location.href = currentUrl.toString();
+}
+
+function applyMonthFilter(month) {
+    let currentUrl = new URL(window.location.href);
+    let currentMonth = currentUrl.searchParams.get("month");
+    if (currentMonth === month) {
+        currentUrl.searchParams.delete("month");
+    } else {
+        currentUrl.searchParams.set("month", month);
+    }
+}
+function applyYearFilter(year) {
+    let currentUrl = new URL(window.location.href);
+    let currentYear = currentUrl.searchParams.get("year");
+    if (currentYear === year) {
+        currentUrl.searchParams.delete("year");
+    } else {
+        currentUrl.searchParams.set("year", year);
+    }
+}
+
+document.addEventListener("click", function (event) {
+    const button = document.getElementById("sortButton");
+    const dropdown = document.getElementById("sortDropdown");
+
+    // Kalau klik di luar button dan dropdown
+    if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.add("hidden");
+    }
+});
+
 // ===== Ekspor Data ===== //
 function exportData() {
     window.location.href = "/users/export";
 }
 
+const monthButton = document.getElementById("monthButton");
+const monthDropdown = document.getElementById("monthDropdown");
+const selectedMonth = document.getElementById("selectedMonth");
+const monthOptions = document.querySelectorAll(".month-option");
+const monthInput = document.getElementById("monthInput");
+
+// Year Selector
+const yearButton = document.getElementById("yearButton");
+const yearDropdown = document.getElementById("yearDropdown");
+const selectedYear = document.getElementById("selectedYear");
+const yearOptions = document.querySelectorAll(".year-option");
+const yearInput = document.getElementById("yearInput");
+
+// Toggle month dropdown
+monthButton.addEventListener("click", function () {
+    monthDropdown.classList.toggle("hidden");
+    // Close year dropdown if open
+    yearDropdown.classList.add("hidden");
+});
+
+// Toggle year dropdown
+yearButton.addEventListener("click", function () {
+    yearDropdown.classList.toggle("hidden");
+    // Close month dropdown if open
+    monthDropdown.classList.add("hidden");
+});
+
+monthOptions.forEach((option) => {
+    option.addEventListener("click", function () {
+        const month = this.getAttribute("data-month");
+        const monthText = this.getAttribute("data-monthText");
+        selectedMonth.textContent = monthText;
+        monthInput.value = month;
+        monthOptions.forEach((opt) => {
+            opt.classList.remove("bg-blue-50", "text-blue-600", "font-medium");
+        });
+        this.classList.add("bg-blue-50", "text-blue-600", "font-medium");
+        monthDropdown.classList.add("hidden");
+        setFilter("month", month); // Apply filter
+    });
+});
+
+// Handle year selection
+yearOptions.forEach((option) => {
+    option.addEventListener("click", function () {
+        const year = this.getAttribute("data-year");
+        const yearText = this.getAttribute("data-yearText");
+        selectedYear.textContent = year;
+        yearInput.value = year;
+        yearOptions.forEach((opt) => {
+            opt.classList.remove("bg-blue-50", "text-blue-600", "font-medium");
+        });
+        this.classList.add("bg-blue-50", "text-blue-600", "font-medium");
+        yearDropdown.classList.add("hidden");
+        setFilter("year", year); // Apply filter
+    });
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener("click", function (event) {
+    if (
+        !monthButton.contains(event.target) &&
+        !monthDropdown.contains(event.target)
+    ) {
+        monthDropdown.classList.add("hidden");
+    }
+
+    if (
+        !yearButton.contains(event.target) &&
+        !yearDropdown.contains(event.target)
+    ) {
+        yearDropdown.classList.add("hidden");
+    }
+});
+
 document.addEventListener("DOMContentLoaded", function () {
+    attendanceOptions.addEventListener("change", function () {
+        let selected =
+            attendanceOptions.options[attendanceOptions.selectedIndex];
+        selectedAttendance.value = selected.value;
+        selectedAttendance.textContent = selected.textContent;
+        if (selected.value === "absent") {
+            locationOptions.disabled = true;
+            noteInput.disabled = true;
+            timeInputText.disabled = true;
+        } else {
+            locationOptions.disabled = false;
+            noteInput.disabled = false;
+            timeInputText.disabled = false;
+        }
+    });
+
     const printUserButton = document.getElementById("printUserButton");
     const userReportModal = document.getElementById("userReportModal");
     const laporanContainer = document.getElementById("laporanContainer");
@@ -80,46 +208,108 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Event Tambah Pengguna
-    const addButton = document.querySelectorAll(".add-button");
-    const addModal = document.getElementById("addModal");
-    const closeModal = document.getElementById("closeAddUserModal");
+    const importButton = document.querySelectorAll(".importButton");
+    const importAttendanceModal = document.getElementById(
+        "importAttendanceModal"
+    );
+    const closeImportModal = document.getElementById(
+        "closeImportAttendanceModal"
+    );
+    const attendUserButton = document.querySelectorAll(".attendUser-button");
+    const attendUserModal = document.getElementById("attendUserModal");
+    const closeModal = document.getElementById("closeAttendUserModal");
     const addUserForm = document.getElementById("addUserForm");
-    addButton.forEach((button) => {
+    attendUserButton.forEach((button) => {
         button.addEventListener("click", function () {
-            addModal.classList.remove("hidden");
-            addModal.classList.add("flex");
+            attendUserModal.classList.remove("hidden");
+            attendUserModal.classList.add("flex");
         });
     });
 
+    attendanceTypeAttendUser = document.getElementById(
+        "attendanceTypeAttendUser"
+    );
+    timeAttendUser = document.getElementById("timeAttendUser");
+    locationAttendUser =
+        document.getElementById("locationAttendUser");
+    noteAttendUser = document.getElementById("noteAttendUser");
+    attendButton = document.getElementById("attendButton");
+    attendUserModalForm = document.getElementById(
+        "attendUserModalForm"
+    );
+    userAttendUser = document.getElementById("userAttendUser");
+
+    attendButton.onclick = function () {
+        const type = attendanceTypeAttendUser.value;
+
+        if (!type) {
+            alert("Please select an attendance status");
+            return;
+        }
+
+        const isTimeRequired = ["present", "sick", "permit", "late"].includes(type);
+        const isLocationRequired = ["present", "late"].includes(type);
+        const isNoteRequired = ["sick", "permit", "late"].includes(type);
+        const isUserRequired = ["present", "sick", "permit", "late","absent"].includes(type);
+        if (isUserRequired && !userAttendUser.value) {
+            alert("Please select a user");
+            return;
+        }
+        if (isTimeRequired && !timeAttendUser.value) {
+            alert("Please fill in the time");
+            return;
+        }
+
+        if (isLocationRequired && !locationAttendUser.value) {
+            alert("Please select a location");
+            return;
+        }
+
+        if (isNoteRequired && !noteAttendUser.value) {
+            alert("Please fill in the note");
+            return;
+        }
+
+        attendUserModalForm.submit();
+    };
+
+
     closeModal.addEventListener("click", function () {
-        addModal.classList.add("hidden");
-        addModal.classList.remove("flex");
+        attendUserModal.classList.add("hidden");
+        attendUserModal.classList.remove("flex");
     });
 
-    addModal.addEventListener("click", function (e) {
-        if (e.target === addModal) {
-            addModal.classList.add("hidden");
-            addModal.classList.remove("flex");
+    attendUserModal.addEventListener("click", function (e) {
+        if (e.target === attendUserModal) {
+            attendUserModal.classList.add("hidden");
+            attendUserModal.classList.remove("flex");
         }
     });
 
+    importButton.forEach((button) => {
+        button.addEventListener("click", function () {
+            importAttendanceModal.classList.remove("hidden");
+            importAttendanceModal.classList.add("flex");
+        });
+    });
+    closeImportModal.addEventListener("click", function () {
+        importAttendanceModal.classList.add("hidden");
+        importAttendanceModal.classList.remove("flex");
+    });
+    importAttendanceModal.addEventListener("click", function (e) {
+        if (e.target === importAttendanceModal) {
+            importAttendanceModal.classList.add("hidden");
+            importAttendanceModal.classList.remove("flex");
+        }
+    });
     let typingTimer;
     let searchInput = document.getElementById("searchright");
     searchInput.addEventListener("input", function () {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(function () {
-            fetch("/users/search?q=" + searchInput.value)
-                .then(function (response) {
-                    return response.text();
-                })
-                .then(function (html) {
-                    document.getElementById("content").innerHTML = html;
-                    pasangModal();
-                })
-                .catch(function (error) {
-                    console.log("Gagal mencari data:", error);
-                });
-        }, 500);
+            // memperbarui url dengan parameter pencarian
+            toggleFilter("search", searchInput.value);
+        }, 1000); // 500 ms delay
     });
 
     function pasangModal() {
@@ -132,6 +322,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let attendance = button.getAttribute("data-attendance");
                 let date = button.getAttribute("data-date");
                 let time = button.getAttribute("data-time");
+                console.log(time);
                 let userFullname = button.getAttribute("data-userFullname");
                 let username = button.getAttribute("data-username");
                 let userPic = button.getAttribute("data-userPic");
@@ -162,6 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let locationText = document.getElementById("locationText");
                 let locationPicture = document.getElementById("locationPic");
                 let noteText = document.getElementById("noteText");
+                let noteInput = document.getElementById("noteInput");
                 let approvalContainer =
                     document.getElementById("approvalContainer");
                 let actionButtons = document.getElementById("actionButtons");
@@ -179,6 +371,164 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
                 let approveButton = document.getElementById("approveButton");
                 let rejectButton = document.getElementById("rejectButton");
+                let editButton = document.getElementById("editButton");
+                let saveButton = document.getElementById("saveButton");
+                let cancelButton = document.getElementById("cancelButton");
+                let userContainer = document.getElementById("userContainer");
+                let attendanceOptions =
+                    document.getElementById("attendanceOptions");
+                let selectedAttendance =
+                    document.getElementById("selectedAttendance");
+                let attendanceStatusContainer = document.getElementById(
+                    "attendanceStatusContainer"
+                );
+                let timeChild = document.getElementById("timeChild");
+                let timeInput = document.getElementById("timeInput");
+                let timeInputText = document.getElementById("timeInputText");
+                let locationContainer =
+                    document.getElementById("locationContainer");
+                let locationOptions =
+                    document.getElementById("locationOptions");
+                let noteContainer = document.getElementById("noteContainer");
+                let viewAttendanceForm =
+                    document.getElementById("viewAttendanceForm");
+
+                editButton.onclick = function () {
+                    viewAttendanceForm.setAttribute(
+                        "action",
+                        `/attendance/update/${idAttendance}`
+                    );
+
+                    if (attendance === "Absent") {
+                        locationOptions.disabled = true;
+                        noteInput.disabled = true;
+                        timeInputText.disabled = true;
+                    } else {
+                        locationOptions.disabled = false;
+                        noteInput.disabled = false;
+                        timeInputText.disabled = false;
+                    }
+                    timeInputText.value = time;
+                    tombolBack.classList.add("hidden");
+                    tombolBack.classList.remove("flex");
+                    saveButton = document.getElementById("saveButton");
+                    cancelButton = document.getElementById("cancelButton");
+                    saveButton.classList.remove("hidden");
+                    saveButton.classList.add("flex");
+                    cancelButton.classList.remove("hidden");
+                    cancelButton.classList.add("flex");
+                    editButton.classList.add("hidden");
+                    editButton.classList.remove("flex");
+
+                    attendanceOptions.classList.remove("hidden");
+                    selectedAttendance.value = attendance.toLocaleLowerCase;
+                    selectedAttendance.textContent = attendance;
+
+                    attendanceStatusContainer.classList.add("hidden");
+                    attendanceStatusContainer.classList.remove("flex");
+
+                    timeChild.classList.add("hidden");
+                    timeChild.classList.remove("flex");
+                    timeInput.classList.remove("hidden");
+
+                    locationContainer.classList.remove("flex");
+                    locationContainer.classList.add("hidden");
+                    locationOptions.classList.remove("hidden");
+
+                    userContainer.classList.remove(
+                        "hover:bg-slate-50",
+                        "hover:p-2",
+                        "cursor-pointer"
+                    );
+                    userContainer.onclick = function () {
+                        return false;
+                    };
+
+                    noteText.classList.add("hidden");
+                    noteInput.classList.remove("hidden");
+                    noteInput.value = note;
+                };
+
+                saveButton.onclick = function () {
+                    if (attendanceOptions.value === "absent") {
+                        // Langsung submit form
+                        viewAttendanceForm.submit();
+                    } else if (attendanceOptions.value === "present") {
+                        if (timeInputText.value === "") {
+                            alert("Please fill in the time");
+                            return;
+                        }
+                        if (locationOptions.value === "") {
+                            alert("Please select a location");
+                            return;
+                        }
+                        viewAttendanceForm.submit();
+                    } else if (
+                        attendanceOptions.value === "sick" ||
+                        attendanceOptions.value === "permit"
+                    ) {
+                        if (timeInputText.value === "") {
+                            alert("Please fill in the time");
+                            return;
+                        }
+                        if (noteInput.value === "") {
+                            alert("Please fill in the note");
+                            return;
+                        }
+                        viewAttendanceForm.submit();
+                    } else if (attendanceOptions.value === "late") {
+                        if (timeInputText.value === "") {
+                            alert("Please fill in the time");
+                            return;
+                        }
+                        if (locationOptions.value === "") {
+                            alert("Please select a location");
+                            return;
+                        }
+                        if (noteInput.value === "") {
+                            alert("Please fill in the note");
+                            return;
+                        }
+                        viewAttendanceForm.submit();
+                    } else {
+                        alert("Please select an attendance status");
+                    }
+                };
+
+                cancelButton.onclick = function () {
+                    tombolBack.classList.remove("hidden");
+                    tombolBack.classList.add("flex");
+                    saveButton.classList.add("hidden");
+                    saveButton.classList.remove("flex");
+                    cancelButton.classList.add("hidden");
+                    cancelButton.classList.remove("flex");
+                    editButton.classList.remove("hidden");
+                    editButton.classList.add("flex");
+
+                    attendanceOptions.classList.add("hidden");
+                    attendanceStatusContainer.classList.remove("hidden");
+                    attendanceStatusContainer.classList.add("flex");
+
+                    timeChild.classList.remove("hidden");
+                    timeChild.classList.add("flex");
+                    timeInput.classList.add("hidden");
+
+                    locationContainer.classList.add("flex");
+                    locationContainer.classList.remove("hidden");
+                    locationOptions.classList.add("hidden");
+
+                    userContainer.classList.add(
+                        "hover:bg-slate-50",
+                        "hover:p-2",
+                        "cursor-pointer"
+                    );
+                    userContainer.onclick = function () {
+                        window.location.href = `/users/${username}`;
+                    };
+
+                    noteText.classList.remove("hidden");
+                    noteInput.classList.add("hidden");
+                };
 
                 function hiddenActionButtons() {
                     actionButtons.classList.remove("flex");
@@ -187,10 +537,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     approvalContainer.classList.add("hidden");
                 }
 
-                function resetApprovementStatus(){
+                function resetApprovementStatus() {
                     approvementStatusText.textContent = "";
-                    approvementStatusText.classList.remove("text-green-500", "text-red-500", "text-gray-500");
-                    approvementStatusBullet.classList.remove("bg-green-500", "bg-red-500", "bg-gray-500");
+                    approvementStatusText.classList.remove(
+                        "text-green-500",
+                        "text-red-500",
+                        "text-gray-500"
+                    );
+                    approvementStatusBullet.classList.remove(
+                        "bg-green-500",
+                        "bg-red-500",
+                        "bg-gray-500"
+                    );
                 }
 
                 if (attendance == "Absent" && status == "approved") {
@@ -198,7 +556,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     approvementStatusText.textContent = "Absented by";
                     approvementStatusText.classList.add("text-gray-500");
                     approvementStatusBullet.classList.add("bg-gray-500");
-                }else if (attendance == "Absent" && status == "rejected") {
+                } else if (attendance == "Absent" && status == "rejected") {
                     resetApprovementStatus();
                     approvementStatusText.textContent = "Rejected by";
                     approvementStatusText.classList.add("text-red-500");
@@ -226,7 +584,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             "/assets/images/icons/setting.svg";
                     } else {
                         approverText.textContent = approver;
-                        approverProfilePicture.src = `/storage/profilePics/${approverPic}`;
+                        if (approverPic === "") {
+                            approverProfilePicture.src =
+                                "/assets/images/userPlaceholder.png";
+                        } else {
+                            approverProfilePicture.src = `/storage/profilePics/${approverPic}`;
+                        }
                     }
                 }
 
@@ -239,24 +602,73 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 userFullnameText.textContent = userFullname;
                 usernameText.textContent = "@" + username;
-                userProfilePicture.src = `/storage/profilePics/${userPic}`;
+                if (userPic === null) {
+                    userProfilePicture.src =
+                        "/assets/images/userPlaceholder.png";
+                } else {
+                    fetch(`/storage/profilePics/${userPic}`, { method: "HEAD" })
+                        .then((response) => {
+                            if (response.ok) {
+                                userProfilePicture.src = `/storage/profilePics/${userPic}`;
+                            } else {
+                                userProfilePicture.src =
+                                    "/assets/images/userPlaceholder.png";
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "Error checking profile picture:",
+                                error
+                            );
+                            userProfilePicture.src =
+                                "/assets/images/userPlaceholder.png";
+                        });
+                }
                 if (note === "") {
                     noteText.textContent = "-";
                     noteText.classList.add("ml-3");
                 } else {
                     noteText.textContent = note;
+                    noteText.classList.remove("ml-3");
                 }
+
+                userContainer.onclick = function () {
+                    window.location.href = `/users/${username}`;
+                };
 
                 if (locationName === "") {
                     locationPicture.classList.add("hidden");
                     locationText.classList.add("hidden");
                     locationAddressText.textContent = "-";
                 } else {
-                    // locationPicture.classList.add("flex");
-                    // locationName.classList.add("flex");
+                    locationPicture.classList.remove("hidden");
+                    locationText.classList.remove("hidden");
                     locationAddressText.textContent = locationAddress;
                     locationText.textContent = locationName;
-                    locationPicture.src = `/storage/locationPics/${locationPic}`;
+                    if (locationPic === null) {
+                        locationPicture.src =
+                            "/assets/images/picPlaceholder.png";
+                    } else {
+                        fetch(`/storage/locationPics/${locationPic}`, {
+                            method: "HEAD",
+                        })
+                            .then((response) => {
+                                if (response.ok) {
+                                    locationPicture.src = `/storage/locationPics/${locationPic}`;
+                                } else {
+                                    locationPicture.src =
+                                        "/assets/images/picPlaceholder.png";
+                                }
+                            })
+                            .catch((error) => {
+                                console.error(
+                                    "Error checking profile picture:",
+                                    error
+                                );
+                                locationPicture.src =
+                                    "/assets/images/picPlaceholder.png";
+                            });
+                    }
                 }
 
                 attendanceText.textContent = attendance;
@@ -272,7 +684,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "text-gray-500",
                     "text-yellow-500",
                     "text-red-500",
-                    "text-blue-500",
+                    "text-blue-500"
                 );
                 attendanceBullet.classList.remove(
                     "bg-green-500",
@@ -289,12 +701,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 viewModal.classList.remove("hidden");
                 viewModal.classList.add("flex");
 
-                window.addEventListener("click", function (event) {
-                    if (event.target === viewModal) {
-                        viewModal.classList.add("hidden");
-                        viewModal.classList.remove("flex");
-                    }
-                });
+                // window.addEventListener("click", function (event) {
+                //     if (event.target === viewModal) {
+                //         viewModal.classList.add("hidden");
+                //         viewModal.classList.remove("flex");
+                //     }
+                // });
 
                 let tombolBack = document.getElementById(
                     "closeViewAttendanceModal"

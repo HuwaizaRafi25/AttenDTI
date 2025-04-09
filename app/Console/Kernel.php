@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('attendance:create')->dailyAt('08:36');
+        $schedule->command('attendance:create')->dailyAt('07:05');
         $schedule->command('jobs:update-status')->everyMinute();
         $schedule->command('tasks:update-overdue')->everyMinute();
     }

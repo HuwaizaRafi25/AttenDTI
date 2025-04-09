@@ -66,9 +66,14 @@ Route::middleware(['auth'])->group(
         // });
         Route::get('/overview', [DashboardController::class, 'index'])->name('overview');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/attendance/today', [DashboardController::class, 'getTodayAttendance']);
 
         Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('/attendance/search', [AttendanceController::class, 'search'])->name('attendances.search');
+        Route::get('/attendance/form', [AttendanceController::class, 'form'])->name('attendance.form');
         Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
+        Route::post('/attendance/attendUser', [AttendanceController::class, 'attendUser'])->name('attendance.attendUser');
+        Route::put('/attendance/update/{id}', [AttendanceController::class, 'update'])->name('attendance.update');
         Route::post('/attendance/absent', [AttendanceController::class, 'absent'])->name('attendance.absent');
         Route::get('/attendance/approval/{approval}/{id}', [AttendanceController::class, 'approval'])->name('attendances.approval');
         Route::get('/attendances/export/{type}', [AttendanceController::class, 'export'])->name('attendances.export');
@@ -76,6 +81,9 @@ Route::middleware(['auth'])->group(
         Route::post('/attendance/verify-location', [AttendanceController::class, 'verifyLocation'])->name('attendance.verifyLocation');
         Route::post('/register-face', [AttendanceController::class, 'registerFace'])->name('registerFace');
         Route::post('/verify-face', [AttendanceController::class, 'verifyFace']);
+        Route::post('/analyze-attendance', [AttendanceController::class, 'analyzeAttendance']);
+        Route::post('/attandance/import', [AttendanceController::class, 'importAttendance'])->name('attendance.import');
+
 
         Route::get('/announcement', function () {
             return view('menus.announcement');
@@ -114,23 +122,26 @@ Route::middleware(['auth'])->group(
         Route::get('/users/{username}', [UserController::class, 'view'])->name('user.view');
         Route::get('/users/print/interview_magang_pkl', [PrintController::class, 'index_interview'])->name('print.interview_magang_pkl');
         Route::get('/users/print/exit_clearance', [PrintController::class, 'index_exit'])->name('print.exit_clearance');
+        Route::post('/download-word', [PrintController::class, 'downloadWord'])->name('download.word');
 
         Route::get('/users', [UserController::class, 'index'])->name('users.list');
         Route::post('/users/store', [UserController::class, 'store'])->middleware(['Permission:manage_user', 'method.check:POST'])->name('users.store');
         Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::get('/users/update/{id}', [UserController::class, 'updateView'])->name('users.updateView');
         Route::put('/users/updateAct/{id}', [UserController::class, 'update'])->name('users.updateAct');
-        Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+        Route::get('/users/data/search', [UserController::class, 'search'])->name('users.search');
         Route::get('/users/get/placement', [UserController::class, 'getPlacements'])->name('users.getPlacements');
         Route::get('/users/check/username', [UserController::class, 'checkUsername'])->name('checkUsername');
         Route::get('/users/check/itb-account', [UserController::class, 'checkITBAccount'])->name('checkItbAccount');
         Route::get('/users/export/{type}', [UserController::class, 'export'])->name('users.export');
+        Route::get('/getUsers', [UserController::class, 'getUsers'])->name('getUsers');
 
         Route::get('/roles-permissions', [RolePermissionController::class, 'index'])->name('rolesPermissions.index');
         Route::post('/roles-permissions/store', [RolePermissionController::class, 'store'])->name('rolesPermissions.store');
         Route::delete('/user-permission/unlink/{id}', [RolePermissionController::class, 'unlinkUserPermission'])->name('userPermission.unlink');
 
         Route::get('/locations', [LocationController::class, 'index'])->name('location.index');
+        Route::get('/getLocations', [LocationController::class, 'getLocations'])->name('getLocations');
 
         Route::get('/documents', [DocumentController::class, 'index'])->name('document.index');
 

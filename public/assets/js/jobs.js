@@ -11,7 +11,7 @@ function fetchJobs() {
     params.append("search", searchTerm);
     selectedJobTypes.forEach((type) => params.append("jobType[]", type));
     selectedExperienceLevels.forEach((level) =>
-        params.append("jobType[]", level)
+        params.append("experienceLevel[]", level)
     );
 
     // Tampilkan loading state
@@ -150,6 +150,8 @@ function attachPinJobListeners() {
                             "hover:text-gray-600"
                         );
                         heartContainer.classList.add("text-red-500");
+                        // Refresh halaman setelah pin berhasil
+                        location.reload();
                     } else if (data.status === "removed") {
                         icon.classList.replace("fa-solid", "fa-regular");
                         heartContainer.classList.remove("text-red-500");
@@ -157,6 +159,8 @@ function attachPinJobListeners() {
                             "text-gray-400",
                             "hover:text-gray-600"
                         );
+                        // Refresh halaman setelah unpin berhasil (optional)
+                        location.reload();
                     }
                 })
                 .catch((error) => console.error("Error:", error));
@@ -489,7 +493,9 @@ document.querySelectorAll(".pin-job").forEach(function (element) {
         console.log(url);
 
         // Ambil CSRF token dari meta tag
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const csrfToken = document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content");
 
         fetch(url, {
             method: "POST",
@@ -513,13 +519,19 @@ document.querySelectorAll(".pin-job").forEach(function (element) {
                 if (data.status === "success") {
                     icon.classList.remove("fa-regular");
                     icon.classList.add("fa-solid");
-                    heartContainer.classList.remove("text-gray-300", "hover:bg-gray-50");
+                    heartContainer.classList.remove(
+                        "text-gray-300",
+                        "hover:bg-gray-50"
+                    );
                     heartContainer.classList.add("text-red-500");
                 } else if (data.status === "removed") {
                     icon.classList.remove("fa-solid");
                     icon.classList.add("fa-regular");
                     heartContainer.classList.remove("text-red-500");
-                    heartContainer.classList.add("text-gray-300", "hover:bg-gray-50");
+                    heartContainer.classList.add(
+                        "text-gray-300",
+                        "hover:bg-gray-50"
+                    );
                 }
             })
             .catch((error) => {

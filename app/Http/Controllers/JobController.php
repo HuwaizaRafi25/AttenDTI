@@ -22,33 +22,43 @@ class JobController extends Controller
         $search = $request->input('search');
         $selectedJobTypes = $request->input('jobType', []);
         $selectedExperienceLevels = $request->input('experienceLevel', []);
+        $pinned = $request->input('pinned', false);
 
-        $jobs = Jobs::with(['companies', 'pinnedUsers'])
-            ->when($search, function ($query, $search) {
-                $query->where('job_title', 'like', '%' . $search . '%')
+        $query = Jobs::with(['companies', 'pinnedUsers'])->where('is_active', true);
+
+        if ($pinned) {
+            // Jika pinned=true, ambil semua job yang dipin oleh user tanpa pagination
+            $query->whereHas('pinnedUsers', function ($q) {
+                $q->where('user_id', auth()->id());
+            });
+            $jobs = $query->get();
+        } else {
+            // Jika pinned=false atau tidak ada, ambil semua job dengan filter dan pagination
+            $query->when($search, function ($q, $search) {
+                $q->where('job_title', 'like', '%' . $search . '%')
                     ->orWhereHas('companies', function ($q) use ($search) {
                         $q->where('company_name', 'like', '%' . $search . '%')
                             ->orWhere('company_address', 'like', '%' . $search . '%');
                     });
             })
-            ->when(!empty($selectedJobTypes), function ($query) use ($selectedJobTypes) {
-                $query->where(function ($q) use ($selectedJobTypes) {
+            ->when(!empty($selectedJobTypes), function ($q) use ($selectedJobTypes) {
+                $q->where(function ($q) use ($selectedJobTypes) {
                     foreach ($selectedJobTypes as $type) {
                         $q->orWhere('job_type', 'like', '%' . $type . '%');
                     }
                 });
             })
-            ->when(!empty($selectedExperienceLevels), function ($query) use ($selectedExperienceLevels) {
-                $query->where(function ($q) use ($selectedExperienceLevels) {
+            ->when(!empty($selectedExperienceLevels), function ($q) use ($selectedExperienceLevels) {
+                $q->where(function ($q) use ($selectedExperienceLevels) {
                     foreach ($selectedExperienceLevels as $level) {
                         $q->orWhere('job_type', 'like', '%' . $level . '%');
                     }
                 });
-            })
-            ->where('is_active', true)
-            ->latest()
-            ->paginate(4); // Menggunakan pagination
+            });
+            $jobs = $query->latest()->paginate(4);
+        }
 
+        // Hitung jumlah tipe job untuk filter
         $activeJobs = Jobs::select('job_type')->where('is_active', true)->get();
         $jobTypeCounts = [];
 
@@ -62,9 +72,21 @@ class JobController extends Controller
             }
         }
 
+        // Jika request ingin JSON (untuk AJAX)
+        if ($request->wantsJson()) {
+            if ($pinned) {
+                return response()->json($jobs); // Return semua pinned jobs sebagai array
+            } else {
+                return response()->json([
+                    'jobs' => $jobs->items(),           // Hanya item di halaman ini
+                    'pagination' => (string) $jobs->links(), // HTML pagination
+                ]);
+            }
+        }
+
+        // Return view untuk tampilan awal
         return view('menus.job', compact('jobs', 'jobTypeCounts'));
     }
-
 
     public function detail(Jobs $job)
     {
@@ -77,15 +99,13 @@ class JobController extends Controller
                     $query->orWhere('job_title', 'LIKE', '%' . $keyword . '%');
                 }
             })
-            ->get();
+            ->paginate(3);
 
         $selectedJobTypes = explode(',', $job->job_type);
         $selectedJobTypes = array_map('trim', $selectedJobTypes);
 
         return view('menus.job_detail', compact('job', 'similarJobs', 'selectedJobTypes'));
     }
-
-
 
     public function pin(Jobs $job)
     {
@@ -241,7 +261,7 @@ class JobController extends Controller
                 'responsibility' => implode(',', $request['responsibilities']),
             ]);
 
-            return redirect()->route('jobs.show', $job->id);
+            return redirect()->route('jobs.view', $job->id);
         } catch (\Exception $e) {
             Log::error('Failed to create user: ' . $e->getMessage(), [
                 'exception' => $e

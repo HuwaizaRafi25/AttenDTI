@@ -19,6 +19,16 @@ class PrintController extends Controller
         return view('menus.print_exit');
     }
 
+    public function downloadWord(Request $request)
+    {
+        $htmlContent = $request->input('html_content');
+
+        return response()->make($htmlContent, 200, [
+            'Content-Type' => 'application/msword',
+            'Content-Disposition' => 'attachment; filename="laporan_transaksi.doc"'
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

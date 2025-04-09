@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('face_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->string('face_code');
+            $table->longText('face_code');
             $table->timestamps();
         });
     }

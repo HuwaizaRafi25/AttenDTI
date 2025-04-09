@@ -47,7 +47,7 @@
                                 class="{{ Request::is('attendances') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
                                 <span>Attendance</span>
                                 <span
-                                    class="{{ Request::is('attendance') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
+                                    class="{{ Request::is('attendances') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
                             </a>
                             <a href="/announcement"
                                 class="{{ Request::is(patterns: 'announcement') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
@@ -118,7 +118,7 @@
                         Overview
                     </a>
                     <a href="/attendances"
-                        class="{{ Request::is('attendance') ? 'text-blue-600' : 'text-gray-600' }} block px-3 py-2 rounded-md text-base font-medium transition-colors">
+                        class="{{ Request::is('attendances') ? 'text-blue-600' : 'text-gray-600' }} block px-3 py-2 rounded-md text-base font-medium transition-colors">
                         <i
                             class="fas fa-calendar-check mr-2 {{ Request::is('attendances') ? 'text-blue-600' : 'text-gray-600' }}"></i>
                         Attendance
@@ -129,9 +129,9 @@
                             class="fas fa-bullhorn mr-2 {{ Request::is('announcement') ? 'text-blue-600' : 'text-gray-600' }}"></i>
                         Announcement
                     </a>
-                    <a href="/task"
-                        class="{{ Request::is('task') ? 'text-blue-600' : 'text-gray-600' }} block px-3 py-2 rounded-md text-base font-medium transition-colors">
-                        <i class="fas fa-tasks mr-2 {{ Request::is('task') ? 'text-blue-600' : 'text-gray-600' }}"></i>
+                    <a href="/tasks"
+                        class="{{ Request::is('tasks') ? 'text-blue-600' : 'text-gray-600' }} block px-3 py-2 rounded-md text-base font-medium transition-colors">
+                        <i class="fas fa-tasks mr-2 {{ Request::is('tasks') ? 'text-blue-600' : 'text-gray-600' }}"></i>
                         Task
                     </a>
                     <a href="/job"
@@ -166,6 +166,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ config('app.name', 'AttenDTI') }}</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="shortcut icon" href="{{ asset('assets/images/icons/dti_icon.png') }}" type="image/x-icon">
@@ -178,9 +179,6 @@
         @if (Route::currentRouteName() === 'user.index')
             <link rel="stylesheet" href="{{ asset('node_modules/cropperjs/dist/cropper.min.css') }}">
         @endif
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
-
     </head>
 
     <body class="font-sans antialiased overflow-y-scroll bg-gray-50">
@@ -356,7 +354,7 @@
                     </li>
                 </div>
 
-                <div class="menu">
+                {{-- <div class="menu">
                     <li class="nav-link">
                         <div class="navhead">
                             <span class="icon">
@@ -381,7 +379,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="menu">
                     <li class="nav-link" data-navLink="6">
@@ -406,7 +404,7 @@
                 </div>
             </div>
 
-            <div class="sticky -bottom-6 mt-2.5 z-20">
+            <div class="sticky bottom-3 mt-2.5 z-20">
                 <div class="p-2 rounded-md bg-[#bec2eb]">
                     <div class="flex items-center justify-between w-full">
                         <div class="flex items-center gap-x-2">
@@ -437,6 +435,9 @@
         @include('menus.modals.user.view_user_modal')
         @include('menus.modals.user.delete_user_modal')
         @include('menus.modals.attendance.view_attendance_modal')
+        @include('menus.modals.attendance.attend_user_modal')
+        @include('menus.modals.attendance.import_attendance_modal')
+        @include('menus.modals.attendance.view_attendance_report_modal')
         <div
             class="home absolute top-0 lg:left-[296px] w-screen left-0 min-h-screen h-screen bg-gray-50 transition-all transform duration-300">
             <!-- Header -->

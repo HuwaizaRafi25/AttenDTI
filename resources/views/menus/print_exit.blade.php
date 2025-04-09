@@ -20,6 +20,11 @@
                 margin-bottom: 20px;
             }
 
+            .signature-section {
+                display: block !important;
+                page-break-before: always;
+            }
+
             .page-content {
                 position: relative;
             }
@@ -28,8 +33,14 @@
                 page-break-before: always;
             }
 
-            #laporanContainer table:first-of-type {
-                display: none;
+            .signature-section table {
+                display: table !important;
+                width: 100%;
+            }
+
+            .signature-section td,
+            .signature-section th {
+                border-color: #000 !important;
             }
 
             .page-content {
@@ -736,9 +747,9 @@
                                     berlaku.
                                 </p>
 
-                                <div class="w-full max-w-4xl mx-auto">
+                                <div class="w-full max-w-4xl mx-auto signature-section">
                                     <div class="text-right mb-4">
-                                        Bandung, _____________ 20__
+                                        Bandung, {{ date('d M Y') }}
                                     </div>
 
                                     <table class="w-full border border-gray-800">

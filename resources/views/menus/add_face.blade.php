@@ -162,7 +162,6 @@
                 <div class="loading-spinner"></div>
             </div>
         </div>
-        <!-- Awalnya tombol di-disable, akan diaktifkan setelah inisialisasi selesai -->
         <button id="registerBtn" disabled>Register Face</button>
         <div id="registerStatus"></div>
     </div>
@@ -231,12 +230,10 @@
             }
         }
 
-// Fungsi animasi garis pemindaian (sudah berhasil, tapi tetap diperiksa)
 function animateScanLine(videoEl) {
     const scanCanvas = document.getElementById('scanCanvas');
     const ctx = scanCanvas.getContext('2d');
 
-    // Pastikan videoEl memiliki dimensi
     if (!videoEl.videoWidth || !videoEl.videoHeight) {
         console.warn('Video dimensions not available yet. Retrying...');
         setTimeout(() => animateScanLine(videoEl), 100);
@@ -268,7 +265,6 @@ function animateScanLine(videoEl) {
     draw();
 }
 
-// Fungsi deteksi wajah dan menggambar landmark (diperbarui)
 async function detectFaceAndDrawLandmarks() {
     const videoEl = document.getElementById('vid');
     const canvas = document.getElementById('overlay');
@@ -294,45 +290,36 @@ async function detectFaceAndDrawLandmarks() {
             detections.forEach(detection => {
                 const positions = detection.landmarks.positions;
 
-                // Gambar mesh putih
                 ctx.beginPath();
-                ctx.strokeStyle = 'white'; // Warna mesh seperti pada gambar
+                ctx.strokeStyle = 'white';
                 ctx.lineWidth = 1;
 
-                // Hubungkan titik-titik untuk membuat pola mesh sederhana
-                // Contoh: Hubungkan titik-titik secara vertikal dan horizontal di sekitar wajah
                 for (let i = 0; i < positions.length; i++) {
                     const p1 = positions[i];
-                    // Hubungkan ke titik di atas/bawah (jika ada)
                     if (i + 1 < positions.length && Math.abs(p1.y - positions[i + 1].y) < 50) {
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(positions[i + 1].x, positions[i + 1].y);
                     }
-                    // Hubungkan ke titik di kiri/kanan (jika ada)
                     if (i - 1 >= 0 && Math.abs(p1.x - positions[i - 1].x) < 50) {
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(positions[i - 1].x, positions[i - 1].y);
                     }
                 }
 
-                // Gambar garis merah vertikal dan horizontal untuk efek pemindaian
                 ctx.beginPath();
                 ctx.strokeStyle = 'red';
                 ctx.lineWidth = 2;
 
-                // Garis merah vertikal (tengah wajah)
-                const midX = (positions[0].x + positions[16].x) / 2; // Tengah rahang
+                const midX = (positions[0].x + positions[16].x) / 2;
                 ctx.moveTo(midX, 0);
                 ctx.lineTo(midX, canvas.height);
 
-                // Garis merah horizontal (tengah wajah)
-                const midY = (positions[0].y + positions[16].y) / 2; // Tengah rahang
+                const midY = (positions[0].y + positions[16].y) / 2;
                 ctx.moveTo(0, midY);
                 ctx.lineTo(canvas.width, midY);
 
                 ctx.stroke();
 
-                // Gambar titik-titik landmark (opsional, untuk debug)
                 positions.forEach(point => {
                     ctx.beginPath();
                     ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI);
@@ -350,7 +337,6 @@ async function detectFaceAndDrawLandmarks() {
     requestAnimationFrame(detectFaceAndDrawLandmarks);
 }
 
-        // Fungsi registerFace
         async function registerFace() {
             const videoEl = document.getElementById('vid');
             const registerStatus = document.getElementById('registerStatus');
@@ -369,7 +355,6 @@ async function detectFaceAndDrawLandmarks() {
                     const descriptorArray = new Float32Array(detection.descriptor);
                     const binaryString = btoa(String.fromCharCode(...new Uint8Array(descriptorArray.buffer)));
 
-                    // Kirim data ke server
                     await fetch('/register-face', {
                             method: 'POST',
                             headers: {
@@ -423,7 +408,6 @@ async function detectFaceAndDrawLandmarks() {
                 animateScanLine(videoEl);
                 detectFaceAndDrawLandmarks();
 
-                // 6. Tambahkan event listener
                 registerBtn.addEventListener('click', registerFace);
 
                 console.log('Initialization complete');

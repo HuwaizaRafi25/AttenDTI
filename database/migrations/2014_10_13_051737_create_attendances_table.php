@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('attendance', ['present', 'absent', 'sick', 'permit', 'late'])->default('absent');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('note')->nullable();
+            $table->time('check_in')->nullable();
             $table->timestamps();
 
             $table->index(['user_id', 'attendance', 'created_at']);

@@ -258,58 +258,65 @@
                                     {{ $todoTasks->count() }}
                                 </div>
                             </div>
-                            @foreach ($todoTasks as $task)
-                                <div class="w-full h-max shadow-md bg-white rounded-md mt-2 relative p-4 task-card"
-                                    id="task-{{ $task->id }}" data-status="todo">
-                                    <div class="absolute top-4 right-4 dropdown">
-                                        <button
-                                            class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <div
-                                            class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                            @if ($todoTasks->isEmpty())
+                                <div
+                                    class="w-full h-max rounded-md mt-2 relative p-4 text-gray-500">
+                                    No Task Available
+                                </div>
+                            @else
+                                @foreach ($todoTasks as $task)
+                                    <div class="w-full h-max shadow-md bg-white rounded-md mt-2 relative p-4 task-card"
+                                        id="task-{{ $task->id }}" data-status="todo">
+                                        <div class="absolute top-4 right-4 dropdown">
                                             <button
-                                                class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                                data-task-id="{{ $task->id }}" data-title="{{ $task->title }}"
-                                                data-priority="{{ $task->priority }}"
-                                                data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
-                                                data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
-                                                data-description="{{ $task->description }}">
-                                                Edit
+                                                class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
+                                                <i class="fas fa-ellipsis-v"></i>
                                             </button>
-                                            <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                                                data-task-id="{{ $task->id }}">
-                                                Remove
+                                            <div
+                                                class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                                                <button
+                                                    class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                    data-task-id="{{ $task->id }}" data-title="{{ $task->title }}"
+                                                    data-priority="{{ $task->priority }}"
+                                                    data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
+                                                    data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
+                                                    data-description="{{ $task->description }}">
+                                                    Edit
+                                                </button>
+                                                <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                                    data-task-id="{{ $task->id }}">
+                                                    Remove
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h2 class="text-lg font-semibold mb-2 flex items-center">
+                                            @if ($task->priority == 'high')
+                                                <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                                            @elseif ($task->priority == 'medium')
+                                                <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                                            @elseif ($task->priority == 'low')
+                                                <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                            @endif
+                                            {{ $task->title }}
+                                        </h2>
+                                        <p class="text-gray-500 text-sm mb-4">
+                                            {{ $task->description }}
+                                        </p>
+                                        <div class="flex items-center justify-between text-gray-500 text-xs">
+                                            <div class="flex gap-x-3 items-center">
+                                                <button onclick="changeTaskStatus({{ $task->id }}, 'in_progress')"
+                                                    class="h-max w-max p-2 bg-blue-500 rounded-md text-white">
+                                                    Do The Task
+                                                </button>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <i class="fa-regular fa-clock mr-1"></i>
+                                                <span>{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <h2 class="text-lg font-semibold mb-2 flex items-center">
-                                        @if ($task->priority == 'high')
-                                            <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                                        @elseif ($task->priority == 'medium')
-                                            <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
-                                        @elseif ($task->priority == 'low')
-                                            <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                                        @endif
-                                        {{ $task->title }}
-                                    </h2>
-                                    <p class="text-gray-500 text-sm mb-4">
-                                        {{ $task->description }}
-                                    </p>
-                                    <div class="flex items-center justify-between text-gray-500 text-xs">
-                                        <div class="flex gap-x-3 items-center">
-                                            <button onclick="changeTaskStatus({{ $task->id }}, 'in_progress')"
-                                                class="h-max w-max p-2 bg-blue-500 rounded-md text-white">
-                                                Do The Task
-                                            </button>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fa-regular fa-clock mr-1"></i>
-                                            <span>{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @endif
                         </div>
 
                         <!-- In Progress Column -->
@@ -323,58 +330,65 @@
                                     {{ $inProgressTasks->count() }}
                                 </div>
                             </div>
-                            @foreach ($inProgressTasks as $task)
-                                <div class="w-full h-max shadow-md bg-white rounded-md mt-2 relative p-4 task-card"
-                                    id="task-{{ $task->id }}" data-status="in_progress">
-                                    <div class="absolute top-4 right-4 dropdown">
-                                        <button
-                                            class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <div
-                                            class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                            @if ($inProgressTasks->isEmpty())
+                                <div
+                                    class="w-full h-max rounded-md mt-2 relative p-4 text-gray-500">
+                                    No Task Available
+                                </div>
+                            @else
+                                @foreach ($inProgressTasks as $task)
+                                    <div class="w-full h-max shadow-md bg-white rounded-md mt-2 relative p-4 task-card"
+                                        id="task-{{ $task->id }}" data-status="in_progress">
+                                        <div class="absolute top-4 right-4 dropdown">
                                             <button
-                                                class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                                data-task-id="{{ $task->id }}" data-title="{{ $task->title }}"
-                                                data-priority="{{ $task->priority }}"
-                                                data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
-                                                data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
-                                                data-description="{{ $task->description }}">
-                                                Edit
+                                                class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
+                                                <i class="fas fa-ellipsis-v"></i>
                                             </button>
-                                            <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                                                data-task-id="{{ $task->id }}">
-                                                Remove
+                                            <div
+                                                class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                                                <button
+                                                    class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                    data-task-id="{{ $task->id }}" data-title="{{ $task->title }}"
+                                                    data-priority="{{ $task->priority }}"
+                                                    data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
+                                                    data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
+                                                    data-description="{{ $task->description }}">
+                                                    Edit
+                                                </button>
+                                                <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                                    data-task-id="{{ $task->id }}">
+                                                    Remove
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h2 class="text-lg font-semibold mb-2 flex items-center">
+                                            @if ($task->priority == 'high')
+                                                <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                                            @elseif ($task->priority == 'medium')
+                                                <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                                            @elseif ($task->priority == 'low')
+                                                <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                            @endif
+                                            {{ $task->title }}
+                                        </h2>
+                                        <p class="text-gray-500 text-sm mb-4">
+                                            {{ $task->description }}
+                                        </p>
+                                        <div class="flex items-center justify-between text-gray-500 text-xs">
+                                            <div class="flex gap-x-3 items-center">
+                                                <button onclick="changeTaskStatus({{ $task->id }}, 'completed')"
+                                                    class="h-max w-max p-2 bg-blue-500 rounded-md text-white">
+                                                    Mark Completed
+                                                </button>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <i class="fa-regular fa-clock mr-1"></i>
+                                                <span>{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <h2 class="text-lg font-semibold mb-2 flex items-center">
-                                        @if ($task->priority == 'high')
-                                            <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                                        @elseif ($task->priority == 'medium')
-                                            <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
-                                        @elseif ($task->priority == 'low')
-                                            <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                                        @endif
-                                        {{ $task->title }}
-                                    </h2>
-                                    <p class="text-gray-500 text-sm mb-4">
-                                        {{ $task->description }}
-                                    </p>
-                                    <div class="flex items-center justify-between text-gray-500 text-xs">
-                                        <div class="flex gap-x-3 items-center">
-                                            <button onclick="changeTaskStatus({{ $task->id }}, 'completed')"
-                                                class="h-max w-max p-2 bg-blue-500 rounded-md text-white">
-                                                Mark Completed
-                                            </button>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fa-regular fa-clock mr-1"></i>
-                                            <span>{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @endif
                         </div>
 
                         <!-- Completed Column -->
@@ -388,55 +402,62 @@
                                     {{ $completedTasks->count() }}
                                 </div>
                             </div>
-                            @foreach ($completedTasks as $task)
-                                <div class="w-full h-max shadow-md bg-white rounded-md mt-2 relative p-4 task-card"
-                                    id="task-{{ $task->id }}" data-status="completed">
-                                    <div class="absolute top-4 right-4 dropdown">
-                                        <button
-                                            class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <div
-                                            class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                            @if ($completedTasks->isEmpty())
+                                <div
+                                    class="w-full h-max rounded-md mt-2 relative p-4 text-gray-500">
+                                    No Task Available
+                                </div>
+                            @else
+                                @foreach ($completedTasks as $task)
+                                    <div class="w-full h-max shadow-md bg-white rounded-md mt-2 relative p-4 task-card"
+                                        id="task-{{ $task->id }}" data-status="completed">
+                                        <div class="absolute top-4 right-4 dropdown">
                                             <button
-                                                class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                                data-task-id="{{ $task->id }}" data-title="{{ $task->title }}"
-                                                data-priority="{{ $task->priority }}"
-                                                data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
-                                                data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
-                                                data-description="{{ $task->description }}">
-                                                Edit
+                                                class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
+                                                <i class="fas fa-ellipsis-v"></i>
                                             </button>
-                                            <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                                                data-task-id="{{ $task->id }}">
-                                                Remove
+                                            <div
+                                                class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                                                <button
+                                                    class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                    data-task-id="{{ $task->id }}" data-title="{{ $task->title }}"
+                                                    data-priority="{{ $task->priority }}"
+                                                    data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
+                                                    data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
+                                                    data-description="{{ $task->description }}">
+                                                    Edit
+                                                </button>
+                                                <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                                    data-task-id="{{ $task->id }}">
+                                                    Remove
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h2 class="text-lg font-semibold mb-2 flex items-center">
+                                            @if ($task->priority == 'high')
+                                                <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                                            @elseif ($task->priority == 'medium')
+                                                <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                                            @elseif ($task->priority == 'low')
+                                                <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                            @endif
+                                            {{ $task->title }}
+                                        </h2>
+                                        <p class="text-gray-500 text-sm mb-4">
+                                            {{ $task->description }}
+                                        </p>
+                                        <div class="flex items-center justify-between text-gray-500 text-xs">
+                                            <div class="flex gap-x-3 items-center">
+                                                <!-- Tidak ada aksi untuk update di kolom ini -->
+                                            </div>
+                                            <div class="flex items-center">
+                                                <i class="fa-regular fa-clock mr-1"></i>
+                                                <span>{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <h2 class="text-lg font-semibold mb-2 flex items-center">
-                                        @if ($task->priority == 'high')
-                                            <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                                        @elseif ($task->priority == 'medium')
-                                            <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
-                                        @elseif ($task->priority == 'low')
-                                            <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                                        @endif
-                                        {{ $task->title }}
-                                    </h2>
-                                    <p class="text-gray-500 text-sm mb-4">
-                                        {{ $task->description }}
-                                    </p>
-                                    <div class="flex items-center justify-between text-gray-500 text-xs">
-                                        <div class="flex gap-x-3 items-center">
-                                            <!-- Tidak ada aksi untuk update di kolom ini -->
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fa-regular fa-clock mr-1"></i>
-                                            <span>{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @endif
                         </div>
 
                         <!-- Backlog Column -->
@@ -450,58 +471,65 @@
                                     {{ $backlogTasks->count() }}
                                 </div>
                             </div>
-                            @foreach ($backlogTasks as $task)
-                                <div class="w-full h-max shadow-md bg-white rounded-md mt-2 relative p-4 task-card"
-                                    id="task-{{ $task->id }}" data-status="backlog">
-                                    <div class="absolute top-4 right-4 dropdown">
-                                        <button
-                                            class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <div
-                                            class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                            @if ($backlogTasks->isEmpty())
+                                <div
+                                    class="w-full h-max rounded-md mt-2 relative p-4 text-gray-500">
+                                    No Task Available
+                                </div>
+                            @else
+                                @foreach ($backlogTasks as $task)
+                                    <div class="w-full h-max shadow-md bg-white rounded-md mt-2 relative p-4 task-card"
+                                        id="task-{{ $task->id }}" data-status="backlog">
+                                        <div class="absolute top-4 right-4 dropdown">
                                             <button
-                                                class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                                data-task-id="{{ $task->id }}" data-title="{{ $task->title }}"
-                                                data-priority="{{ $task->priority }}"
-                                                data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
-                                                data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
-                                                data-description="{{ $task->description }}">
-                                                Edit
+                                                class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
+                                                <i class="fas fa-ellipsis-v"></i>
                                             </button>
-                                            <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                                                data-task-id="{{ $task->id }}">
-                                                Remove
+                                            <div
+                                                class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                                                <button
+                                                    class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                    data-task-id="{{ $task->id }}" data-title="{{ $task->title }}"
+                                                    data-priority="{{ $task->priority }}"
+                                                    data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
+                                                    data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
+                                                    data-description="{{ $task->description }}">
+                                                    Edit
+                                                </button>
+                                                <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                                    data-task-id="{{ $task->id }}">
+                                                    Remove
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h2 class="text-lg font-semibold mb-2 flex items-center">
+                                            @if ($task->priority == 'high')
+                                                <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                                            @elseif ($task->priority == 'medium')
+                                                <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                                            @elseif ($task->priority == 'low')
+                                                <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                            @endif
+                                            {{ $task->title }}
+                                        </h2>
+                                        <p class="text-gray-500 text-sm mb-4">
+                                            {{ $task->description }}
+                                        </p>
+                                        <div class="flex items-center justify-between text-gray-500 text-xs">
+                                            <div class="flex gap-x-3 items-center">
+                                                <button onclick="changeTaskStatus({{ $task->id }}, 'in_progress')"
+                                                    class="h-max w-max p-2 bg-blue-500 rounded-md text-white">
+                                                    Do The Task
+                                                </button>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <i class="fa-regular fa-clock mr-1"></i>
+                                                <span>{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <h2 class="text-lg font-semibold mb-2 flex items-center">
-                                        @if ($task->priority == 'high')
-                                            <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                                        @elseif ($task->priority == 'medium')
-                                            <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
-                                        @elseif ($task->priority == 'low')
-                                            <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                                        @endif
-                                        {{ $task->title }}
-                                    </h2>
-                                    <p class="text-gray-500 text-sm mb-4">
-                                        {{ $task->description }}
-                                    </p>
-                                    <div class="flex items-center justify-between text-gray-500 text-xs">
-                                        <div class="flex gap-x-3 items-center">
-                                            <button onclick="changeTaskStatus({{ $task->id }}, 'in_progress')"
-                                                class="h-max w-max p-2 bg-blue-500 rounded-md text-white">
-                                                Do The Task
-                                            </button>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fa-regular fa-clock mr-1"></i>
-                                            <span>{{ \Carbon\Carbon::parse($task->due_date)->format('d M, Y') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -518,107 +546,116 @@
                                         <i class="fa-solid fa-plus mr-2"></i> New Task
                                     </button>
                                     <!-- <input type="search" placeholder="Search..."
-                                        class="w-64 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"> -->
+                                            class="w-64 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"> -->
                                     <!-- <button class="p-2 border rounded-lg hover:bg-gray-50">
-                                        <i class="fa-solid fa-filter"></i>
-                                    </button> -->
+                                            <i class="fa-solid fa-filter"></i>
+                                        </button> -->
                                 </div>
                             </div>
                             <div class="space-y-4">
                                 <div class="w-full overflow-x-auto">
                                     <div class="min-w-max space-y-4">
-                                    @foreach (['To Do' => $todoTasks, 'In Progress' => $inProgressTasks, 'Completed' => $completedTasks, 'Backlog' => $backlogTasks] as $section => $tasks)
-    <div class="border rounded-lg">
-        <!-- Header Section -->
-        <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
-             id="{{ strtolower(str_replace(' ', '', $section)) }}Dropdown">
-            <div class="flex items-center">
-                <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
-                <h3 class="font-medium">{{ $section }}</h3>
-                <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">
-                    {{ $tasks->count() }}
-                </span>
-            </div>
-        </div>
+                                        @foreach (['To Do' => $todoTasks, 'In Progress' => $inProgressTasks, 'Completed' => $completedTasks, 'Backlog' => $backlogTasks] as $section => $tasks)
+                                            <div class="border rounded-lg">
+                                                <!-- Header Section -->
+                                                <div class="flex items-center justify-between p-4 bg-gray-100 rounded-t-lg cursor-pointer"
+                                                    id="{{ strtolower(str_replace(' ', '', $section)) }}Dropdown">
+                                                    <div class="flex items-center">
+                                                        <i class="fas fa-chevron-down w-4 h-4 mr-2"></i>
+                                                        <h3 class="font-medium">{{ $section }}</h3>
+                                                        <span
+                                                            class="ml-2 px-2 py-1 text-xs font-medium bg-gray-200 rounded-full">
+                                                            {{ $tasks->count() }}
+                                                        </span>
+                                                    </div>
+                                                </div>
 
-        <!-- Task List -->
-        <div id="{{ strtolower(str_replace(' ', '', $section)) }}Tasks" class="divide-y divide-gray-200">
-            <!-- Table Header -->
-            <div class="grid grid-cols-5 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
-                <div class="col-span-1 text-center">Task Name</div>
-                <div class="col-span-2 text-center">Description</div>
-                <div class="col-span-1 text-center">Estimation</div>
-                <div class="col-span-1 text-center">Action</div>
-            </div>
+                                                <!-- Task List -->
+                                                <div id="{{ strtolower(str_replace(' ', '', $section)) }}Tasks"
+                                                    class="divide-y divide-gray-200">
+                                                    <!-- Table Header -->
+                                                    <div
+                                                        class="grid grid-cols-5 gap-4 py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50">
+                                                        <div class="col-span-1 text-center">Task Name</div>
+                                                        <div class="col-span-2 text-center">Description</div>
+                                                        <div class="col-span-1 text-center">Estimation</div>
+                                                        <div class="col-span-1 text-center">Action</div>
+                                                    </div>
 
-            <!-- Task Rows -->
-            @forelse ($tasks as $task)
-                <div id="task-row-{{ $task->id }}"
-                     class="grid grid-cols-5 gap-4 py-4 px-4 items-center text-sm task-row"
-                     data-status="{{ strtolower($section) }}"
-                     data-task-id="{{ $task->id }}">
+                                                    <!-- Task Rows -->
+                                                    @forelse ($tasks as $task)
+                                                        <div id="task-row-{{ $task->id }}"
+                                                            class="grid grid-cols-5 gap-4 py-4 px-4 items-center text-sm task-row"
+                                                            data-status="{{ strtolower($section) }}"
+                                                            data-task-id="{{ $task->id }}">
 
-                    <div class="col-span-1 text-center font-medium truncate">
-                        {{ $task->title }}
-                    </div>
+                                                            <div class="col-span-1 text-center font-medium truncate">
+                                                                {{ $task->title }}
+                                                            </div>
 
-                    <div class="col-span-2 text-center truncate">
-                        {{ $task->description }}
-                    </div>
+                                                            <div class="col-span-2 text-center truncate">
+                                                                {{ $task->description }}
+                                                            </div>
 
-                    <div class="col-span-1 text-center truncate">
-                        {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
-                        -
-                        {{ \Carbon\Carbon::parse($task->due_date)->format('d M Y') }}
-                    </div>
+                                                            <div class="col-span-1 text-center truncate">
+                                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
+                                                                -
+                                                                {{ \Carbon\Carbon::parse($task->due_date)->format('d M Y') }}
+                                                            </div>
 
-                    <div class="col-span-1 text-center relative">
-                        <div class="flex items-center justify-center space-x-2">
-                            @if (in_array(strtolower($section), ['backlog', 'to do', 'in progress']))
-                                @if (in_array(strtolower($section), ['backlog', 'to do']))
-                                    <button onclick="changeTaskStatus({{ $task->id }}, 'in_progress')"
-                                            title="Do The Task"
-                                            class="p-2 bg-transparent rounded-md text-blue-500">
-                                        <i class="fas fa-play"></i>
-                                    </button>
-                                @elseif (strtolower($section) == 'in progress')
-                                    <button onclick="changeTaskStatus({{ $task->id }}, 'completed')"
-                                            title="Mark Completed"
-                                            class="p-2 bg-transparent rounded-md text-blue-500">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                @endif
-                            @endif
+                                                            <div class="col-span-1 text-center relative">
+                                                                <div class="flex items-center justify-center space-x-2">
+                                                                    @if (in_array(strtolower($section), ['backlog', 'to do', 'in progress']))
+                                                                        @if (in_array(strtolower($section), ['backlog', 'to do']))
+                                                                            <button
+                                                                                onclick="changeTaskStatus({{ $task->id }}, 'in_progress')"
+                                                                                title="Do The Task"
+                                                                                class="p-2 bg-transparent rounded-md text-blue-500">
+                                                                                <i class="fas fa-play"></i>
+                                                                            </button>
+                                                                        @elseif (strtolower($section) == 'in progress')
+                                                                            <button
+                                                                                onclick="changeTaskStatus({{ $task->id }}, 'completed')"
+                                                                                title="Mark Completed"
+                                                                                class="p-2 bg-transparent rounded-md text-blue-500">
+                                                                                <i class="fas fa-check"></i>
+                                                                            </button>
+                                                                        @endif
+                                                                    @endif
 
-                            <div class="dropdown relative">
-                                <button class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                                <div class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
-                                    <button class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                            data-task-id="{{ $task->id }}"
-                                            data-title="{{ $task->title }}"
-                                            data-priority="{{ $task->priority }}"
-                                            data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
-                                            data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
-                                            data-description="{{ $task->description }}">
-                                        Edit
-                                    </button>
-                                    <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                                         data-task-id="{{ $task->id }}">
-                                        Remove
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="py-4 px-4 text-center text-sm text-gray-500">No tasks available.</div>
-            @endforelse
-        </div>
-    </div>
-@endforeach
+                                                                    <div class="dropdown relative">
+                                                                        <button
+                                                                            class="dropdown-toggle text-gray-400 hover:text-gray-600 focus:outline-none">
+                                                                            <i class="fas fa-ellipsis-h"></i>
+                                                                        </button>
+                                                                        <div
+                                                                            class="dropdown-menu hidden absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-lg z-10">
+                                                                            <button
+                                                                                class="edit-button w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                                                data-task-id="{{ $task->id }}"
+                                                                                data-title="{{ $task->title }}"
+                                                                                data-priority="{{ $task->priority }}"
+                                                                                data-start-date="{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') : '' }}"
+                                                                                data-due-date="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
+                                                                                data-description="{{ $task->description }}">
+                                                                                Edit
+                                                                            </button>
+                                                                            <div class="remove-task block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                                                                data-task-id="{{ $task->id }}">
+                                                                                Remove
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @empty
+                                                        <div class="py-4 px-4 text-center text-sm text-gray-500">No tasks
+                                                            available.</div>
+                                                    @endforelse
+                                                </div>
+                                            </div>
+                                        @endforeach
 
                                     </div>
                                 </div>
@@ -638,7 +675,7 @@
                                         <div class="flex items-center space-x-4">
                                             <div class="relative">
                                                 <!-- <input type="text" placeholder="Search..."
-                                                    class="pl-2 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /> -->
+                                                        class="pl-2 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /> -->
                                             </div>
                                             <button
                                                 class="openModal bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium flex items-center hover:bg-blue-700 transition duration-150 ease-in-out">
@@ -728,9 +765,9 @@
                                     <div class="flex items-center text-sm text-gray-600">
                                         Project duration: {{ $start->format('M d') }} - {{ $end->format('M d') }}
                                     </div>
-                                        <!-- <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                                            View All Tasks
-                                        </button> -->
+                                    <!-- <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                                View All Tasks
+                                            </button> -->
                                 </div>
                             </div>
                         </div>
@@ -740,7 +777,6 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const taskModal = document.getElementById("modal");

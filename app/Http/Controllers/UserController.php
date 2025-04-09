@@ -75,6 +75,7 @@ class UserController extends Controller
     public function search(Request $request)
     {
         $search = $request->get('q');
+        $placements = Location::all();
 
         $users = User::with('placement')
             ->where(function ($query) use ($search) {
@@ -84,7 +85,7 @@ class UserController extends Controller
             ->paginate(5);
 
 
-        return view('menus.tables.user_table', compact('users'));
+        return view('menus.tables.user_table', compact('users', 'placements'));
     }
 
     public function checkUsername(Request $request)
@@ -268,7 +269,7 @@ class UserController extends Controller
                 if ($role->name == 'admin') {
                     return redirect()->route('users.list');
                 } else {
-                    return redirect()->route('user.view');
+                    return redirect()->route('user.view', ['username' => Auth::user()->username]);
                 }
             }
         } catch (\Exception $e) {
@@ -284,6 +285,30 @@ class UserController extends Controller
                 }
             }
         }
+    }
+
+    public function getUsers(){
+        // bulan dan tahun ini
+        $selectedMonth = date('m');
+        $selectedYear = date('Y');
+
+        $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $selectedMonth, $selectedYear);
+
+        $dates = [];
+        for ($day = 1; $day <= $numberOfDays; $day++) {
+            $dates[] = $selectedYear . '-' . $selectedMonth . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
+        }
+
+        $firstDate = $dates[0];
+        $lastDate = end($dates);
+
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', 'user');
+        })->whereNotNull('period_start_date')->whereNotNull('period_end_date')->whereNotNull('placement_id')->whereNotNull('institution')
+        ->whereDate('period_end_date', '>=', $firstDate)
+        ->whereDate('period_start_date', '<=', $lastDate)
+        ->get();
+        return response()->json($users);
     }
 
     public function destroy($id)

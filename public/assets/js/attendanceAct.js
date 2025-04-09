@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    formButton.addEventListener("click", () => window.location.href = "/formulir");
+    formButton.addEventListener("click", () => window.location.href = "/attendance/form");
     document.getElementById("okButton").addEventListener("click", () => window.location.href = "/attendances");
 
     // Mulai proses

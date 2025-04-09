@@ -335,9 +335,11 @@ document.addEventListener("DOMContentLoaded", function () {
     searchInput.addEventListener("input", function () {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(function () {
-            fetch("/users/search?q=" + searchInput.value)
+            fetch("/users/data/search?q=" + searchInput.value)
                 .then(function (response) {
+                    console.log(response);
                     return response.text();
+
                 })
                 .then(function (html) {
                     document.getElementById("content").innerHTML = html;

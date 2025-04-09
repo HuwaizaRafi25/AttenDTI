@@ -56,129 +56,59 @@
                             <div id="optionsMenu"
                                 class="hidden md:relative md:flex md:flex-row md:space-y-0 md:space-x-4 bg-white md:bg-transparent p-3 md:p-0 rounded-md md:rounded-none shadow-xl md:border-none border-t-2 md:shadow-none items-center space-y-2 mt-3 md:mt-0 ml-4 !relative"
                                 style="">
-                                <div class="relative" x-data="{
-                                    open: false,
-                                    filters: { role: getURLParam('role'), status: getURLParam('status') },
-                                    toggleFilter(type, value) {
-                                        let currentUrl = new URL(window.location.href);
-                                        let currentValue = currentUrl.searchParams.get(type);
-                                        if (currentValue === value) {
-                                            currentUrl.searchParams.delete(type);
-                                        } else {
-                                            currentUrl.searchParams.set(type, value);
-                                        }
-                                        window.location.href = currentUrl.toString();
-                                    }
-                                }">
-                                    <button @click="open = !open"
-                                        class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
-                                        <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/filter.svg')) !!}</span>
-                                        <span>Filter</span>
-                                    </button>
-
-                                    <div x-show="open" x-cloak @click.away="open = false"
-                                        class="fixed -mt-6 md:mt-2 w-48 md:ml-0 ml-[116px] bg-white border-t rounded-md shadow-lg z-50">
-                                        <div class="py-1">
-                                            <a href="#" :class="{ 'bg-blue-100': filters.role === 'all' }"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="toggleFilter('role', 'all')">All</a>
-                                            <a href="#" :class="{ 'bg-blue-100': filters.role === 'admin' }"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="toggleFilter('role', 'admin')">Admin</a>
-                                            <a href="#" :class="{ 'bg-blue-100': filters.role === 'alumni' }"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="toggleFilter('role', 'alumni')">Alumni</a>
-                                            <a href="#" :class="{ 'bg-blue-100': filters.role === 'user' }"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="toggleFilter('role', 'user')">User</a>
-                                            <div class="border-t mx-2"></div>
-                                            <a href="#" :class="{ 'bg-blue-100': filters.status === '1' }"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="toggleFilter('status', '1')">Online</a>
-                                            <a href="#" :class="{ 'bg-blue-100': filters.status === '0' }"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="toggleFilter('status', '0')">Offline</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="relative" x-data="{
-                                    open: false,
-                                    activeSort: getURLParam('sort'),
-                                    activeDirection: getURLParam('direction'),
-                                    applySort(column, direction) {
-                                        let currentUrl = new URL(window.location.href);
-                                        currentUrl.searchParams.set('sort', column);
-                                        currentUrl.searchParams.set('direction', direction);
-                                        window.location.href = currentUrl.toString();
-                                    }
-                                }">
-                                    <button @click="open = !open"
+                                <div class="relative">
+                                    <button id="sortButton" onclick="document.getElementById('sortDropdown').classList.toggle('hidden')"
                                         class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
                                         <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/sort.svg')) !!}</span>
                                         <span>Sort</span>
                                     </button>
-                                    <div x-show="open" x-cloak @click.away="open = false"
-                                        class="fixed md:ml-0 ml-[116px] md:mt-2 -mt-6 w-48 bg-white border-t rounded-md shadow-lg z-10">
+
+                                    <div id="sortDropdown"
+                                        class="hidden fixed md:ml-0 ml-[116px] md:mt-2 -mt-6 w-48 bg-white border-t rounded-md shadow-lg z-10">
                                         <div class="py-1">
-                                            <a href="#"
-                                                :class="activeSort === 'full_name' && activeDirection === 'asc' ?
-                                                    'bg-blue-100' : ''"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="applySort('full_name', 'asc')">Full Name (A-Z)</a>
-                                            <a href="#"
-                                                :class="activeSort === 'full_name' && activeDirection === 'desc' ?
-                                                    'bg-blue-100' : ''"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="applySort('full_name', 'desc')">Full Name (Z-A)</a>
-                                            <a href="#"
-                                                :class="activeSort === 'username' && activeDirection === 'asc' ?
-                                                    'bg-blue-100' : ''"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="applySort('username', 'asc')">Username (A-Z)</a>
-                                            <a href="#"
-                                                :class="activeSort === 'username' && activeDirection === 'desc' ?
-                                                    'bg-blue-100' : ''"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="applySort('username', 'desc')">Username (Z-A)</a>
-                                            <a href="#"
-                                                :class="activeSort === 'institution' && activeDirection === 'asc' ?
-                                                    'bg-blue-100' : ''"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="applySort('institution', 'asc')">Institution (A-Z)</a>
-                                            <a href="#"
-                                                :class="activeSort === 'institution' && activeDirection === 'desc' ?
-                                                    'bg-blue-100' : ''"
-                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                @click.prevent="applySort('institution', 'desc')">Institution (Z-A)</a>
+                                            <a href="#" onclick="applySort('full_name', 'asc')"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Full Name
+                                                (A-Z)</a>
+                                            <a href="#" onclick="applySort('full_name', 'desc')"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Full Name
+                                                (Z-A)</a>
+                                            <a href="#" onclick="applySort('institution', 'asc')"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Institution
+                                                (A-Z)</a>
+                                            <a href="#" onclick="applySort('institution', 'desc')"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Institution
+                                                (Z-A)</a>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="w-px h-6 bg-gray-300 hidden"></div>
 
-
                                 <div class="relative" x-data="{ open: false }">
                                     <button @click="open = !open"
                                         class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
                                         <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/export.svg')) !!}</span>
-                                        <span>Export</span>
+                                        <span>Export/Import</span>
                                     </button>
                                     <div x-show="open" x-cloak @click.away="open = false"
                                         class="fixed -mt-6 md:mt-2 md:ml-0 ml-[116px] w-48 bg-white border-t rounded-md shadow-lg z-10">
                                         <div class="py-1">
                                             <a href="{{ route('users.export', ['type' => 'pdf']) . '?' . http_build_query(request()->query()) }}"
                                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
-                                                sebagai
+                                                as
                                                 <b>PDF</b></a>
                                             <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
                                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
-                                                sebagai
+                                                as
                                                 <b>Excel</b></a>
                                             <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
                                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
-                                                sebagai
+                                                as
                                                 <b>CSV</b></a>
+                                            <a id="importButton"
+                                                class="importButton block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Import
+                                                <b>Data</b>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -200,7 +130,17 @@
                                         <button id="monthButton"
                                             class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200 bg-white border border-gray-200 rounded-md px-3 py-1.5">
                                             <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/calendar.svg')) !!}</span>
-                                            <span id="selectedMonth">January</span>
+                                            @php
+                                                $selectedMonthNumber = request()->get('month');
+                                                $selectedMonthName = $selectedMonthNumber
+                                                    ? \Carbon\Carbon::create()->month($selectedMonthNumber)->format('F')
+                                                    : date('F');
+                                            @endphp
+
+                                            <span id="selectedMonth">
+                                                {{ $selectedMonthName }}
+                                            </span>
+
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -210,39 +150,32 @@
                                         <div id="monthDropdown"
                                             class="absolute mt-1 w-40 bg-white border rounded-md shadow-lg z-10 hidden">
                                             <div class="py-1 max-h-60 overflow-y-auto">
-                                                @php
-                                                    $months = [
-                                                        'January',
-                                                        'February',
-                                                        'March',
-                                                        'April',
-                                                        'May',
-                                                        'June',
-                                                        'July',
-                                                        'August',
-                                                        'September',
-                                                        'October',
-                                                        'November',
-                                                        'December',
-                                                    ];
-                                                @endphp
-
                                                 @foreach ($months as $month)
-                                                    <button data-month="{{ $month }}"
-                                                        class="month-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $month === 'January' ? 'bg-blue-50 text-blue-600 font-medium' : '' }}">
+                                                    @php
+                                                        $monthNumber = \Carbon\Carbon::parse($month)->format('m'); // 1 - 12
+                                                    @endphp
+                                                    <button data-month="{{ $monthNumber }}"
+                                                        data-monthText="{{ $month }}"
+                                                        @click.prevent="toggleFilter('month', '{{ $monthNumber }}')"
+                                                        class="month-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $month === $selectedMonthName ? 'bg-blue-50 text-blue-600 font-medium' : '' }}">
                                                         {{ $month }}
                                                     </button>
                                                 @endforeach
+
                                             </div>
                                         </div>
-                                        <input type="hidden" name="month" id="monthInput" value="January">
+                                        <input type="hidden" name="month" id="monthInput" value="{{ date('F') }}">
                                     </div>
 
                                     <!-- Year Selector -->
                                     <div class="relative" id="yearSelector">
                                         <button id="yearButton"
                                             class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200 bg-white border border-gray-200 rounded-md px-3 py-1.5">
-                                            <span id="selectedYear">{{ date('Y') }}</span>
+                                            @php
+                                                $selectedYear = request()->get('year');
+                                                $selectedYear = $selectedYear ? $selectedYear : date('Y');
+                                            @endphp
+                                            <span id="selectedYear">{{ $selectedYear }}</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -252,14 +185,11 @@
                                         <div id="yearDropdown"
                                             class="absolute mt-1 w-32 bg-white border rounded-md shadow-lg z-10 hidden">
                                             <div class="py-1 max-h-60 overflow-y-auto">
-                                                @php
-                                                    $currentYear = date('Y');
-                                                    $years = range($currentYear, $currentYear - 9);
-                                                @endphp
-
                                                 @foreach ($years as $year)
                                                     <button data-year="{{ $year }}"
-                                                        class="year-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $year == $currentYear ? 'bg-blue-50 text-blue-600 font-medium' : '' }}">
+                                                        data-yearText="{{ $year }}"
+                                                        @click.prevent="toggleFilter('year', '{{ $year }}')"
+                                                        class="year-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $year == $selectedYear ? 'bg-blue-50 text-blue-600 font-medium' : '' }}">
                                                         {{ $year }}
                                                     </button>
                                                 @endforeach
@@ -269,83 +199,6 @@
                                             value="{{ date('Y') }}">
                                     </div>
                                 </div>
-
-                                <script>
-                                    // Month Selector
-                                    const monthButton = document.getElementById('monthButton');
-                                    const monthDropdown = document.getElementById('monthDropdown');
-                                    const selectedMonth = document.getElementById('selectedMonth');
-                                    const monthOptions = document.querySelectorAll('.month-option');
-                                    const monthInput = document.getElementById('monthInput');
-
-                                    // Year Selector
-                                    const yearButton = document.getElementById('yearButton');
-                                    const yearDropdown = document.getElementById('yearDropdown');
-                                    const selectedYear = document.getElementById('selectedYear');
-                                    const yearOptions = document.querySelectorAll('.year-option');
-                                    const yearInput = document.getElementById('yearInput');
-
-                                    // Toggle month dropdown
-                                    monthButton.addEventListener('click', function() {
-                                        monthDropdown.classList.toggle('hidden');
-                                        // Close year dropdown if open
-                                        yearDropdown.classList.add('hidden');
-                                    });
-
-                                    // Toggle year dropdown
-                                    yearButton.addEventListener('click', function() {
-                                        yearDropdown.classList.toggle('hidden');
-                                        // Close month dropdown if open
-                                        monthDropdown.classList.add('hidden');
-                                    });
-
-                                    // Handle month selection
-                                    monthOptions.forEach(option => {
-                                        option.addEventListener('click', function() {
-                                            const month = this.getAttribute('data-month');
-                                            selectedMonth.textContent = month;
-                                            monthInput.value = month;
-
-                                            // Update active class
-                                            monthOptions.forEach(opt => {
-                                                opt.classList.remove('bg-blue-50', 'text-blue-600', 'font-medium');
-                                            });
-                                            this.classList.add('bg-blue-50', 'text-blue-600', 'font-medium');
-
-                                            // Close dropdown
-                                            monthDropdown.classList.add('hidden');
-                                        });
-                                    });
-
-                                    // Handle year selection
-                                    yearOptions.forEach(option => {
-                                        option.addEventListener('click', function() {
-                                            const year = this.getAttribute('data-year');
-                                            selectedYear.textContent = year;
-                                            yearInput.value = year;
-
-                                            // Update active class
-                                            yearOptions.forEach(opt => {
-                                                opt.classList.remove('bg-blue-50', 'text-blue-600', 'font-medium');
-                                            });
-                                            this.classList.add('bg-blue-50', 'text-blue-600', 'font-medium');
-
-                                            // Close dropdown
-                                            yearDropdown.classList.add('hidden');
-                                        });
-                                    });
-
-                                    // Close dropdowns when clicking outside
-                                    document.addEventListener('click', function(event) {
-                                        if (!monthButton.contains(event.target) && !monthDropdown.contains(event.target)) {
-                                            monthDropdown.classList.add('hidden');
-                                        }
-
-                                        if (!yearButton.contains(event.target) && !yearDropdown.contains(event.target)) {
-                                            yearDropdown.classList.add('hidden');
-                                        }
-                                    });
-                                </script>
                             </div>
                         </div>
                         <div class="flex">
@@ -353,7 +206,7 @@
                             <div class="relative inline-block h-12 w-12 -mr-6">
                                 <input {{-- lg:w-64 md:w-[196px] w-[164px] transition-all transform duration-300 --}}
                                     class="-mr-3 search expandright absolute right-[49px] rounded bg-white border border-white h-8 w-0 lg:focus:w-[190px] md:focus:w-[164px] focus:w-[148px]  transition-all duration-400 outline-none z-10 focus:px-4 focus:border-blue-500"
-                                    id="searchright" type="text" name="q" placeholder="Cari">
+                                    id="searchright" value="{{ $search ? $search : null }}" type="text" name="q" placeholder="Cari">
                                 <label class="z-20 button searchbutton absolute text-[22px] w-full cursor-pointer"
                                     for="searchright">
                                     <span class="-ml-3 mt-1 inline-block">
@@ -364,7 +217,7 @@
                                 </label>
                             </div>
                             <button
-                                class="add-button -mt-1 max-h-10 flex items-center bg-[#187bcd] text-white font-semibold px-4 text-sm rounded hover:bg-[#4f57a5] transition duration-200">
+                                class="attendUser-button -mt-1 max-h-10 flex items-center bg-[#187bcd] text-white font-semibold px-4 text-sm rounded hover:bg-[#4f57a5] transition duration-200">
                                 <span class="icon mr-2 scale-150">
                                     {!! file_get_contents(public_path('assets/images/icons/plus.svg')) !!}
                                 </span>

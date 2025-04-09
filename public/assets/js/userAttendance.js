@@ -43,19 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
         hideModal()
       }
     })
-
-    // Show placement field when "Permit" is selected
-    if (permitRadio) {
-      permitRadio.addEventListener("change", function () {
-        if (this.checked) {
-          placementContainer.classList.remove("hidden")
-          setTimeout(() => {
-            placementContainer.classList.remove("opacity-0")
-          }, 10)
-        }
-      })
-    }
-
     // Hide placement field when "Sick" is selected
     if (sickRadio) {
       sickRadio.addEventListener("change", function () {
@@ -89,9 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // If permit is selected, validate placement
         if (absenceType.value === "permit") {
-          const placement = document.getElementById("placement").value
-          if (!placement && !document.getElementById("placement").disabled) {
-            showError("Please select a placement location")
+          const permit = document.getElementById("permit").value
+          if (!permit && !document.getElementById("permit").disabled) {
+            showError("Please select a permit location")
             return
           }
         }

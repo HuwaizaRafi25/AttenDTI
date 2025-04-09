@@ -302,9 +302,7 @@
                             <div class="mt-12 mb-8">
                                 <!-- Location and Date -->
                                 <div class="text-right mb-8">
-                                    <p>Bandung, <input type="text"
-                                            class="border-b border-gray-400 w-48 text-center"
-                                            placeholder="Click or tap here to enter text."></p>
+                                    <p>Bandung, {{ date('d M Y') }}</p>
                                 </div>
 
                                 <!-- Signature Grid -->
@@ -340,7 +338,7 @@
                                     <!-- Kasubdit -->
                                     <div class="space-y-20">
                                         <p>Kasubdit. Operasional & Layanan TI,</p>
-                                        <div class="h-24 flex items-end justify-center">
+                                        <div class="h-[73px] flex items-end justify-center">
                                             <p>( ................................. )</p>
                                         </div>
                                         <div class="flex items-center gap-2 justify-center">

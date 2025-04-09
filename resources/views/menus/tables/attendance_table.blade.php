@@ -1,7 +1,9 @@
 @if ($users->isEmpty())
     <tr>
-        <td colspan="6" class="text-center p-4 text-sm font-medium">
-            User Not Found.
+        <td colspan="14" class="text-center p-4 text-sm font-medium">
+            <div class="flex items-center justify-center">
+                <span class="text-gray-500">No data available</span>
+            </div>
         </td>
     </tr>
 @else
@@ -62,21 +64,20 @@
                                         data-userId="{{ $user->id }}" data-userFullname="{{ $user->full_name }}"
                                         data-username="{{ $user->username }}" data-userPic="{{ $user->profile_pic }}"
                                         data-date="{{ \Carbon\Carbon::parse($date)->format('F jS, Y') }}"
-                                        data-time="{{ \Carbon\Carbon::parse($attendance->created_at)->format('h:i') }}"
+                                        data-time="{{ \Carbon\Carbon::parse($attendance->check_in)->format('h:i') }}"
                                         data-attendanceId="{{ $attendance->id }}"
                                         data-attendance="{{ ucfirst($attendance->attendance) }}"
                                         data-status="{{ $attendance->status }}"
-                                        data-locationName="{{ $attendance->location ? $attendance->location->name.' - '.$attendance->location->campus : '' }}"
+                                        data-locationName="{{ $attendance->location ? $attendance->location->name . ' - ' . $attendance->location->campus : '' }}"
                                         data-locationAddress="{{ $attendance->location ? $attendance->location->address : '' }}"
                                         data-locationPic="{{ $attendance->location ? $attendance->location->pic : '' }}"
                                         data-note="{{ $attendance->note }}"
                                         data-approver="{{ $attendance->approver ? $attendance->approver->username : '' }}"
-                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}"
-
-                                        >
+                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}">
                                         ✓
                                         @if ($attendance->status === 'pending')
-                                            <span class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
+                                            <span
+                                                class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
                                         @endif
                                     </span>
                                 @elseif ($attendance->attendance === 'permit')
@@ -85,21 +86,20 @@
                                         data-userId="{{ $user->id }}" data-userFullname="{{ $user->full_name }}"
                                         data-username="{{ $user->username }}" data-userPic="{{ $user->profile_pic }}"
                                         data-date="{{ \Carbon\Carbon::parse($date)->format('F jS, Y') }}"
-                                        data-time="{{ \Carbon\Carbon::parse($attendance->created_at)->format('h:i') }}"
+                                        data-time="{{ \Carbon\Carbon::parse($attendance->check_in)->format('h:i') }}"
                                         data-attendanceId="{{ $attendance->id }}" data-attendance="Permit"
                                         data-status="{{ $attendance->status }}"
-                                        data-locationName="{{ $attendance->location ? $attendance->location->name.' - '.$attendance->location->campus : '' }}"
+                                        data-locationName="{{ $attendance->location ? $attendance->location->name . ' - ' . $attendance->location->campus : '' }}"
                                         data-locationAddress="{{ $attendance->location ? $attendance->location->address : '' }}"
                                         data-locationPic="{{ $attendance->location ? $attendance->location->pic : '' }}"
                                         data-note="{{ $attendance->note }}"
                                         data-approver="{{ $attendance->approver ? $attendance->approver->username : '' }}"
-                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}"
-
-                                        >
+                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}">
                                         ¡
                                         @if ($attendance->status === 'pending')
-                                        <span class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
-                                    @endif
+                                            <span
+                                                class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
+                                        @endif
                                     </span>
                                 @elseif ($attendance->attendance === 'sick')
                                     <span
@@ -107,21 +107,20 @@
                                         data-userId="{{ $user->id }}" data-userFullname="{{ $user->full_name }}"
                                         data-username="{{ $user->username }}" data-userPic="{{ $user->profile_pic }}"
                                         data-date="{{ \Carbon\Carbon::parse($date)->format('F jS, Y') }}"
-                                        data-time="{{ \Carbon\Carbon::parse($attendance->created_at)->format('h:i') }}"
+                                        data-time="{{ \Carbon\Carbon::parse($attendance->check_in)->format('h:i') }}"
                                         data-attendanceId="{{ $attendance->id }}" data-attendance="Sick"
                                         data-status="{{ $attendance->status }}"
-                                        data-locationName="{{ $attendance->location ? $attendance->location->name.' - '.$attendance->location->campus : '' }}"
+                                        data-locationName="{{ $attendance->location ? $attendance->location->name . ' - ' . $attendance->location->campus : '' }}"
                                         data-locationAddress="{{ $attendance->location ? $attendance->location->address : '' }}"
                                         data-locationPic="{{ $attendance->location ? $attendance->location->pic : '' }}"
                                         data-note="{{ $attendance->note }}"
                                         data-approver="{{ $attendance->approver ? $attendance->approver->username : '' }}"
-                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}"
-
-                                        >
+                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}">
                                         s
                                         @if ($attendance->status === 'pending')
-                                        <span class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
-                                    @endif
+                                            <span
+                                                class="absolute -top-1.5 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1">!</span>
+                                        @endif
                                     </span>
                                 @elseif ($attendance->attendance === 'absent')
                                     <span
@@ -129,24 +128,24 @@
                                         data-userId="{{ $user->id }}" data-userFullname="{{ $user->full_name }}"
                                         data-username="{{ $user->username }}" data-userPic="{{ $user->profile_pic }}"
                                         data-date="{{ \Carbon\Carbon::parse($date)->format('F jS, Y') }}"
-                                        data-time="{{ \Carbon\Carbon::parse($attendance->created_at)->format('--:--') }}"
+                                        data-time="{{ \Carbon\Carbon::parse($attendance->check_in)->format('--:--') }}"
                                         data-attendanceId="{{ $attendance->id }}" data-attendance="Absent"
                                         data-status="{{ $attendance->status }}"
-                                        data-locationName="{{ $attendance->location ? $attendance->location->name.' - '.$attendance->location->campus : '' }}"
+                                        data-locationName="{{ $attendance->location ? $attendance->location->name . ' - ' . $attendance->location->campus : '' }}"
                                         data-locationAddress="{{ $attendance->location ? $attendance->location->address : '' }}"
                                         data-locationPic="{{ $attendance->location ? $attendance->location->pic : '' }}"
                                         data-note="{{ $attendance->note }}"
                                         data-approver="{{ $attendance->approver ? $attendance->approver->username : '' }}"
-                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}"
-
-                                        >
+                                        data-approverPic="{{ $attendance->approver ? $attendance->approver->profile_pic : '' }}">
                                         ✕
                                     </span>
                                 @endif
                                 <span id="{{ $uniqueId }}"
                                     class="span-attendance space-x-2 absolute opacity-0 hidden top-1.5 left-14 z-30 bg-white border border-gray-300 rounded-md py-1.5 px-2 w-auto pr-9">
-                                    <img src="{{ asset('storage/profilePics/' . $user->profile_pic) }}"
-                                        class="w-6 h-6 rounded-full shadow-md object-cover" alt="">
+                                    <img src="{{ $user->profile_pic && file_exists(storage_path('app/public/profilePics/' . $user->profile_pic))
+                                        ? asset('storage/profilePics/' . $user->profile_pic)
+                                        : asset('assets/images/userPlaceHolder.png') }}"
+                                        class="w-6 h-6 rounded-full shadow-md object-cover">
                                     <div>
                                         {{ $user->full_name ?? 'Namauser' }}
                                     </div>
@@ -162,25 +161,29 @@
             <td class="px-4 py-3 text-center">
                 {{ $user->attendances->whereIn('attendance', ['present', 'late'])->count() }}</td>
             <td class="px-4 py-3 text-center">{{ $user->attendances->count() }}</td>
-            <td class="px-4 py-3 text-center">
-                @php
-                    $presentLateCount = $user->attendances->whereIn('attendance', ['present', 'late'])->count();
-                    $totalCount = $user->attendances->count();
-                    $percentage = $totalCount > 0 ? round(($presentLateCount / $totalCount) * 100, 2) : 0;
-                    $color = '';
-                    if ($percentage >= 80) {
-                        $color = 'bg-green-500';
-                    } elseif ($percentage >= 50) {
-                        $color = 'bg-yellow-500';
-                    } else {
-                        $color = 'bg-red-500';
-                    }
-                @endphp
+            <td class="px-4 py-3 text-center flex items-end gap-x-2">
+                <div class="flex flex-col items-center w-full">
+                    @php
+                        $presentLateCount = $user->attendances->whereIn('attendance', ['present', 'late'])->count();
+                        $totalCount = $user->attendances->count();
+                        $percentage = $totalCount > 0 ? round(($presentLateCount / $totalCount) * 100, 2) : 0;
+                        $color = '';
+                        if ($percentage >= 80) {
+                            $color = 'bg-green-500';
+                        } elseif ($percentage >= 50) {
+                            $color = 'bg-yellow-500';
+                        } else {
+                            $color = 'bg-red-500';
+                        }
+                    @endphp
 
-                {{ $percentage }}%
-                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
-                    <div class="{{ $color }} h-2.5 rounded-full" style="width: {{ $percentage }}%;"></div>
+                    {{ $percentage }}%
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1 flex flex-col">
+                        <div class="{{ $color }} h-2.5 rounded-full" style="width: {{ $percentage }}%;">
+                        </div>
+                    </div>
                 </div>
+                <i class="fa-solid fa-circle-info relative text-gray-400 hover:scale-125 hover:text-gray-600 transition-all transform duration-100 cursor-pointer"></i>
             </td>
         </tr>
     @endforeach
