@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AppSetting;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Location;
@@ -18,6 +19,12 @@ class UserSeeder extends Seeder
     {
         // User::truncate();
         // Location::truncate();
+
+        AppSetting::create([
+            'app_name' => 'AttenDTI',
+            'app_logo' => 'logo.png',
+            'late_time' => Carbon::parse('08:00:00'),
+        ]);
 
         Location::create([
             'name' => 'CRCS',

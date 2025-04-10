@@ -14,13 +14,20 @@
             <div class="bg-gray-800 p-6 text-white">
                 <h2 class="text-2xl font-bold text-center">Attendance Form</h2>
                 <p class="text-gray-300 text-center text-sm mt-2">
-                    Please explain your reason if face verification or location check failed
+                    @if (request('type') === 'late')
+                        You are late for work. Please provide a reason.
+                    @else
+                        Please explain your reason if face verification or location check failed
+                    @endif
+
                 </p>
             </div>
 
             <div class="p-6">
-                <form action="{{ route('attendance.store') }}" method="POST">
+                <form action="{{ route('attendance.formStore') }}" method="POST">
                     @csrf
+
+                    <input type="hidden" name="type" value="{{ request('type') ? request('type') : 'present' }}">
 
                     <div class="space-y-6">
                         <!-- Location Selection -->
@@ -51,7 +58,7 @@
                             <label for="reason" class="block text-sm font-medium text-gray-700 mb-2">
                                 Reason:
                             </label>
-                            <textarea id="reason" name="reason" rows="4"
+                            <textarea id="reason" name="note" rows="4"
                                 class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition duration-150"
                                 placeholder="Write your reason here..."></textarea>
                         </div>
@@ -62,6 +69,7 @@
                                 Quick reason templates:
                             </p>
                             <div class="flex flex-wrap gap-2">
+                                @if (request('type') === 'late')
                                 <button type="button"
                                     class="template-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm hover:bg-gray-200 transition duration-200 border border-gray-200">
                                     Macet di jalan
@@ -78,6 +86,25 @@
                                     class="template-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm hover:bg-gray-200 transition duration-200 border border-gray-200">
                                     Urusan keluarga mendadak
                                 </button>
+                                @else
+                                <button type="button"
+                                    class="template-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm hover:bg-gray-200 transition duration-200 border border-gray-200">
+                                    Tidak ada sinyal
+                                </button>
+                                <button type="button"
+                                    class="template-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm hover:bg-gray-200 transition duration-200 border border-gray-200">
+                                    Tidak bisa akses kamera
+                                </button>
+                                <button type="button"
+                                class="template-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm hover:bg-gray-200 transition duration-200 border border-gray-200">
+                                Sistem error
+                            </button>
+                                <button type="button"
+                                    class="template-btn bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm hover:bg-gray-200 transition duration-200 border border-gray-200">
+                                    Tidak bisa akses GPS
+                                </button>
+
+                                @endif
                             </div>
                         </div>
                     </div>

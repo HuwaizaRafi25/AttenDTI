@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Cashcontroller;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -71,9 +72,10 @@ Route::middleware(['auth'])->group(
         Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('/attendance/search', [AttendanceController::class, 'search'])->name('attendances.search');
         Route::get('/attendance/form', [AttendanceController::class, 'form'])->name('attendance.form');
+        Route::post('/attendance/formStore', [AttendanceController::class, 'formStore'])->name('attendance.formStore');
         Route::post('/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
         Route::post('/attendance/attendUser', [AttendanceController::class, 'attendUser'])->name('attendance.attendUser');
-        Route::put('/attendance/update/{id}', [AttendanceController::class, 'update'])->name('attendance.update');
+        Route::put('/attendance/update/{id}', [AttendanceController::class, 'update'])->middleware(['Permission:manage_attendance'])->name('attendance.update');
         Route::post('/attendance/absent', [AttendanceController::class, 'absent'])->name('attendance.absent');
         Route::get('/attendance/approval/{approval}/{id}', [AttendanceController::class, 'approval'])->name('attendances.approval');
         Route::get('/attendances/export/{type}', [AttendanceController::class, 'export'])->name('attendances.export');
@@ -83,6 +85,7 @@ Route::middleware(['auth'])->group(
         Route::post('/verify-face', [AttendanceController::class, 'verifyFace']);
         Route::post('/analyze-attendance', [AttendanceController::class, 'analyzeAttendance']);
         Route::post('/attandance/import', [AttendanceController::class, 'importAttendance'])->name('attendance.import');
+        Route::get('/getUserAttendance/{id}', [AttendanceController::class, 'getUserAttendance'])->name('getUserAttendance');
 
 
         Route::get('/announcement', function () {
@@ -103,6 +106,9 @@ Route::middleware(['auth'])->group(
         Route::post('/jobs/{job}/pin', [JobController::class, 'pin'])->name('jobs.pin');
         Route::post('/jobs/{job}/remove', [JobController::class, 'remove'])->name('jobs.remove');
         Route::put('/jobs/update/{id}', [JobController::class, 'update'])->name('jobs.update');
+
+        Route::get('/dues', [CashController::class, 'index'])->name('cash.index');
+        Route::post('/update-payment-status', [CashController::class, 'update'])->name('update.payment.status');
 
         Route::get('/test_print', function () {
             return view('test-print');
@@ -135,10 +141,13 @@ Route::middleware(['auth'])->group(
         Route::get('/users/check/itb-account', [UserController::class, 'checkITBAccount'])->name('checkItbAccount');
         Route::get('/users/export/{type}', [UserController::class, 'export'])->name('users.export');
         Route::get('/getUsers', [UserController::class, 'getUsers'])->name('getUsers');
+        Route::get('/getAllUsers', [UserController::class, 'getAllUsers'])->name('getAllUsers');
 
         Route::get('/roles-permissions', [RolePermissionController::class, 'index'])->name('rolesPermissions.index');
         Route::post('/roles-permissions/store', [RolePermissionController::class, 'store'])->name('rolesPermissions.store');
+        Route::post('/roles-permissions/link', [RolePermissionController::class, 'linkUserPermission'])->name('rolesPermissions.link');
         Route::delete('/user-permission/unlink/{id}', [RolePermissionController::class, 'unlinkUserPermission'])->name('userPermission.unlink');
+        Route::get('/getPermissions', [RolePermissionController::class, 'getPermissions'])->name('getPermissions');
 
         Route::get('/locations', [LocationController::class, 'index'])->name('location.index');
         Route::get('/getLocations', [LocationController::class, 'getLocations'])->name('getLocations');
@@ -149,6 +158,7 @@ Route::middleware(['auth'])->group(
         Route::get('/contact-support', [SupportController::class, 'contactSupport'])->name('contactSupport');
 
         Route::get('/application-settings', [SettingController::class, 'applicationSetting'])->name('setelanUmum');
+        Route::put('/application-settings/update', [SettingController::class, 'updateApplicationSetting'])->name('setelanUmum.update');
         // Route::get('/general-setting', [SettingController::class, 'generalSetting'])->name('setelanUmum');
 
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activityLogs.index');

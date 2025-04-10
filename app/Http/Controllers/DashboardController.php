@@ -33,9 +33,9 @@ class DashboardController extends Controller
         $unpaidStudents = 15;
         $jobVacancies = 5;
         $latestJobs = [
-            (object) ['title' => 'Frontend Developer Internship', 'created_at' => now()],
-            (object) ['title' => 'Backend Developer Internship', 'created_at' => now()->subDay()],
-            (object) ['title' => 'UI/UX Designer Internship', 'created_at' => now()->subDays(2)],
+            (object) ['title' => 'Frontend Developer Internship', 'created_at' => now(), 'company' => 'Tech Company'],
+            (object) ['title' => 'Backend Developer Internship', 'created_at' => now()->subDay(), 'company' => 'Tech Company'],
+            (object) ['title' => 'UI/UX Designer Internship', 'created_at' => now()->subDays(2), 'company' => 'Tech Company'],
         ];
         return view('menus.overview', compact(
             'currentDate',

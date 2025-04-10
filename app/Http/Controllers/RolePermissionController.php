@@ -36,7 +36,8 @@ class RolePermissionController extends Controller
             'read_location',
             'manage_location',
             'read_job',
-            'manage-job',
+            'manage_job',
+            'manage_dues'
         ];
 
         $modelHasPermissions = ModelHasPermission::with('user', 'permission')
@@ -49,7 +50,37 @@ class RolePermissionController extends Controller
             return $mp->permission->name;
         });
 
-        return view('menus.role_permission', compact('groupedPermissions'));
+        $users = User::all();
+
+        return view('menus.role_permission', compact('groupedPermissions', 'users', 'permissions'));
+    }
+
+    public function getPermissions()
+    {
+        $permissions = Permission::all();
+        return response()->json($permissions);
+    }
+
+    public function linkUserPermission(Request $request)
+    {
+        try {
+            $user = User::find($request->input('user'));
+            $permission = $request->input('permission');
+            $user->givePermissionTo($permission);
+            // Permission::create([
+            //     'model_id' => $user->id,
+            //     'permission_id' => $permission
+            // ]);
+
+            notify()->success('Model was assigned successfully! 👌');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Failed to assign user permission: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
+            notify()->error('Something went wrong.', 'Error!');
+            return redirect()->back();
+        }
     }
 
     public function unlinkUserPermission(Request $request, $id)
@@ -61,12 +92,11 @@ class RolePermissionController extends Controller
             notify()->success('Model was unassigned successfully! 👌');
             return redirect()->back();
         } catch (\Exception $e) {
-            Log::error('Failed to unlink user permission: ' . $e->getMessage(), [
+            Log::error('Failed to unassign user permission: ' . $e->getMessage(), [
                 'exception' => $e
             ]);
             notify()->error('Something went wrong.', 'Error!');
             return redirect()->back();
         }
     }
-
 }

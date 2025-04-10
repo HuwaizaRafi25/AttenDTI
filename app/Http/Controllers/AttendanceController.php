@@ -50,7 +50,7 @@ class AttendanceController extends Controller
         //     }
         // }
 
-        $search = $request['search'];
+        $search = $request->input('search');
 
         $users = User::with([
             'attendances' => function ($query) use ($startDate, $endDate, $holidays) {
@@ -159,6 +159,37 @@ class AttendanceController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function formStore(Request $request){
+        try {
+            $request->validate([
+                'type' => ['in:present,absent,sick,permit,late'],
+                'location' => ['required', 'exists:locations,id'],
+                'note' => ['required', 'max:255'],
+            ]);
+            $attendanceType = $request->input('type') ? $request->input('type') : 'present';
+            $locationId = $request->input('location') ? $request->input('location') : null;
+            $note = $request->input('note') ? $request->input('note') : null;
+
+            $attendance = Attendance::create([
+                'user_id' => Auth::user()->id,
+                'location_id' => $locationId,
+                'status' => 'pending',
+                'attendance' => $attendanceType,
+                'check_in' => now(),
+                'note' => $note,
+            ]);
+
+            notify()->success('Attendance was successfully stored!', 'Success!');
+            return redirect()->route('attendances.index');
+        } catch (\Exception $e) {
+            Log::error('Failed to store attendance: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
+            notify()->error('Failed to store attendance', 'Failed!');
+            return redirect()->route('attendances.index');
         }
     }
 
@@ -770,6 +801,61 @@ class AttendanceController extends Controller
         }
     }
 
+    public function getUserAttendance($userId)
+    {
+        try {
+        $user = User::find($userId);
+        $minDate = $user->period_start_date;
+        $maxDate = Carbon::today();
+        $years = range(Carbon::parse($minDate)->year, $maxDate->year);
 
+        $holidays = [];
+        foreach ($years as $year) {
+            $apiUrl = "https://dayoffapi.vercel.app/api?year={$year}";
+            $response = Http::get($apiUrl);
+            if ($response->successful()) {
+                $holidayData = $response->json();
+                foreach ($holidayData as $holiday) {
+                    $holidayDate = Carbon::parse($holiday['tanggal'])->format('Y-m-d');
+                    $holidays[] = $holidayDate;
+                }
+            }
+        }
+        $attendances = Attendance::where('user_id', $userId)->whereNotIn(DB::raw('DATE(created_at)'), $holidays)
+        ->whereRaw('WEEKDAY(created_at) NOT IN (5, 6)')->get();
+
+        $attendanceStats = [
+            'present' => $attendances->where('attendance', 'present')->count(),
+            'absent' => $attendances->where('attendance', 'absent')->count(),
+            'late' => $attendances->where('attendance', 'late')->count(),
+            'sick' => $attendances->where('attendance', 'sick')->count(),
+            'permit' => $attendances->where('attendance', 'permit')->count(),
+        ];
+
+        // Ambil data check-in times untuk chart
+        $checkInTimes = $attendances->map(function ($attendance) {
+            return [
+                'date' => $attendance->created_at->format('Y-m-d'),
+                'time' => $attendance->check_in ? $attendance->check_in->format('H:i') : null,
+            ];
+        })->filter(function ($item) {
+            return $item['time'] !== null;
+        })->values();
+
+        // Kembalikan data dalam format JSON
+        return response()->json([
+            'attendance' => $attendanceStats,
+            'checkInTimes' => $checkInTimes,
+        ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to get user attendance: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
 }

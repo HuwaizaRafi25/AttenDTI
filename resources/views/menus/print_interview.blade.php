@@ -13,19 +13,34 @@
             .no-print {
                 display: none;
             }
+
+            .print-bg {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            @page {
+                size: auto;
+                margin: 0;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
         }
     </style>
 </head>
 
-<body class="bg-gray-50 min-h-screen p-4 md:p-8">
-    <div id="form-container" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Formulir Exit Clearance</h1>
+<body class="min-h-screen p-4 bg-gray-50 md:p-8">
+    <div id="form-container" class="max-w-4xl p-6 mx-auto bg-white shadow-lg rounded-xl md:p-8">
+        <h1 class="mb-8 text-3xl font-bold text-center text-gray-800">Formulir Exit Clearance</h1>
 
         <form class="space-y-12" id="clearanceForm">
             <section>
-                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Pengalaman Program</h2>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <h2 class="pb-2 mb-4 text-xl font-semibold text-gray-700 border-b">Pengalaman Program</h2>
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             1. Bagaimana Anda menilai pengalaman Anda secara keseluruhan selama magang/praktik kerja di
                             DTI?
@@ -34,18 +49,17 @@
                             class="w-full p-2 border border-gray-300 rounded-md sync-input" data-target="modal-input1">
                     </div>
                 </div>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             2. Apakah tugas yang diberikan sesuai dengan harapan dan bidang studi Anda?
                         </label>
-                        <!-- Perbaiki kesalahan markup di sini (hilangkan " yang tidak perlu) -->
                         <input type="text" name="question2" placeholder="Keterangan"
                             class="w-full p-2 border border-gray-300 rounded-md sync-input" data-target="modal-input2">
                     </div>
                 </div>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             3. Bagaimana Anda menilai dukungan yang Anda terima dari PIC dan tim kerja?
                         </label>
@@ -53,8 +67,8 @@
                             class="w-full p-2 border border-gray-300 rounded-md sync-input" data-target="modal-input3">
                     </div>
                 </div>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             4. Bagaimana Anda menilai fasilitas dan sumber daya yang tersedia untuk mendukung kerja
                             Anda?
@@ -63,8 +77,8 @@
                             class="w-full p-2 border border-gray-300 rounded-md sync-input" data-target="modal-input4">
                     </div>
                 </div>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             5. Bagaimana Anda merasa keterampilan Anda berkembang selama program ini?
                         </label>
@@ -75,9 +89,9 @@
             </section>
 
             <section>
-                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Saran dan Umpan Balik</h2>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <h2 class="pb-2 mb-4 text-xl font-semibold text-gray-700 border-b">Saran dan Umpan Balik</h2>
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             6. Apa aspek terbaik dari program magang/praktik kerja di DTI yang paling Anda sukai?
                         </label>
@@ -85,8 +99,8 @@
                             class="w-full p-2 border border-gray-300 rounded-md sync-input" data-target="modal-input6">
                     </div>
                 </div>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             7. Apa yang menurut Anda perlu ditingkatkan dalam program ini di DTI?
                         </label>
@@ -94,8 +108,8 @@
                             class="w-full p-2 border border-gray-300 rounded-md sync-input" data-target="modal-input7">
                     </div>
                 </div>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             8. Apakah pengalaman ini membantu Anda dalam merencanakan karir di masa depan?
                         </label>
@@ -103,8 +117,8 @@
                             class="w-full p-2 border border-gray-300 rounded-md sync-input" data-target="modal-input8">
                     </div>
                 </div>
-                <div class="space-y-4 mt-4">
-                    <div class="grid gap-4 items-center">
+                <div class="mt-4 space-y-4">
+                    <div class="grid items-center gap-4">
                         <label class="text-sm font-medium text-gray-700">
                             9. Apakah ada saran atau umpan balik lain yang ingin Anda berikan untuk peningkatan program
                             ini di DTI?
@@ -115,9 +129,9 @@
                 </div>
             </section>
 
-            <div class="flex justify-end space-x-4 pt-6">
+            <div class="flex justify-end pt-6 space-x-4 no-print">
                 <div onclick="openModal()"
-                    class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer">
+                    class="px-6 py-2 text-white bg-blue-600 rounded-md cursor-pointer hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Print
                 </div>
             </div>
@@ -125,40 +139,40 @@
     </div>
 
     <!-- Modal -->
-    <div id="userReportModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-70 z-50 hidden">
+    <div id="userReportModal" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-70">
         <div class="bg-gray-50 text-white rounded-lg shadow-lg m-6 p-6 h-[95vh] max-w-xl md:max-w-4xl w-full">
             <div class="overflow-y-auto h-[80vh] space-y-4">
                 <!-- Container yang akan dicetak -->
                 <div id="laporanTransaksi"
-                    class="laporanTransaksi h-auto p-8 rounded-md max-width-full border-2 bg-white text-black"
+                    class="h-auto p-8 text-black bg-white border-2 rounded-md laporanTransaksi max-width-full"
                     style="aspect-ratio: 2480 / 3508;">
                     <table class="w-full border border-gray-800 table-fixed opacity-70">
                         <tr>
-                            <td class="w-1/6 border-r border-gray-800 text-center p-2">
+                            <td class="w-1/6 p-2 text-center border-r border-gray-800">
                                 <img src="{{ asset('assets/images/logo_itb_512.png') }}" alt="Logo"
                                     class="w-20 mx-auto my-2">
                             </td>
                             <td class="w-5/6">
                                 <table class="w-full">
                                     <tr>
-                                        <td class="text-center p-2">
+                                        <td class="p-2 text-center">
                                             <div class="text-base font-bold">DIREKTORAT TEKNOLOGI INFORMASI ITB</div>
                                             <div class="text-sm text-gray-600">Gedung CRCS Lantai 4, Jalan Ganesha
                                                 Nomor 10 Bandung 40132 Telp: +6222 86010037</div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="bg-blue-600 text-white text-center p-2">
-                                            <div class="font-bold">FORMULIR EXIT CLEARANCE</div>
+                                        <td class="p-2 text-center text-white bg-blue-600 print-bg">
+                                            FORMULIR EXIT CLEARANCE
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="p-0">
                                             <table class="w-full text-sm border-t border-gray-800">
                                                 <tr>
-                                                    <td class="border-r border-gray-800 p-1">Nomor : FRM.07-OPL.01</td>
-                                                    <td class="border-r border-gray-800 p-1">Revisi : 0</td>
-                                                    <td class="border-r border-gray-800 p-1">Tanggal:
+                                                    <td class="p-1 border-r border-gray-800">Nomor : FRM.07-OPL.01</td>
+                                                    <td class="p-1 border-r border-gray-800">Revisi : 0</td>
+                                                    <td class="p-1 border-r border-gray-800">Tanggal:
                                                         {{ date('d M Y') }}</td>
                                                     <td class="p-1">Halaman : 1 dari 1</td>
                                                 </tr>
@@ -173,7 +187,7 @@
                     <!-- Body Laporan -->
                     <div class="p-8" id="laporanContainer">
                         <div class="mt-4 space-y-4">
-                            <div class="text-center space-y-2">
+                            <div class="space-y-2 text-center">
                                 <h1 class="text-2xl font-bold">Form Evaluasi Exit Interview</h1>
                                 <h2 class="text-xl">Personel Magang/PKL</h2>
                             </div>
@@ -216,7 +230,7 @@
                                             magang/praktik kerja di DTI?
                                         </p>
                                         <div id="modal-input1"
-                                            class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                            class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                             <p></p>
                                         </div>
                                     </div>
@@ -225,7 +239,7 @@
                                             2. Apakah tugas yang diberikan sesuai dengan harapan dan bidang studi Anda?
                                         </p>
                                         <div id="modal-input2"
-                                            class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                            class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                             <p></p>
                                         </div>
                                     </div>
@@ -234,7 +248,7 @@
                                             3. Bagaimana Anda menilai dukungan yang Anda terima dari PIC dan tim kerja?
                                         </p>
                                         <div id="modal-input3"
-                                            class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                            class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                             <p></p>
                                         </div>
                                     </div>
@@ -244,7 +258,7 @@
                                             mendukung kerja Anda?
                                         </p>
                                         <div id="modal-input4"
-                                            class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                            class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                             <p></p>
                                         </div>
                                     </div>
@@ -253,7 +267,7 @@
                                             5. Bagaimana Anda merasa keterampilan Anda berkembang selama program ini?
                                         </p>
                                         <div id="modal-input5"
-                                            class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                            class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                             <p></p>
                                         </div>
                                     </div>
@@ -266,7 +280,7 @@
                                         sukai?
                                     </p>
                                     <div id="modal-input6"
-                                        class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                        class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                         <p></p>
                                     </div>
                                 </div>
@@ -275,7 +289,7 @@
                                         7. Apa yang menurut Anda perlu ditingkatkan dalam program ini di DTI?
                                     </p>
                                     <div id="modal-input7"
-                                        class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                        class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                         <p></p>
                                     </div>
                                 </div>
@@ -284,7 +298,7 @@
                                         8. Apakah pengalaman ini membantu Anda dalam merencanakan karir di masa depan?
                                     </p>
                                     <div id="modal-input8"
-                                        class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                        class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                         <p></p>
                                     </div>
                                 </div>
@@ -294,14 +308,14 @@
                                         peningkatan program ini di DTI?
                                     </p>
                                     <div id="modal-input9"
-                                        class="w-full border border-gray-300 rounded px-3 py-2 h-12">
+                                        class="w-full h-12 px-3 py-2 border border-gray-300 rounded">
                                         <p></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-12 mb-8">
                                 <!-- Location and Date -->
-                                <div class="text-right mb-8">
+                                <div class="mb-8 text-right">
                                     <p>Bandung, {{ date('d M Y') }}</p>
                                 </div>
 
@@ -310,12 +324,12 @@
                                     <!-- Personel Magang/PKL -->
                                     <div class="space-y-20">
                                         <p>Personel Magang/PKL,</p>
-                                        <div class="h-24 flex items-end justify-center">
+                                        <div class="flex items-end justify-center h-24">
                                             <p>( {{ Auth::user()->full_name }} )</p>
                                         </div>
-                                        <div class="flex items-center gap-2 justify-center">
+                                        <div class="flex items-center justify-center gap-2">
                                             <span>NIP/Nopeg.</span>
-                                            <div class="border-b border-gray-400 w-32 text-center">
+                                            <div class="w-32 text-center border-b border-gray-400">
                                                 <p>{{ Auth::user()->identity_number }}</p>
                                             </div>
                                         </div>
@@ -324,12 +338,12 @@
                                     <!-- PIC Offboarding -->
                                     <div class="space-y-20">
                                         <p>PIC Offboarding,</p>
-                                        <div class="h-24 flex items-end justify-center">
+                                        <div class="flex items-end justify-center h-24">
                                             <p>( ................................. )</p>
                                         </div>
-                                        <div class="flex items-center gap-2 justify-center">
+                                        <div class="flex items-center justify-center gap-2">
                                             <span>NIP/Nopeg.</span>
-                                            <div class="border-b border-gray-400 w-32 text-center">
+                                            <div class="w-32 text-center border-b border-gray-400">
                                                 <p>.....................</p>
                                             </div>
                                         </div>
@@ -338,13 +352,13 @@
                                     <!-- Kasubdit -->
                                     <div class="space-y-20">
                                         <p>Kasubdit. Operasional & Layanan TI,</p>
-                                        <div class="h-[73px] flex items-end justify-center">
+                                        <div class="flex items-end justify-center h-[73px]">
                                             <p>( ................................. )</p>
                                         </div>
-                                        <div class="flex items-center gap-2 justify-center">
+                                        <div class="flex items-center justify-center gap-2">
                                             <span>NIP/Nopeg.</span>
-                                            <div class="border-b border-gray-400 w-32 text-center">
-                                              <p>.....................</p>
+                                            <div class="w-32 text-center border-b border-gray-400">
+                                                <p>.....................</p>
                                             </div>
                                         </div>
                                     </div>
@@ -353,12 +367,12 @@
                         </div>
                     </div>
                     <!-- Tombol Aksi di dalam modal -->
-                    <div class="flex gap-x-2 py-3 no-print">
+                    <div class="flex py-3 gap-x-2 no-print">
                         <button type="button"
-                            class="no-print w-full px-4 py-2 text-sm font-medium text-gray-800 rounded-md hover:text-gray-900 border-2"
+                            class="w-full px-4 py-2 text-sm font-medium text-gray-800 border-2 rounded-md no-print hover:text-gray-900"
                             id="userReportClose" onclick="closeModal()">Kembali</button>
                         <button type="button"
-                            class="no-print w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
+                            class="w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md no-print hover:bg-green-700"
                             onclick="printDiv('laporanTransaksi')">Cetak Laporan</button>
                     </div>
                 </div>

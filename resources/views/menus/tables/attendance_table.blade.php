@@ -183,7 +183,7 @@
                         </div>
                     </div>
                 </div>
-                <i class="fa-solid fa-circle-info relative text-gray-400 hover:scale-125 hover:text-gray-600 transition-all transform duration-100 cursor-pointer"></i>
+                <i class="reportAttendanceButton fa-solid fa-circle-info relative text-gray-400 hover:scale-125 hover:text-gray-600 transition-all transform duration-100 cursor-pointer" data-userId="{{ $user->id }}" ></i>
             </td>
         </tr>
     @endforeach

@@ -169,7 +169,6 @@ class UserController extends Controller
 
             notify()->success('User was created successfully! ✍️', 'Success!');
             return redirect()->back();
-
         } catch (\Exception $e) {
             Log::error('Failed to create user: ' . $e->getMessage(), [
                 'exception' => $e
@@ -198,7 +197,7 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             if ($user->roles->first() != null) {
                 $role = $user->roles->first()->name;
-            }else{
+            } else {
                 $role = null;
             }
             $request->validate([
@@ -273,8 +272,7 @@ class UserController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            Log::error('Gagal mengedit pengguna: ' . $e->getMessage(), [
-            ]);
+            Log::error('Gagal mengedit pengguna: ' . $e->getMessage(), []);
 
             notify()->error('Failed to update user! Try again', 'Failed!');
             foreach (Auth::user()->roles as $role) {
@@ -287,7 +285,8 @@ class UserController extends Controller
         }
     }
 
-    public function getUsers(){
+    public function getUsers()
+    {
         // bulan dan tahun ini
         $selectedMonth = date('m');
         $selectedYear = date('Y');
@@ -305,9 +304,16 @@ class UserController extends Controller
         $users = User::whereHas('roles', function ($query) {
             $query->where('name', 'user');
         })->whereNotNull('period_start_date')->whereNotNull('period_end_date')->whereNotNull('placement_id')->whereNotNull('institution')
-        ->whereDate('period_end_date', '>=', $firstDate)
-        ->whereDate('period_start_date', '<=', $lastDate)
-        ->get();
+            ->whereDate('period_end_date', '>=', $firstDate)
+            ->whereDate('period_start_date', '<=', $lastDate)
+            ->get();
+        return response()->json($users);
+    }
+
+    public function getAllUsers() {
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', 'user');
+        })->get();
         return response()->json($users);
     }
 

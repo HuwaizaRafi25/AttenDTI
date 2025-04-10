@@ -40,6 +40,7 @@ class RolePermissionSeeder extends Seeder
             'manage_location',
             'read_job',
             'manage_job',
+            'manage_dues',
         ];
 
         foreach ($permissions as $permission) {

@@ -60,7 +60,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof NotFoundHttpException) {
-            return response()->view('errors.404', [
+            return response()->view('errors.view_not_found', [
                 'message' => 'The page you are looking for could not be found.',
             ], 404);
         }
@@ -72,7 +72,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
-            return response()->view('errors.500', [
+            return response()->view('errors.server_error', [
                 'message' => 'Oops! Something went wrong on our server.',
             ], 500);
         }

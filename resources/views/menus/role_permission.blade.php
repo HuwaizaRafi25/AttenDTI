@@ -416,6 +416,14 @@
             <div id="accomplishedQcTable"
                 class="max-w-7xl mx-auto sm:px-6 lg:px-8 transition-all transform ease-in-out duration-500 opacity-0 hidden">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+                    {{-- tombol link user permission --}}
+                    <div class="flex justify-end mb-4">
+                        <button id="linkUserPermission"
+                            class="linkUserPermissionButton bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+                            <i class="fa-solid fa-link"></i>
+                            Assign User
+                        </button>
+                    </div>
                     <div class="w-full flex justify-between h-auto px-4">
                         <div class="w-4/6">
                             <span class="text-gray-600">Action</span>
@@ -871,10 +879,12 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
                                                     <button type="submit"
                                                         class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
                                                         <span class="icon">
@@ -912,10 +922,12 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
                                                     <button type="submit"
                                                         class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
                                                         <span class="icon">
@@ -961,10 +973,12 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
                                                     <button type="submit"
                                                         class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
                                                         <span class="icon">
@@ -1002,10 +1016,12 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
                                                     <button type="submit"
                                                         class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
                                                         <span class="icon">
@@ -1026,19 +1042,19 @@
                     <div class="w-full flex items-center space-x-5 h-14 bg-slate-50 px-4">
                         <img src="{{ asset('assets/images/icons/document_blue.svg') }}" class="w-5 opacity-85"
                             alt="">
-                        <span class="font-semibold opacity-90">Documents Management</span>
+                        <span class="font-semibold opacity-90">Others</span>
                     </div>
                     <hr class="w-full border-gray-300 mb-4">
                     <div class="flex flex-col space-y-4 w-full">
                         <div class="w-full flex justify-between h-auto px-4">
                             <div class="w-4/6 font-normal flex items-center">
-                                <span>Create Document</span>
+                                <span>Manage Dues</span>
                             </div>
                             <div class="mr-4 w-2/6 flex flex-col justify-center items-start space-y-2">
-                                @if (!isset($groupedPermissions['create_document']) || $groupedPermissions['create_document']->isEmpty())
+                                @if (!isset($groupedPermissions['manage_dues']) || $groupedPermissions['manage_dues']->isEmpty())
                                     <span class="text-gray-400">User Not Found</span>
                                 @else
-                                    @foreach ($groupedPermissions['create_document'] as $mp)
+                                    @foreach ($groupedPermissions['manage_dues'] as $mp)
                                         <div class="flex w-full justify-between items-center">
                                             <div class="flex items-center space-x-3">
                                                 <img src="{{ $mp->user->profile_pic
@@ -1051,10 +1067,12 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}" method="post">
+                                                <form action="{{ route('userPermission.unlink', $mp->user->id) }}"
+                                                    method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <input type="hidden" name="permission" value="{{ $mp->permission->name }}">
+                                                    <input type="hidden" name="permission"
+                                                        value="{{ $mp->permission->name }}">
                                                     <button type="submit"
                                                         class="w-4 mr-2 transform saturate-0 hover:saturate-100 hover:scale-125 transition duration-75">
                                                         <span class="icon">
@@ -1070,7 +1088,7 @@
                                 @endif
                             </div>
                         </div>
-                        <hr>
+                        {{-- <hr>
                         <div class="w-full flex justify-between h-auto px-4">
                             <div class="w-4/6 font-normal flex items-center">
                                 <span>Read Users Document</span>
@@ -1151,7 +1169,7 @@
                                     @endforeach
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                         <hr>
                     </div>
                 </div>
@@ -1207,6 +1225,31 @@
 
             // Initial setup
             setActiveButton(workButton, doneButton);
+
+            const linkUserPermissionButton = document.querySelectorAll('.linkUserPermissionButton');
+            const linkUserPermission = document.getElementById('linkUserPermission');
+            const closeButton = document.querySelectorAll('.closeLinkUser');
+
+            linkUserPermissionButton.forEach(button => {
+                button.addEventListener('click', function() {
+                    linkUserPermission.classList.remove('hidden');
+                    linkUserPermission.classList.add('flex');
+                });
+            });
+
+            closeButton.forEach(button => {
+                button.addEventListener('click', function() {
+                    linkUserPermission.classList.add('hidden');
+                    linkUserPermission.classList.remove('flex');
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                if (event.target === linkUserPermission) {
+                    linkUserPermission.classList.add('hidden');
+                    linkUserPermission.classList.remove('flex');
+                }
+            });
         });
     </script>
 @endsection

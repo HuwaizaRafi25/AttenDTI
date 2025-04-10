@@ -22,14 +22,13 @@
                 <div class="flex items-center justify-between h-16">
                     <div class="flex-shrink-0">
                         <a href="/" class="flex items-center justify-center">
-                            <img src="{{ asset('assets/images/icons/dti_icon.png') }}" class="h-8 w-8 mr-2"
-                                alt="Logo">
+                            <img src="{{ $appLogo ? asset('storage/appLogo/' . $appLogo) : asset('assets/images/icons/dti_icon.png') }}" class="w-8 h-8 mr-2">
                             <span class="flex text-2xl font-bold sm:text-3xl lg:text-xl">
-                                <span class="text-[#9c9e9d]">
+                                {{-- <span class="text-[#9c9e9d]">
                                     Atten
-                                </span>
+                                </span> --}}
                                 <span class="text-[#2daabd]">
-                                    DTI
+                                    {{ $appName ? $appName : config('app.name', 'AttendDTI') }}
                                 </span>
                             </span>
                         </a>
@@ -66,6 +65,12 @@
                                 <span>Job</span>
                                 <span
                                     class="{{ Request::is('job') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
+                            </a>
+<a href="/dues"
+                                class="{{ Request::is(patterns: 'dues') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
+                                <span>Dues</span>
+                                <span
+                                    class="{{ Request::is('dues') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
                             </a>
                         </div>
                     </div>
@@ -139,6 +144,12 @@
                         <i
                             class="fas fa-briefcase mr-2 {{ Request::is('job') ? 'text-blue-600' : 'text-gray-600' }}"></i>
                         Job
+                    </a>
+                    <a href="/dues"
+                        class="{{ Request::is('dues') ? 'text-blue-600' : 'text-gray-600' }} block px-3 py-2 rounded-md text-base font-medium transition-colors">
+                        <i
+                            class="fas fa-briefcase mr-2 {{ Request::is('dues') ? 'text-blue-600' : 'text-gray-600' }}"></i>
+                        Dues
                     </a>
                 </div>
             </div>
@@ -253,13 +264,14 @@
                 <div class="image-text">
                     <a href="">
                         <span class="image">
-                            <img src="{{ asset('assets/images/icons/dti_icon.png') }}" alt="">
+                            <img src="{{ $appLogo ? asset('storage/appLogo/' . $appLogo) : asset('assets/images/icons/dti_icon.png') }}" alt="">
                         </span>
                     </a>
 
                     <div class="text logo-text">
-                        <span class="name">{{ config('app.name', 'AttendDTI') }}</span>
-                        {{-- <span class="profession">Web developer</span> --}}
+                        <span class="text-[#2daabd] font-semibold text-xl">
+                            {{ $appName ? $appName : config('app.name', 'AttendDTI') }}
+                        </span>
                     </div>
                     <span class="bx bx-menu toggle -mr-10 -mt-1 scale-150">
                         {!! file_get_contents(public_path('assets/images/icons/menu.svg')) !!}
@@ -349,7 +361,8 @@
                             <span class="icon">
                                 {!! file_get_contents(public_path('assets/images/icons/documents.svg')) !!}
                             </span>
-                            <span class="text nav-text">Documents</span>
+                            <!-- <span class="text nav-text">Documents</span> -->
+                            <span class="text nav-text">Dues</span>
                         </div>
                     </li>
                 </div>
@@ -438,6 +451,8 @@
         @include('menus.modals.attendance.attend_user_modal')
         @include('menus.modals.attendance.import_attendance_modal')
         @include('menus.modals.attendance.view_attendance_report_modal')
+        @include('menus.modals.dues.view_dues_modal')
+        @include('menus.modals.rolePermission.link_user_modal')
         <div
             class="home absolute top-0 lg:left-[296px] w-screen left-0 min-h-screen h-screen bg-gray-50 transition-all transform duration-300">
             <!-- Header -->

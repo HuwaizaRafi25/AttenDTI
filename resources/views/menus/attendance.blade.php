@@ -57,7 +57,8 @@
                                 class="hidden md:relative md:flex md:flex-row md:space-y-0 md:space-x-4 bg-white md:bg-transparent p-3 md:p-0 rounded-md md:rounded-none shadow-xl md:border-none border-t-2 md:shadow-none items-center space-y-2 mt-3 md:mt-0 ml-4 !relative"
                                 style="">
                                 <div class="relative">
-                                    <button id="sortButton" onclick="document.getElementById('sortDropdown').classList.toggle('hidden')"
+                                    <button id="sortButton"
+                                        onclick="document.getElementById('sortDropdown').classList.toggle('hidden')"
                                         class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
                                         <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/sort.svg')) !!}</span>
                                         <span>Sort</span>
@@ -206,7 +207,8 @@
                             <div class="relative inline-block h-12 w-12 -mr-6">
                                 <input {{-- lg:w-64 md:w-[196px] w-[164px] transition-all transform duration-300 --}}
                                     class="-mr-3 search expandright absolute right-[49px] rounded bg-white border border-white h-8 w-0 lg:focus:w-[190px] md:focus:w-[164px] focus:w-[148px]  transition-all duration-400 outline-none z-10 focus:px-4 focus:border-blue-500"
-                                    id="searchright" value="{{ $search ? $search : null }}" type="text" name="q" placeholder="Cari">
+                                    id="searchright" value="{{ $search ? $search : null }}" type="text"
+                                    name="q" placeholder="Cari">
                                 <label class="z-20 button searchbutton absolute text-[22px] w-full cursor-pointer"
                                     for="searchright">
                                     <span class="-ml-3 mt-1 inline-block">
@@ -309,7 +311,6 @@
                                 <p class="text-base text-gray-800">DTI ITB,</p>
                             </div>
 
-                            <!-- Nama Lengkap -->
                             <div class="mt-10 text-right">
                                 <p class="text-md font-medium text-gray-700">{{ Auth::user()->full_name }}</p>
                                 <div class="border-b border-gray-400 w-32 mt-2"></div>
@@ -371,27 +372,52 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-8">
                 <div class="flex flex-col gap-4 md:flex-row items-center justify-between mb-8">
-                    @if (Auth::user()->attendances->where('created_at', '>=', today()->startOfDay())->where('created_at', '<=', today()->endOfDay())->count() > 0)
+                    @if (in_array(today()->format('Y-m-d'), $holidays))
+                        <!-- Jika hari ini adalah hari libur -->
                         <div class="text-center md:text-left mb-6 md:mb-0">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, {{ Auth::user()->full_name }}!
-                            </h2>
-                            <p class="text-lg text-gray-600">You've marked your presence today. Keep up the good work!</p>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, {{ Auth::user()->full_name }}!</h2>
+                            <p class="text-lg text-gray-600">Today is a holiday! Enjoy your day off!</p>
                         </div>
-                    @else
-                        <div class="text-center md:text-left mb-6 md:mb-0">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Hello! Ready to start your day?</h2>
-                            <p class="text-lg text-gray-600">Let's mark your presence and make today count!</p>
-                        </div>
-                        <div class="flex gap-x-4">
-                            <button onclick="window.location.href='{{ route('attendance.request', Auth::id()) }}'"
-                                class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
-                                <i class="fas fa-check-circle mr-2"></i> I'm Here!
-                            </button>
-                            <button onclick="showAbsentModal()"
-                                class="absentButton bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
-                                <i class="fas fa-times-circle mr-2"></i> Not Today
-                            </button>
-                        </div>
+                    @elseif (Carbon\Carbon::now()->isWeekday())
+                        <!-- Jika hari ini adalah hari kerja -->
+                        @if (Auth::user()->attendances->where('created_at', '>=', today()->startOfDay())->where('created_at', '<=', today()->endOfDay())->count() > 0)
+                            <!-- Jika pengguna sudah melakukan attendance hari ini -->
+                            <div class="text-center md:text-left mb-6 md:mb-0">
+                                <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, {{ Auth::user()->full_name }}!</h2>
+                                <p class="text-lg text-gray-600">You've marked your presence today. Keep up the good work!</p>
+                            </div>
+                        @else
+                            <!-- Jika pengguna belum melakukan attendance hari ini -->
+                            @if (Carbon\Carbon::now() >= $lateTime)
+                                <!-- Jika waktu saat ini sudah melewati lateTime -->
+                                <div class="text-center md:text-left mb-6 md:mb-0">
+                                    <h2 class="text-3xl font-bold text-gray-800 mb-2">You're late!</h2>
+                                    <p class="text-lg text-gray-600">Please fill out the form to explain your lateness.</p>
+                                </div>
+                                <div class="flex gap-x-4">
+                                    <button onclick="window.location.href='{{ route('attendance.form', Auth::id()). '&type=late' }}'"
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                                        <i class="fas fa-file-alt mr-2"></i> Fill Late Form
+                                    </button>
+                                </div>
+                            @else
+                                <!-- Jika waktu saat ini belum melewati lateTime -->
+                                <div class="text-center md:text-left mb-6 md:mb-0">
+                                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Hello! Ready to start your day?</h2>
+                                    <p class="text-lg text-gray-600">Let's mark your presence and make today count!</p>
+                                </div>
+                                <div class="flex gap-x-4">
+                                    <button onclick="window.location.href='{{ route('attendance.request', Auth::id()) }}'"
+                                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                                        <i class="fas fa-check-circle mr-2"></i> I'm Here!
+                                    </button>
+                                    <button onclick="showAbsentModal()"
+                                        class="absentButton bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                                        <i class="fas fa-times-circle mr-2"></i> Not Today
+                                    </button>
+                                </div>
+                            @endif
+                        @endif
                     @endif
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Attendance Summary</h2>
