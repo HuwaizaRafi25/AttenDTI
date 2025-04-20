@@ -22,7 +22,8 @@
                 <div class="flex items-center justify-between h-16">
                     <div class="flex-shrink-0">
                         <a href="/" class="flex items-center justify-center">
-                            <img src="{{ $appLogo ? asset('storage/appLogo/' . $appLogo) : asset('assets/images/icons/dti_icon.png') }}" class="w-8 h-8 mr-2">
+                            <img src="{{ $appLogo ? asset('storage/appLogo/' . $appLogo) : asset('assets/images/icons/dti_icon.png') }}"
+                                class="w-8 h-8 mr-2">
                             <span class="flex text-2xl font-bold sm:text-3xl lg:text-xl">
                                 {{-- <span class="text-[#9c9e9d]">
                                     Atten
@@ -66,12 +67,14 @@
                                 <span
                                     class="{{ Request::is('job') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
                             </a>
-<a href="/dues"
-                                class="{{ Request::is(patterns: 'dues') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
-                                <span>Dues</span>
-                                <span
-                                    class="{{ Request::is('dues') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
-                            </a>
+                            @if (Auth::User()->hasPermissionTo('manage_dues'))
+                                <a href="/dues"
+                                    class="{{ Request::is(patterns: 'dues') ? 'text-blue-600' : 'text-gray-600' }} px-3 py-2 rounded-md font-medium transition-colors relative group">
+                                    <span>Dues</span>
+                                    <span
+                                        class="{{ Request::is('dues') ? 'w-[85%]' : 'w-0' }} absolute bottom-0 left-[7%] h-0.5 bg-blue-600 transition-all group-hover:w-[85%]"></span>
+                                </a>
+                            @endif
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
@@ -136,7 +139,8 @@
                     </a>
                     <a href="/tasks"
                         class="{{ Request::is('tasks') ? 'text-blue-600' : 'text-gray-600' }} block px-3 py-2 rounded-md text-base font-medium transition-colors">
-                        <i class="fas fa-tasks mr-2 {{ Request::is('tasks') ? 'text-blue-600' : 'text-gray-600' }}"></i>
+                        <i
+                            class="fas fa-tasks mr-2 {{ Request::is('tasks') ? 'text-blue-600' : 'text-gray-600' }}"></i>
                         Task
                     </a>
                     <a href="/job"
@@ -264,7 +268,8 @@
                 <div class="image-text">
                     <a href="">
                         <span class="image">
-                            <img src="{{ $appLogo ? asset('storage/appLogo/' . $appLogo) : asset('assets/images/icons/dti_icon.png') }}" alt="">
+                            <img src="{{ $appLogo ? asset('storage/appLogo/' . $appLogo) : asset('assets/images/icons/dti_icon.png') }}"
+                                alt="">
                         </span>
                     </a>
 
@@ -447,6 +452,7 @@
         @include('menus.modals.user.add_user_modal')
         @include('menus.modals.user.view_user_modal')
         @include('menus.modals.user.delete_user_modal')
+        @include('menus.modals.user.import_user_modal')
         @include('menus.modals.attendance.view_attendance_modal')
         @include('menus.modals.attendance.attend_user_modal')
         @include('menus.modals.attendance.import_attendance_modal')

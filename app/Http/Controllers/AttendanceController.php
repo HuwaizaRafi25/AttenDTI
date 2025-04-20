@@ -37,18 +37,18 @@ class AttendanceController extends Controller
         $lastDate = end($dates);
 
         $apiUrl = "https://dayoffapi.vercel.app/api?month={$selectedMonth}&year={$selectedYear}";
-        // $response = file_get_contents($apiUrl);
-        // $holidayData = json_decode($response, true);
+        $response = file_get_contents($apiUrl);
+        $holidayData = json_decode($response, true);
 
         $holidays = [];
         $holidaysNames = [];
-        // if ($holidayData) {
-        //     foreach ($holidayData as $holiday) {
-        //         $holidayDate = Carbon::parse($holiday['tanggal'])->format('Y-m-d');
-        //         $holidays[] = $holidayDate;
-        //         $holidaysNames[$holidayDate] = $holiday['keterangan'];
-        //     }
-        // }
+        if ($holidayData) {
+            foreach ($holidayData as $holiday) {
+                $holidayDate = Carbon::parse($holiday['tanggal'])->format('Y-m-d');
+                $holidays[] = $holidayDate;
+                $holidaysNames[$holidayDate] = $holiday['keterangan'];
+            }
+        }
 
         $search = $request->input('search');
 

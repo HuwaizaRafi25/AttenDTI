@@ -330,6 +330,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    const importUserButton = document.querySelectorAll(".importUserButton");
+    const importUserModal = document.getElementById("importUserModal");
+    const closeImportUserModal = document.getElementById("closeImportUserModal");
+    importUserButton.forEach((button) => {
+        button.addEventListener("click", function () {
+            importUserModal.classList.remove("hidden");
+            importUserModal.classList.add("flex");
+        });
+    });
+
+    closeImportUserModal.addEventListener("click", function () {
+        importUserModal.classList.add("hidden");
+        importUserModal.classList.remove("flex");
+    });
+
+    importUserModal.addEventListener("click", function (e) {
+        if (e.target === importUserModal) {
+            importUserModal.classList.add("hidden");
+            importUserModal.classList.remove("flex");
+        }
+    });
+
     let typingTimer;
     let searchInput = document.getElementById("searchright");
     searchInput.addEventListener("input", function () {

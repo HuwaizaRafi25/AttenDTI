@@ -209,7 +209,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event Tambah Pengguna
     const importButton = document.querySelectorAll(".importButton");
-    const reportAttendanceButton = document.querySelectorAll(".reportAttendanceButton");
+    const reportAttendanceButton = document.querySelectorAll(
+        ".reportAttendanceButton"
+    );
     const importAttendanceModal = document.getElementById(
         "importAttendanceModal"
     );
@@ -237,13 +239,10 @@ document.addEventListener("DOMContentLoaded", function () {
         "attendanceTypeAttendUser"
     );
     timeAttendUser = document.getElementById("timeAttendUser");
-    locationAttendUser =
-        document.getElementById("locationAttendUser");
+    locationAttendUser = document.getElementById("locationAttendUser");
     noteAttendUser = document.getElementById("noteAttendUser");
     attendButton = document.getElementById("attendButton");
-    attendUserModalForm = document.getElementById(
-        "attendUserModalForm"
-    );
+    attendUserModalForm = document.getElementById("attendUserModalForm");
     userAttendUser = document.getElementById("userAttendUser");
 
     attendButton.onclick = function () {
@@ -254,10 +253,18 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const isTimeRequired = ["present", "sick", "permit", "late"].includes(type);
+        const isTimeRequired = ["present", "sick", "permit", "late"].includes(
+            type
+        );
         const isLocationRequired = ["present", "late"].includes(type);
         const isNoteRequired = ["sick", "permit", "late"].includes(type);
-        const isUserRequired = ["present", "sick", "permit", "late","absent"].includes(type);
+        const isUserRequired = [
+            "present",
+            "sick",
+            "permit",
+            "late",
+            "absent",
+        ].includes(type);
         if (isUserRequired && !userAttendUser.value) {
             alert("Please select a user");
             return;
@@ -308,15 +315,44 @@ document.addEventListener("DOMContentLoaded", function () {
             importAttendanceModal.classList.remove("flex");
         }
     });
-//
+    //
     reportAttendanceButton.forEach((button) => {
         button.addEventListener("click", function () {
             attendanceReportModal.classList.remove("hidden");
             attendanceReportModal.classList.add("flex");
 
             const userId = button.getAttribute("data-userId");
+            const userPic = button.getAttribute("data-userPic");
+            const userFullname = button.getAttribute("data-userFullname");
+            const userITBAccount = button.getAttribute("data-userITBAcc");
+            const userIdentityNum = button.getAttribute("data-userIdentityNum");
+            const userMajor = button.getAttribute("data-userMajor");
+            const userInstitution = button.getAttribute("data-userInstitution");
+
             const userIdInput = document.getElementById("userId");
+            const userProfilePic = document.getElementById("userPicReport");
+            const userFullnameText = document.getElementById("userFullnameText");
+            const userITBAccountText = document.getElementById(
+                "userITBAccountText"
+            );
+            const userIdentityNumText = document.getElementById(
+                "userIdentityNum"
+            );
+            const userMajorText = document.getElementById("userMajorText");
+            const userInstitutionText = document.getElementById(
+                "userInstitutionText"
+            );
             userIdInput.value = userId;
+            if (userPic === null) {
+                userProfilePic.src = "/assets/images/userPlaceHolder2.png";
+            } else {
+                userProfilePic.src = `/storage/profilePics/${userPic}`;
+            }
+            userFullnameText.textContent = userFullname;
+            userITBAccountText.textContent = userITBAccount;
+            userIdentityNumText.textContent = userIdentityNum;
+            userMajorText.textContent = userMajor;
+            userInstitutionText.textContent = userInstitution;
             loadUserAttendanceData(userId);
         });
     });
@@ -333,46 +369,66 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function loadUserAttendanceData(userId) {
         // Show loading state
-        document.getElementById('presentCount').textContent = '...';
-        document.getElementById('absentCount').textContent = '...';
-        document.getElementById('lateCount').textContent = '...';
-        document.getElementById('sickCount').textContent = '...';
-        document.getElementById('permitCount').textContent = '...';
+        document.getElementById("presentCount").textContent = "...";
+        document.getElementById("absentCount").textContent = "...";
+        document.getElementById("lateCount").textContent = "...";
+        document.getElementById("sickCount").textContent = "...";
+        document.getElementById("permitCount").textContent = "...";
 
         // AJAX request to get user attendance data
         fetch(`/getUserAttendance/${userId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('presentCount').textContent = data.attendance.present;
-                document.getElementById('absentCount').textContent = data.attendance.absent;
-                document.getElementById('lateCount').textContent = data.attendance.late;
-                document.getElementById('sickCount').textContent = data.attendance.sick;
-                document.getElementById('permitCount').textContent = data.attendance.permit;
+            .then((response) => response.json())
+            .then((data) => {
+                document.getElementById("presentCount").textContent =
+                    data.attendance.present;
+                document.getElementById("absentCount").textContent =
+                    data.attendance.absent;
+                document.getElementById("lateCount").textContent =
+                    data.attendance.late;
+                document.getElementById("sickCount").textContent =
+                    data.attendance.sick;
+                document.getElementById("permitCount").textContent =
+                    data.attendance.permit;
 
                 // Calculate and update attendance rate
-                const totalDays = data.attendance.present + data.attendance.absent +
-                    data.attendance.late + data.attendance.sick + data.attendance.permit;
-                const attendanceRate = totalDays > 0 ?
-                    Math.round(((data.attendance.present + data.attendance.late) / totalDays) * 100) :
-                    0;
+                const totalDays =
+                    data.attendance.present +
+                    data.attendance.absent +
+                    data.attendance.late +
+                    data.attendance.sick +
+                    data.attendance.permit;
+                const attendanceRate =
+                    totalDays > 0
+                        ? Math.round(
+                              ((data.attendance.present +
+                                  data.attendance.late) /
+                                  totalDays) *
+                                  100
+                          )
+                        : 0;
 
-                document.getElementById('attendanceRateBar').style.width = `${attendanceRate}%`;
-                document.getElementById('attendanceRateText').textContent = `${attendanceRate}%`;
+                document.getElementById(
+                    "attendanceRateBar"
+                ).style.width = `${attendanceRate}%`;
+                document.getElementById(
+                    "attendanceRateText"
+                ).textContent = `${attendanceRate}%`;
 
                 // Render charts
                 renderCheckInTimeChart(data.checkInTimes);
                 renderAttendanceDistributionChart(data.attendance);
             })
-            .catch(error => {
-                console.error('Error loading user attendance data:', error);
+            .catch((error) => {
+                console.error("Error loading user attendance data:", error);
                 // Show error message or fallback to sample data
-
             });
     }
 
     // Function to render check-in time chart
     function renderCheckInTimeChart(checkInTimes) {
-        const ctx = document.getElementById('checkInTimeChart').getContext('2d');
+        const ctx = document
+            .getElementById("checkInTimeChart")
+            .getContext("2d");
 
         // Destroy existing chart if it exists
         if (window.checkInTimeChartInstance) {
@@ -380,26 +436,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Format data for chart
-        const labels = checkInTimes.map(item => item.date);
-        const data = checkInTimes.map(item => {
+        const labels = checkInTimes.map((item) => item.date);
+        const data = checkInTimes.map((item) => {
             // Convert time string to minutes since midnight for plotting
-            const [hours, minutes] = item.time.split(':').map(Number);
+            const [hours, minutes] = item.time.split(":").map(Number);
             return hours * 60 + minutes;
         });
 
         // Create new chart
         window.checkInTimeChartInstance = new Chart(ctx, {
-            type: 'line',
+            type: "line",
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'Check-in Time',
-                    data: data,
-                    borderColor: '#3B82F6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.2,
-                    fill: true
-                }]
+                datasets: [
+                    {
+                        label: "Check-in Time",
+                        data: data,
+                        borderColor: "#3B82F6",
+                        backgroundColor: "rgba(59, 130, 246, 0.1)",
+                        tension: 0.2,
+                        fill: true,
+                    },
+                ],
             },
             options: {
                 responsive: true,
@@ -407,36 +465,46 @@ document.addEventListener("DOMContentLoaded", function () {
                 scales: {
                     y: {
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 // Convert minutes back to time format
                                 const hours = Math.floor(value / 60);
                                 const minutes = value % 60;
-                                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-                            }
+                                return `${hours
+                                    .toString()
+                                    .padStart(2, "0")}:${minutes
+                                    .toString()
+                                    .padStart(2, "0")}`;
+                            },
                         },
                         min: 360, // 8:00 AM (8 * 60)
-                        max: 600 // 10:00 AM (10 * 60)
-                    }
+                        max: 600, // 10:00 AM (10 * 60)
+                    },
                 },
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 const value = context.raw;
                                 const hours = Math.floor(value / 60);
                                 const minutes = value % 60;
-                                return `Check-in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-                            }
-                        }
-                    }
-                }
-            }
+                                return `Check-in: ${hours
+                                    .toString()
+                                    .padStart(2, "0")}:${minutes
+                                    .toString()
+                                    .padStart(2, "0")}`;
+                            },
+                        },
+                    },
+                },
+            },
         });
     }
 
     // Function to render attendance distribution chart
     function renderAttendanceDistributionChart(attendance) {
-        const ctx = document.getElementById('attendanceDistributionChart').getContext('2d');
+        const ctx = document
+            .getElementById("attendanceDistributionChart")
+            .getContext("2d");
 
         // Destroy existing chart if it exists
         if (window.attendanceDistributionChartInstance) {
@@ -445,56 +513,61 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Create new chart
         window.attendanceDistributionChartInstance = new Chart(ctx, {
-            type: 'doughnut',
+            type: "doughnut",
             data: {
-                labels: ['Present', 'Late', 'Sick', 'Permit', 'Absent'],
-                datasets: [{
-                    data: [
-                        attendance.present,
-                        attendance.late,
-                        attendance.sick,
-                        attendance.permit,
-                        attendance.absent
-                    ],
-                    backgroundColor: [
-                        '#10B981', // green for present
-                        '#F59E0B', // amber for late
-                        '#3B82F6', // blue for sick
-                        '#8B5CF6', // purple for permit
-                        '#EF4444' // red for absent
-                    ],
-                    borderWidth: 1
-                }]
+                labels: ["Present", "Late", "Sick", "Permit", "Absent"],
+                datasets: [
+                    {
+                        data: [
+                            attendance.present,
+                            attendance.late,
+                            attendance.sick,
+                            attendance.permit,
+                            attendance.absent,
+                        ],
+                        backgroundColor: [
+                            "#10B981", // green for present
+                            "#F59E0B", // amber for late
+                            "#3B82F6", // blue for sick
+                            "#8B5CF6", // purple for permit
+                            "#EF4444", // red for absent
+                        ],
+                        borderWidth: 1,
+                    },
+                ],
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '65%',
+                cutout: "65%",
                 plugins: {
                     legend: {
-                        position: 'bottom',
+                        position: "bottom",
                         labels: {
                             usePointStyle: true,
-                            padding: 15
-                        }
+                            padding: 15,
+                        },
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
+                            label: function (context) {
+                                const label = context.label || "";
                                 const value = context.raw || 0;
-                                const total = context.dataset.data.reduce((acc, val) => acc +
-                                    val, 0);
-                                const percentage = Math.round((value / total) * 100);
+                                const total = context.dataset.data.reduce(
+                                    (acc, val) => acc + val,
+                                    0
+                                );
+                                const percentage = Math.round(
+                                    (value / total) * 100
+                                );
                                 return `${label}: ${value} (${percentage}%)`;
-                            }
-                        }
-                    }
-                }
-            }
+                            },
+                        },
+                    },
+                },
+            },
         });
     }
-
 
     let typingTimer;
     let searchInput = document.getElementById("searchright");

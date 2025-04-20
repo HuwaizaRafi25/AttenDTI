@@ -4,8 +4,8 @@
         <div class="w-[30%] h-full flex flex-col justify-center items-center p-6">
             <img src="{{ asset('assets/images/huwajawa.jpg') }}" alt="userPic"
                 class="w-32 h-32 object-cover rounded-full mb-2 shadow-lg" id="userPicReport">
-            <h1 class="font-semibold text-center">Muhammad Huwaiza Rafi</h1>
-            <p class="font-light text-gray-700 text-base">huwaiza.r@itb.ac.id</p>
+            <h1 class="font-semibold text-center" id="userFullnameText">Muhammad Huwaiza Rafi</h1>
+            <p class="font-light text-gray-700 text-base" id="userITBAccountText">huwaiza.r@itb.ac.id</p>
             <hr class="w-full border-gray-300 my-4">
             <div class="flex flex-col items-start w-full gap-y-4">
                 <div id="majorContainer" class="flex items-center ml-1 gap-x-1">
@@ -14,7 +14,7 @@
                     </span>
                     <div>
                         <input type="hidden" name="userId" id="userId">
-                        <h1 id="userMajor" class="text-sm">876543456</h1>
+                        <h1 id="userIdentityNum" class="text-sm">876543456</h1>
                     </div>
                 </div>
                 <div id="majorContainer" class="flex items-center ml-1 gap-x-1">
@@ -23,7 +23,7 @@
                             alt="">
                     </span>
                     <div>
-                            <h1 id="userMajor" class="text-sm">Rekayasa Perangkat Lunak</h1>
+                            <h1 id="userMajorText" class="text-sm">Rekayasa Perangkat Lunak</h1>
                     </div>
                 </div>
                 <div class="flex items-center ml-1 gap-x-1">
@@ -32,7 +32,7 @@
                             alt="">
                     </span>
                     <div>
-                        <h1 id="userInstitution" class="text-sm">SMK TI Pembangunan Cimahi</h1>
+                        <h1 id="userInstitutionText" class="text-sm">SMK TI Pembangunan Cimahi</h1>
                     </div>
                 </div>
             </div>

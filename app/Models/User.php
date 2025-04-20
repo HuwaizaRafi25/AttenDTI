@@ -114,4 +114,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cash::class);
     }
+
+    public function sertifikat()
+    {
+        return $this->hasMany(Sertifikat::class);
+    }
 }

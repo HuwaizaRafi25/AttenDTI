@@ -174,6 +174,10 @@
                                         <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor sebagai
                                             <b>CSV</b></a>
+                                            <a id="importUserButton"
+                                            class="importUserButton block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Import
+                                            <b>Data</b>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

@@ -183,7 +183,8 @@
                         </div>
                     </div>
                 </div>
-                <i class="reportAttendanceButton fa-solid fa-circle-info relative text-gray-400 hover:scale-125 hover:text-gray-600 transition-all transform duration-100 cursor-pointer" data-userId="{{ $user->id }}" ></i>
+                <i class="reportAttendanceButton fa-solid fa-circle-info relative text-gray-400 hover:scale-125 hover:text-gray-600 transition-all transform duration-100 cursor-pointer"
+                    data-userId="{{ $user->id }}" data-userPic="{{ $user->profile_pic }}" data-userFullname="{{ $user->full_name }}" data-userITBAcc="{{ $user->itb_account }}" data-userIdentityNum="{{ $user->identity_number }}" data-userMajor="{{ $user->major }}" data-userInstitution="{{ $user->institution }}"></i>
             </td>
         </tr>
     @endforeach
