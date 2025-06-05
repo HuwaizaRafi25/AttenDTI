@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
-            $table->foreignId('announcement_category_id')->constrainted('announcement_categories')->onDelete('cascade');
+            $table->foreignId('announcement_category_id')->constrained('announcement_categories')->onDelete('cascade');
             $table->string('title');
             $table->text('text');
             $table->string('image_path')->nullable();

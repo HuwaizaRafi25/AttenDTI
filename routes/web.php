@@ -18,6 +18,7 @@ use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\AccountSettingsController;
+use App\Http\Controllers\AnnouncementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,10 +89,13 @@ Route::middleware(['auth'])->group(
         Route::get('/getUserAttendance/{id}', [AttendanceController::class, 'getUserAttendance'])->name('getUserAttendance');
 
 
-        Route::get('/announcement', function () {
-            return view('menus.announcement');
-        });
-
+        route::get('/announcement', [AnnouncementController::class, 'index'])->name('announcements.index');
+        route::post('/add_announcement', [AnnouncementController::class, 'store'])->name('announcements.store');
+        Route::delete('/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+        Route::put('/announcements/{id}', [AnnouncementController::class, 'update'])->name('announcements.update');
+        Route::get('/announcements/{id}', [AnnouncementController::class, 'show'])->name('announcements.show');
+        Route::post('/announcements/pin/{id}', [AnnouncementController::class, 'pin'])->name('announcements.pin');
+        
 
         Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
         Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');

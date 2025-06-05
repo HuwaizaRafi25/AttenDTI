@@ -119,4 +119,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Sertifikat::class);
     }
+
+    public function announcement()
+    {
+        return $this->hasMany(announcement::class);
+    }
+    public function pinnedAnnouncements()
+    {
+        return $this->hasMany(PinnedAnnouncement::class, 'user_id');
+    }
 }
