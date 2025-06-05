@@ -32,36 +32,77 @@
                 background-image: none;
             }
 
-            /* CSS untuk modal Sertifikat Kelulusan */
-            #certificateModal .bg-template {
+            /* Certificate specific styles - DIPERBAIKI */
+            .certificate-container {
+                width: 297mm;
+                height: 210mm;
+                position: relative;
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
-                min-height: 100vh;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                color: #1E3A8A;
                 font-family: 'Roboto', sans-serif;
-                padding: 20px;
+                color: #1E3A8A;
+                padding: 40px;
                 box-sizing: border-box;
+                margin: 0 auto;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
-            /* Print-specific styles */
+            .certificate-content {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                text-align: center;
+                position: relative;
+                z-index: 10;
+            }
+
+            .certificate-header {
+                margin-top: 60px;
+            }
+
+            .certificate-body {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .certificate-footer {
+                margin-bottom: 60px;
+            }
+
+            .certificate-name {
+                font-family: 'Pacifico', cursive;
+                font-size: 3.5rem;
+                margin: 30px 0;
+                color: #1E3A8A;
+            }
+
+            /* Print-specific styles - DIPERBAIKI */
             @media print {
                 .no-print {
-                    display: none;
+                    display: none !important;
                 }
 
                 .print-bg {
-                    -webkit-print-color-adjust: exact;
-                    print-color-adjust: exact;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
                 }
 
                 @page {
-                    size: auto;
-                    margin: 20px;
+                    size: A4 landscape;
+                    margin: 0;
                 }
 
                 body {
@@ -69,39 +110,90 @@
                     padding: 0;
                 }
 
-                /* Khusus untuk print sertifikat */
-                @page: certificate {
-                    size: landscape;
+                .certificate-container {
+                    width: 100vw;
+                    height: 100vh;
                     margin: 0;
+                    padding: 0;
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
                 }
 
                 #certificateContent {
                     width: 100vw;
                     height: 100vh;
-                    page: certificate;
+                    margin: 0;
+                    padding: 0;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
                 }
+            }
+
+            /* PDF Preview Modal */
+            .pdf-preview-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .pdf-preview-container {
+                background: white;
+                border-radius: 8px;
+                padding: 20px;
+                max-width: 90vw;
+                max-height: 90vh;
+                overflow: auto;
+            }
+
+            .pdf-preview-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #e5e5e5;
+            }
+
+            .pdf-preview-content {
+                text-align: center;
+            }
+
+            .pdf-preview-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 20px;
+                justify-content: center;
             }
         </style>
     </head>
 
     <body
-        class="min-h-screen gradient-bg flex items-center justify-center p-4 bg-gradient-to-r from-blue-200 to-blue-400">
-        <a href="{{ route('overview') }}" class="fixed z-10 top-5 left-5 text-black ">
+        class="flex items-center justify-center min-h-screen p-4 gradient-bg bg-gradient-to-r from-blue-200 to-blue-400">
+        <a href="{{ route('overview') }}" class="fixed z-10 text-black top-5 left-5 ">
             <i class="text-lg fas fa-arrow-left"></i>
         </a>
 
-        <div class="profile-card max-w-xl w-full text-black relative overflow-visible">
+        <div class="relative w-full max-w-xl overflow-visible text-black profile-card">
             <!-- Blue background header -->
-            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-40 rounded-xl m-3"></div>
+            <div class="h-40 m-3 bg-gradient-to-r from-blue-400 to-blue-600 rounded-xl"></div>
 
             <!-- Content that overlaps the blue background -->
             <div class="px-6 pb-6 -mt-24">
                 <!-- Profile header -->
                 <div class="flex flex-col mb-6">
                     <!-- Profile image and icons in a row -->
-                    <div class="flex w-full justify-between mb-4">
-                        <div class="profile-image-bg p-1 w-36 h-36 rounded-full">
-                            <div class="w-full h-full rounded-full overflow-hidden border-2 border-white">
+                    <div class="flex justify-between w-full mb-4">
+                        <div class="p-1 rounded-full profile-image-bg w-36 h-36">
+                            <div class="w-full h-full overflow-hidden border-2 border-white rounded-full">
                                 <img src="{{ $user->profile_pic ? asset('storage/profilePics/' . $user->profile_pic) : asset('assets/images/userPlaceHolder.png') }}"
                                     alt="Profile Photo" class="object-cover w-full h-full">
                             </div>
@@ -111,17 +203,17 @@
                         <div class="flex items-end gap-4 transition-all duration-500 transform">
                             @if (Auth::check() && Auth::user()->username === $user->username)
                                 <a href="{{ url('addface') }}"
-                                    class="text-gray-600 hover:text-gray-800 hover:scale-125 transition-all">
+                                    class="text-gray-600 transition-all hover:text-gray-800 hover:scale-125">
                                     <img src="{{ asset('assets/images/icons/face.svg') }}" class="w-6 h-6 opacity-85"
                                         alt="">
                                 </a>
                                 <a href="{{ route('users.updateView', ['id' => $user->id]) }}"
-                                    class="text-gray-600 hover:text-gray-800 hover:scale-125 transition-all">
+                                    class="text-gray-600 transition-all hover:text-gray-800 hover:scale-125">
                                     <i class="text-lg fas fa-edit"></i>
                                 </a>
                                 <div class="relative" x-data="{ isOpen: false }">
                                     <button @click="isOpen = !isOpen" @click.away="isOpen = false"
-                                        class="text-gray-600 hover:text-gray-800 hover:scale-125 transition-all">
+                                        class="text-gray-600 transition-all hover:text-gray-800 hover:scale-125">
                                         <i class="text-lg fas fa-print"></i>
                                     </button>
 
@@ -157,7 +249,7 @@
                     <!-- User name and placement -->
                     <h1 class="text-xl font-semibold">{{ $user->full_name }} |
                         {{ $user->placement ? $user->placement->name : 'N/A' }}</h1>
-                    <p class="text-sm text-gray-600 mt-1">{{ $user->username }} •
+                    <p class="mt-1 text-sm text-gray-600">{{ $user->username }} •
                         @if ($user->roles->isNotEmpty())
                             {{ $user->roles->pluck('name')->join(', ') }}
                         @else
@@ -169,52 +261,52 @@
                 <!-- User details section -->
                 <div class="">
                     <!-- Divider -->
-                    <div class="h-px bg-gray-200 mb-4"></div>
+                    <div class="h-px mb-4 bg-gray-200"></div>
 
                     <!-- User details in two columns -->
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <p class="text-xs text-gray-500 mb-1">ITB Account</p>
+                            <p class="mb-1 text-xs text-gray-500">ITB Account</p>
                             <p class="text-sm font-medium">{{ $user->itb_account ?? 'N/A' }}</p>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 mb-1">Email</p>
+                            <p class="mb-1 text-xs text-gray-500">Email</p>
                             <p class="text-sm font-medium">{{ $user->email ? $user->email : 'N/A' }}</p>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 mb-1">Identity Number</p>
+                            <p class="mb-1 text-xs text-gray-500">Identity Number</p>
                             <p class="text-sm font-medium">
                                 {{ $user->identity_number ? $user->identity_number : 'N/A' }}</p>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 mb-1">Phone</p>
+                            <p class="mb-1 text-xs text-gray-500">Phone</p>
                             <p class="text-sm font-medium">{{ $user->phone ?: 'N/A' }}</p>
                         </div>
                         <div class="col-span-2">
-                            <p class="text-xs text-gray-500 mb-1">Address</p>
+                            <p class="mb-1 text-xs text-gray-500">Address</p>
                             <p class="text-sm font-medium">{{ $user->address ?: 'N/A' }}</p>
                         </div>
                     </div>
 
                     <!-- Divider -->
-                    <div class="h-px bg-gray-200 my-4"></div>
+                    <div class="h-px my-4 bg-gray-200"></div>
 
                     <!-- Period and institution info -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <p class="text-xs text-gray-500 mb-1">Start Date</p>
+                            <p class="mb-1 text-xs text-gray-500">Start Date</p>
                             <p class="text-sm font-medium">{{ $user->period_start_date ?? 'N/A' }}</p>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 mb-1">End Date</p>
+                            <p class="mb-1 text-xs text-gray-500">End Date</p>
                             <p class="text-sm font-medium">{{ $user->period_end_date ?? 'N/A' }}</p>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 mb-1">Major</p>
+                            <p class="mb-1 text-xs text-gray-500">Major</p>
                             <p class="text-sm font-medium">{{ $user->major ?? 'N/A' }}</p>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 mb-1">Institution</p>
+                            <p class="mb-1 text-xs text-gray-500">Institution</p>
                             <p class="text-sm font-medium">{{ $user->institution ?: 'N/A' }}</p>
                         </div>
                     </div>
@@ -354,45 +446,46 @@
             </div>
         </div>
 
-        <!-- Modal for Sertifikat Kelulusan -->
+        <!-- Modal for Sertifikat Kelulusan - DIPERBAIKI -->
         <div id="certificateModal"
             class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-70">
-            <div class="bg-gray-100 text-black rounded-lg shadow-lg m-6 p-6 h-[95vh] max-w-xl md:max-w-4xl w-full">
+            <div class="bg-gray-100 text-black rounded-lg shadow-lg m-6 p-6 h-[95vh] max-w-6xl w-full">
                 <div class="overflow-y-auto h-[80vh] space-y-4">
-                    <div id="certificateContent" class="relative overflow-auto text-black border-2 rounded-md">
-                        {{-- set asset('assets/images/template-sertifikat.png sebagai bg dari certificate --}}
-                        <img src="{{ asset('assets/images/template-sertifikat.png') }}"
-                            class="absolute inset-0 w-full h-full object-cover" alt="">
+                    <div id="certificateContent" class="certificate-container print-bg"
+                        style="background-image: url('{{ asset('assets/images/template-sertifikat.png') }}');">
+                        
+                        <!-- Konten Sertifikat - DIPERBAIKI -->
+                        <div class="certificate-content">
+                            <!-- Header -->
+                            <div class="certificate-header">
+                                <h1 class="text-5xl font-bold text-blue-900">Sertifikat</h1>
+                                <p class="mt-2 text-lg text-blue-800">101/ITI.B05.3/DL.09/2024</p>
+                            </div>
 
-                        <!-- Konten Sertifikat -->
-                        <div class="relative z-10 font-roboto text-blue-900 min-h-screen flex flex-col justify-center">
-                            <div class="content items-center">
-                                <div class="header text-center">
-                                    <h1 class="text-4xl font-bold">Sertifikat</h1>
-                                    <p class="text-sm">101/ITI.B05.3/DL.09/2024</p>
+                            <!-- Body -->
+                            <div class="certificate-body">
+                                <p class="mb-4 text-2xl text-blue-800">Sertifikat ini diberikan kepada:</p>
+                                <h2 class="certificate-name">{{ $user->full_name }}</h2>
+                                <div class="space-y-2 text-xl text-blue-800">
+                                    <p>Telah melaksanakan Praktek Kerja Lapangan (PKL)</p>
+                                    <p>di Direktorat Teknologi Informasi ITB</p>
+                                    <p>dari tanggal {{ \Carbon\Carbon::parse($user->period_start_date)->format('d F Y') }} - {{ \Carbon\Carbon::parse($user->period_end_date)->format('d F Y') }}</p>
                                 </div>
                             </div>
-                            <div class="content text-center mt-8">
-                                <p class="text-lg">Sertifikat ini diberikan kepada:</p>
-                                <h2 class="text-5xl my-4" style="font-family: 'Pacifico', cursive;">
-                                    {{ $user->full_name }}</h2>
-                                <p class="text-md">Telah melaksanakan Praktek Kerja Lapangan (PKL)</p>
-                                <p class="text-md">di Direktorat Teknologi Informasi ITB</p>
-                                <p class="text-md">dari tanggal
-                                    {{ \Carbon\Carbon::parse($user->period_start_date)->format('d F Y') }} -
-                                    {{ \Carbon\Carbon::parse($user->period_end_date)->format('d F Y') }}</p>
-                            </div>
-                            <div class="footer mt-8 flex flex-col items-center">
-                                <img src="{{ asset('assets/images/ttd.png-removebg-preview.png') }}"
-                                    alt="Tanda Tangan" class="w-32 h-32">
-                                <div class="text-center">
-                                    <p class="text-md font-bold">Yustinus Dwiharjanto, S.Kom.</p>
-                                    <p class="text-sm">Kepala Seksi Layanan Teknologi Informasi</p>
+
+                            <!-- Footer -->
+                            <div class="certificate-footer">
+                                <div class="flex flex-col items-center">
+                                    <img src="{{ asset('assets/images/ttd.png-removebg-preview.png') }}"
+                                        alt="Tanda Tangan" class="w-32 h-24 mb-4 print-bg">
+                                    <div class="text-center text-blue-900">
+                                        <p class="text-xl font-bold">Yustinus Dwiharjanto, S.Kom.</p>
+                                        <p class="text-lg">Kepala Seksi Layanan Teknologi Informasi</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="flex py-3 gap-x-2">
                     <button
@@ -400,7 +493,32 @@
                         onclick="closeCertificateModal()">Kembali</button>
                     <button
                         class="w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
-                        onclick="printCertificate()">Cetak Sertifikat</button>
+                        onclick="generateCertificatePDF()">Cetak Sertifikat</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF Preview Modal - BARU -->
+        <div id="pdfPreviewModal" class="pdf-preview-modal" style="display: none;">
+            <div class="pdf-preview-container">
+                <div class="pdf-preview-header">
+                    <h3 class="text-lg font-bold">Preview Sertifikat PDF</h3>
+                    <button onclick="closePDFPreview()" class="text-gray-500 hover:text-gray-700">
+                        <i class="text-xl fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="pdf-preview-content">
+                    <canvas id="pdfCanvas" style="max-width: 100%; border: 1px solid #ddd;"></canvas>
+                </div>
+                <div class="pdf-preview-buttons">
+                    <button onclick="closePDFPreview()" 
+                        class="px-4 py-2 text-gray-800 border-2 rounded-md hover:text-gray-900">
+                        Tutup
+                    </button>
+                    <button onclick="downloadPDF()" 
+                        class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                        <i class="mr-2 fas fa-download"></i>Download PDF
+                    </button>
                 </div>
             </div>
         </div>
@@ -409,6 +527,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
         <script>
+            let generatedPDF = null;
+            const username = '{{ $user->full_name }}'.replace(/\s+/g, '_');
+
             // Fungsi untuk modal Formulir Perjanjian Kerahasiaan
             function openModal() {
                 document.getElementById('userReportModal').classList.remove('hidden');
@@ -441,28 +562,126 @@
                 document.body.innerHTML = originalContents;
             }
 
-            // Fungsi print khusus untuk sertifikat
-            function printCertificate() {
-        const { jsPDF } = window.jspdf; // Akses jsPDF dari UMD module
-        const doc = new jsPDF({
-            orientation: 'landscape',
-            unit: 'mm',
-            format: 'a4'
-        });
+            // Fungsi untuk generate PDF dengan preview - BARU
+            async function generateCertificatePDF() {
+                try {
+                    // Show loading
+                    const button = event.target;
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="mr-2 fas fa-spinner fa-spin"></i>Generating PDF...';
+                    button.disabled = true;
 
-        const certificateContent = document.getElementById('certificateContent');
-        const username = '{{ $user->full_name }}'.replace(/\s+/g, '_');
+                    const certificateContent = document.getElementById('certificateContent');
+                    
+                    // Menggunakan html2canvas dengan konfigurasi untuk menangkap background dan gambar
+                    const canvas = await html2canvas(certificateContent, {
+                        scale: 2, // Meningkatkan kualitas
+                        useCORS: true, // Untuk menangkap gambar dari domain lain
+                        allowTaint: true, // Mengizinkan gambar yang mungkin "tainted"
+                        backgroundColor: null, // Mempertahankan background transparan
+                        logging: false,
+                        width: certificateContent.offsetWidth,
+                        height: certificateContent.offsetHeight,
+                        onclone: function(clonedDoc) {
+                            // Memastikan background image dan styling tetap ada di clone
+                            const clonedElement = clonedDoc.getElementById('certificateContent');
+                            if (clonedElement) {
+                                clonedElement.style.backgroundImage = certificateContent.style.backgroundImage;
+                                clonedElement.style.backgroundSize = 'cover';
+                                clonedElement.style.backgroundPosition = 'center';
+                                clonedElement.style.backgroundRepeat = 'no-repeat';
+                            }
+                        }
+                    });
 
-        doc.html(certificateContent, {
-            callback: function (doc) {
-                doc.save(`sertifikat_kelulusan_${username}.pdf`);
-            },
-            x: 10,
-            y: 10,
-            width: 237, // Lebar B5 landscape dalam mm
-            windowWidth: 900 // Lebar viewport untuk rendering
-        });
-    }
+                    // Create PDF
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: 'landscape',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+
+                    // Calculate dimensions to fit A4 landscape
+                    const imgWidth = 297; // A4 landscape width in mm
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                    // Add image to PDF
+                    const imgData = canvas.toDataURL('image/png', 1.0);
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+                    // Store PDF for download
+                    generatedPDF = pdf;
+
+                    // Show preview
+                    showPDFPreview(canvas);
+
+                    // Reset button
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+
+                } catch (error) {
+                    console.error('Error generating PDF:', error);
+                    alert('Terjadi kesalahan saat membuat PDF. Silakan coba lagi.');
+                    
+                    // Reset button
+                    const button = event.target;
+                    button.innerHTML = 'Cetak Sertifikat';
+                    button.disabled = false;
+                }
+            }
+
+            // Fungsi untuk menampilkan preview PDF - BARU
+            function showPDFPreview(canvas) {
+                const modal = document.getElementById('pdfPreviewModal');
+                const previewCanvas = document.getElementById('pdfCanvas');
+                const ctx = previewCanvas.getContext('2d');
+
+                // Set canvas size for preview
+                const maxWidth = 800;
+                const scale = Math.min(maxWidth / canvas.width, 1);
+                
+                previewCanvas.width = canvas.width * scale;
+                previewCanvas.height = canvas.height * scale;
+
+                // Draw the certificate on preview canvas
+                ctx.drawImage(canvas, 0, 0, previewCanvas.width, previewCanvas.height);
+
+                // Show modal
+                modal.style.display = 'flex';
+            }
+
+            // Fungsi untuk menutup preview PDF - BARU
+            function closePDFPreview() {
+                document.getElementById('pdfPreviewModal').style.display = 'none';
+            }
+
+            // Fungsi untuk download PDF - BARU
+            function downloadPDF() {
+                if (generatedPDF) {
+                    generatedPDF.save(`sertifikat_kelulusan_${username}.pdf`);
+                    closePDFPreview();
+                } else {
+                    alert('PDF belum siap. Silakan generate ulang.');
+                }
+            }
+
+            // Preload images untuk memastikan gambar termuat saat generate PDF
+            function preloadImages() {
+                const images = [
+                    '{{ asset('assets/images/template-sertifikat.png') }}',
+                    '{{ asset('assets/images/ttd.png-removebg-preview.png') }}'
+                ];
+
+                images.forEach(src => {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.src = src;
+                });
+            }
+
+            // Preload images saat halaman dimuat
+            window.addEventListener('load', preloadImages);
         </script>
     </body>
 
