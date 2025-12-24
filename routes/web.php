@@ -132,6 +132,8 @@ Route::middleware(['auth'])->group(
         Route::get('/users/{username}', [UserController::class, 'view'])->name('user.view');
         Route::get('/users/print/interview_magang_pkl', [PrintController::class, 'index_interview'])->name('print.interview_magang_pkl');
         Route::get('/users/print/exit_clearance', [PrintController::class, 'index_exit'])->name('print.exit_clearance');
+        Route::get('/users/print/penilaian', [PrintController::class, 'index_penilaian'])->name('print.sertifikat_penilaian');
+        Route::get('/users/print/kompetensi', [PrintController::class, 'index_kompetensi'])->name('print.sertifikat_kompetensi');
         Route::post('/download-word', [PrintController::class, 'downloadWord'])->name('download.word');
 
         Route::get('/users', [UserController::class, 'index'])->name('users.list');

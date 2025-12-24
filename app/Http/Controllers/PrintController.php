@@ -19,6 +19,16 @@ class PrintController extends Controller
         return view('menus.print_exit');
     }
 
+    public function index_penilaian()
+    {
+        return view('menus.print_penilaian');
+    }
+
+    public function index_kompetensi()
+    {
+        return view('menus.print_sertifikat_kompetensi');
+    }
+
     public function downloadWord(Request $request)
     {
         $htmlContent = $request->input('html_content');

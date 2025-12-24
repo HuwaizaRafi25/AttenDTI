@@ -239,6 +239,14 @@
                                                 onclick="openCertificateModal()">
                                                 Sertifikat Kelulusan
                                             </div>
+                                            <a href="{{ route('print.sertifikat_penilaian') }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100">
+                                                Sertifikat Penilaian
+                                            </a>
+                                            <a href="{{ route('print.sertifikat_kompetensi') }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100">
+                                                Sertifikat Kompetensi
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -476,7 +484,7 @@
                             <!-- Footer -->
                             <div class="certificate-footer">
                                 <div class="flex flex-col items-center">
-                                    <img src="{{ asset('assets/images/ttd.png-removebg-preview.png') }}"
+                                    <img src="{{ asset('assets/images/ttd.png') }}"
                                         alt="Tanda Tangan" class="w-32 h-24 mb-4 print-bg">
                                     <div class="text-center text-blue-900">
                                         <p class="text-xl font-bold">Yustinus Dwiharjanto, S.Kom.</p>
