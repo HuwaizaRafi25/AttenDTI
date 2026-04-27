@@ -40,7 +40,7 @@ class CreateAttendance extends Command
 
         $holidays = [];
         foreach ($years as $year) {
-            $apiUrl = "https://dayoffapi.vercel.app/api?year={$year}";
+            $apiUrl = "https://dayoff-api-xi.vercel.app/api?year={$year}";
             $response = Http::get($apiUrl);
             if ($response->successful()) {
                 $holidayData = $response->json();

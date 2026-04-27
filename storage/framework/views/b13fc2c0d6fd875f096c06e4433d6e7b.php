@@ -1,6 +1,5 @@
-@extends('layouts.app')
-@section('content')
-    @if (Auth::user()->hasRole('admin') || Auth::user()->can('manage_attendance'))
+<?php $__env->startSection('content'); ?>
+    <?php if(Auth::user()->hasRole('admin') || Auth::user()->can('manage_attendance')): ?>
         <style>
             #optionsMenu.show {
                 display: block;
@@ -21,36 +20,12 @@
         </style>
 
         <div class="">
-            {{-- <nav class="flex pb-8" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                <li class="inline-flex items-center">
-                    <a href="{{ url('/') }}"
-                        class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                        <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                            viewBox="0 0 20 20">
-                            <path
-                                d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
-                        </svg>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 9 4-4-4-4" />
-                        </svg>
-                        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2">User Managemet</span>
-                    </div>
-                </li>
-            </ol>
-        </nav> --}}
+            
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white shadow-xl sm:rounded-lg p-6">
                     <div class="flex justify-between w-full items-center mb-2">
                         <div class="flex flex-col sm:flex-row justify-between gap-y-2 items-start mb-4">
-                            <img src="{{ asset('assets/images/icons/more.svg') }}"
+                            <img src="<?php echo e(asset('assets/images/icons/more.svg')); ?>"
                                 class="w-4 opacity-75 block ml-4 md:hidden cursor-pointer" alt="moreButton" id="moreButton">
                             <h3 class="text-xl font-semibold mb-2 ml-4 hidden lg:block">Attendance Management</h3>
                             <div id="optionsMenu"
@@ -60,7 +35,7 @@
                                     <button id="sortButton"
                                         onclick="document.getElementById('sortDropdown').classList.toggle('hidden')"
                                         class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
-                                        <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/sort.svg')) !!}</span>
+                                        <span class="icon mr-1"><?php echo file_get_contents(public_path('assets/images/icons/sort.svg')); ?></span>
                                         <span>Sort</span>
                                     </button>
 
@@ -88,21 +63,21 @@
                                 <div class="relative" x-data="{ open: false }">
                                     <button @click="open = !open"
                                         class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200">
-                                        <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/export.svg')) !!}</span>
+                                        <span class="icon mr-1"><?php echo file_get_contents(public_path('assets/images/icons/export.svg')); ?></span>
                                         <span>Export/Import</span>
                                     </button>
                                     <div x-show="open" x-cloak @click.away="open = false"
                                         class="fixed -mt-6 md:mt-2 md:ml-0 ml-[116px] w-48 bg-white border-t rounded-md shadow-lg z-10">
                                         <div class="py-1">
-                                            <a href="{{ route('users.export', ['type' => 'pdf']) . '?' . http_build_query(request()->query()) }}"
+                                            <a href="<?php echo e(route('users.export', ['type' => 'pdf']) . '?' . http_build_query(request()->query())); ?>"
                                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
                                                 as
                                                 <b>PDF</b></a>
-                                            <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
+                                            <a href="<?php echo e(route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query())); ?>"
                                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
                                                 as
                                                 <b>Excel</b></a>
-                                            <a href="{{ route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query()) }}"
+                                            <a href="<?php echo e(route('users.export', ['type' => 'xlsx']) . '?' . http_build_query(request()->query())); ?>"
                                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ekspor
                                                 as
                                                 <b>CSV</b></a>
@@ -114,32 +89,33 @@
                                     </div>
                                 </div>
                                 <!-- Print Button -->
-                                {{-- onclick="printData('userTable', 'Daftar Pengguna')" --}}
+                                
                                 <button id="printUserButton"
                                     class="flex items-center text-gray-700 hover:text-green-600 transition duration-200">
-                                    <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/printer.svg')) !!}</span>
+                                    <span class="icon mr-1"><?php echo file_get_contents(public_path('assets/images/icons/printer.svg')); ?></span>
                                     <span>Print</span>
                                 </button>
 
                                 <div class="h-5 w-0.5 border border-gray-700"></div>
 
-                                {{-- Select Option bulan dan tahun --}}
+                                
                                 <!-- Month and Year Selectors -->
                                 <div class="flex items-center gap-2">
                                     <!-- Month Selector -->
                                     <div class="relative" id="monthSelector">
                                         <button id="monthButton"
                                             class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200 bg-white border border-gray-200 rounded-md px-3 py-1.5">
-                                            <span class="icon mr-1">{!! file_get_contents(public_path('assets/images/icons/calendar.svg')) !!}</span>
-                                            @php
+                                            <span class="icon mr-1"><?php echo file_get_contents(public_path('assets/images/icons/calendar.svg')); ?></span>
+                                            <?php
                                                 $selectedMonthNumber = request()->get('month');
                                                 $selectedMonthName = $selectedMonthNumber
                                                     ? \Carbon\Carbon::create()->month($selectedMonthNumber)->format('F')
                                                     : date('F');
-                                            @endphp
+                                            ?>
 
                                             <span id="selectedMonth">
-                                                {{ $selectedMonthName }}
+                                                <?php echo e($selectedMonthName); ?>
+
                                             </span>
 
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none"
@@ -151,32 +127,33 @@
                                         <div id="monthDropdown"
                                             class="absolute mt-1 w-40 bg-white border rounded-md shadow-lg z-10 hidden">
                                             <div class="py-1 max-h-60 overflow-y-auto">
-                                                @foreach ($months as $month)
-                                                    @php
+                                                <?php $__currentLoopData = $months; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $month): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php
                                                         $monthNumber = \Carbon\Carbon::parse($month)->format('m'); // 1 - 12
-                                                    @endphp
-                                                    <button data-month="{{ $monthNumber }}"
-                                                        data-monthText="{{ $month }}"
-                                                        @click.prevent="toggleFilter('month', '{{ $monthNumber }}')"
-                                                        class="month-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $month === $selectedMonthName ? 'bg-blue-50 text-blue-600 font-medium' : '' }}">
-                                                        {{ $month }}
+                                                    ?>
+                                                    <button data-month="<?php echo e($monthNumber); ?>"
+                                                        data-monthText="<?php echo e($month); ?>"
+                                                        @click.prevent="toggleFilter('month', '<?php echo e($monthNumber); ?>')"
+                                                        class="month-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <?php echo e($month === $selectedMonthName ? 'bg-blue-50 text-blue-600 font-medium' : ''); ?>">
+                                                        <?php echo e($month); ?>
+
                                                     </button>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                                             </div>
                                         </div>
-                                        <input type="hidden" name="month" id="monthInput" value="{{ date('F') }}">
+                                        <input type="hidden" name="month" id="monthInput" value="<?php echo e(date('F')); ?>">
                                     </div>
 
                                     <!-- Year Selector -->
                                     <div class="relative" id="yearSelector">
                                         <button id="yearButton"
                                             class="flex items-center text-gray-700 hover:text-blue-600 transition duration-200 bg-white border border-gray-200 rounded-md px-3 py-1.5">
-                                            @php
+                                            <?php
                                                 $selectedYear = request()->get('year');
                                                 $selectedYear = $selectedYear ? $selectedYear : date('Y');
-                                            @endphp
-                                            <span id="selectedYear">{{ $selectedYear }}</span>
+                                            ?>
+                                            <span id="selectedYear"><?php echo e($selectedYear); ?></span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -186,18 +163,19 @@
                                         <div id="yearDropdown"
                                             class="absolute mt-1 w-32 bg-white border rounded-md shadow-lg z-10 hidden">
                                             <div class="py-1 max-h-60 overflow-y-auto">
-                                                @foreach ($years as $year)
-                                                    <button data-year="{{ $year }}"
-                                                        data-yearText="{{ $year }}"
-                                                        @click.prevent="toggleFilter('year', '{{ $year }}')"
-                                                        class="year-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $year == $selectedYear ? 'bg-blue-50 text-blue-600 font-medium' : '' }}">
-                                                        {{ $year }}
+                                                <?php $__currentLoopData = $years; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $year): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <button data-year="<?php echo e($year); ?>"
+                                                        data-yearText="<?php echo e($year); ?>"
+                                                        @click.prevent="toggleFilter('year', '<?php echo e($year); ?>')"
+                                                        class="year-option block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <?php echo e($year == $selectedYear ? 'bg-blue-50 text-blue-600 font-medium' : ''); ?>">
+                                                        <?php echo e($year); ?>
+
                                                     </button>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
                                         </div>
                                         <input type="hidden" name="year" id="yearInput"
-                                            value="{{ date('Y') }}">
+                                            value="<?php echo e(date('Y')); ?>">
                                     </div>
                                 </div>
                             </div>
@@ -205,15 +183,16 @@
                         <div class="flex">
                             <!-- Search Bar -->
                             <div class="relative inline-block h-12 w-12 -mr-6">
-                                <input {{-- lg:w-64 md:w-[196px] w-[164px] transition-all transform duration-300 --}}
+                                <input 
                                     class="-mr-3 search expandright absolute right-[49px] rounded bg-white border border-white h-8 w-0 lg:focus:w-[190px] md:focus:w-[164px] focus:w-[148px]  transition-all duration-400 outline-none z-10 focus:px-4 focus:border-blue-500"
-                                    id="searchright" value="{{ $search ? $search : null }}" type="text"
+                                    id="searchright" value="<?php echo e($search ? $search : null); ?>" type="text"
                                     name="q" placeholder="Cari">
                                 <label class="z-20 button searchbutton absolute text-[22px] w-full cursor-pointer"
                                     for="searchright">
                                     <span class="-ml-3 mt-1 inline-block">
                                         <span class="icon ">
-                                            {!! file_get_contents(public_path('assets/images/icons/search.svg')) !!}
+                                            <?php echo file_get_contents(public_path('assets/images/icons/search.svg')); ?>
+
                                         </span>
                                     </span>
                                 </label>
@@ -221,7 +200,8 @@
                             <button
                                 class="attendUser-button -mt-1 max-h-10 flex items-center bg-[#187bcd] text-white font-semibold px-4 text-sm rounded hover:bg-[#4f57a5] transition duration-200">
                                 <span class="icon mr-2 scale-150">
-                                    {!! file_get_contents(public_path('assets/images/icons/plus.svg')) !!}
+                                    <?php echo file_get_contents(public_path('assets/images/icons/plus.svg')); ?>
+
                                 </span>
                                 Attend User
                             </button>
@@ -236,16 +216,20 @@
                                     <th class="px-4 py-3 text-center">Name</th>
                                     <th class="px-4 py-3 text-center">Institution</th>
 
-                                    @foreach ($dates as $date)
+                                    <?php $__currentLoopData = $dates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $date): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <th
                                             class="px-4 py-3 text-center
-                                            {{ \Carbon\Carbon::parse($date)->isToday() ? 'text-blue-800 text-lg' : '' }}
-                                            {{ \Carbon\Carbon::parse($date)->isWeekend() ? 'text-gray-600' : '' }}
-                                            {{ in_array(\Carbon\Carbon::parse($date)->format('Y-m-d'), $holidays) ? 'text-red-600' : '' }}
-                                            {{ !\Carbon\Carbon::parse($date)->isToday() && !\Carbon\Carbon::parse($date)->isWeekend() ? 'text-gray-800' : '' }}">
-                                            {{ \Carbon\Carbon::parse($date)->translatedFormat('d') }}
+                                            <?php echo e(\Carbon\Carbon::parse($date)->isToday() ? 'text-blue-800 text-lg' : ''); ?>
+
+                                            <?php echo e(\Carbon\Carbon::parse($date)->isWeekend() ? 'text-gray-600' : ''); ?>
+
+                                            <?php echo e(in_array(\Carbon\Carbon::parse($date)->format('Y-m-d'), $holidays) ? 'text-red-600' : ''); ?>
+
+                                            <?php echo e(!\Carbon\Carbon::parse($date)->isToday() && !\Carbon\Carbon::parse($date)->isWeekend() ? 'text-gray-800' : ''); ?>">
+                                            <?php echo e(\Carbon\Carbon::parse($date)->translatedFormat('d')); ?>
+
                                         </th>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                                     <th class="px-4 py-3 text-center">Present</th>
                                     <th class="px-4 py-3 text-center">Total Days</th>
@@ -253,7 +237,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 text-sm text-gray-600">
-                                @include('menus.tables.attendance_table', ['users' => $users])
+                                <?php echo $__env->make('menus.tables.attendance_table', ['users' => $users], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                             </tbody>
                         </table>
                     </div>
@@ -261,50 +245,14 @@
                         <div class="mb-6">
                             <p>
                                 <strong>Waktu Laporan:</strong>
-                                {{-- @if ($start_date && $end_date)
-                                {{ \Carbon\Carbon::parse($start_date)->translatedFormat('d M Y') }} -
-                                {{ \Carbon\Carbon::parse($end_date)->translatedFormat('d M Y') }}
-                            @else --}}
+                                
                                 Semua waktu
-                                {{-- @endif --}}
+                                
                             </p>
                             <p><strong>Disusun Oleh:</strong> Admin Wasuhin</p>
                         </div>
 
-                        {{-- <table class="w-full table-fixed border-collapse border border-gray-300 text-sm">
-                        <thead>
-                            <tr class="bg-gray-200">
-                                <th class="border border-gray-300 w-12 p-2">No</th>
-                                <th class="border border-gray-300 p-2">Nomor Identitas</th>
-                                <th class="border border-gray-300 p-2">Nama</th>
-                                <th class="border border-gray-300 p-2">Akun ITB</th>
-                                <th class="border border-gray-300 p-2">Institusi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (count($users) <= 0)
-                                <tr>
-                                    <td class="border border-gray-300 p-2 text-center" colspan="5">Data transaksi
-                                        kosong
-                                    </td>
-                                </tr>
-                            @else
-                                @foreach ($users as $user)
-                                    <tr>
-                                        <td class="border border-gray-300 whitespace-nowrap w-min p-2 text-center">{{ $loop->iteration }}</td>
-                                        <td class="border border-gray-300 text-wrap flex-wrap p-2">{{ $user->identity_number ? $user->identity_number : '-' }}
-                                        </td>
-                                        <td class="border border-gray-300 text-wrap p-2">{{ $user->full_name }}
-                                        </td>
-                                        <td class="border border-gray-300 text-wrap flex-wrap p-2">{{ $user->itb_account }}
-                                        </td>
-                                        <td class="border border-gray-300 text-wrap p-2">{{ $user->institution ? $user->institution : '-' }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                    </table> --}}
+                        
                         <div class="mt-10 flex flex-col items-end w-full h-min justify-end">
                             <div class="text-right flex gap-x-1">
                                 <p class="text-base text-gray-800">Admin</p>
@@ -312,7 +260,7 @@
                             </div>
 
                             <div class="mt-10 text-right">
-                                <p class="text-md font-medium text-gray-700">{{ Auth::user()->full_name }}</p>
+                                <p class="text-md font-medium text-gray-700"><?php echo e(Auth::user()->full_name); ?></p>
                                 <div class="border-b border-gray-400 w-32 mt-2"></div>
                             </div>
                         </div>
@@ -322,9 +270,9 @@
         </div>
 
 
-        <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+        <script src="<?php echo e(asset('assets/js/jquery.min.js')); ?>"></script>
         <script>
-            const printCssPath = "{{ asset('assets/css/app.css') }}";
+            const printCssPath = "<?php echo e(asset('assets/css/app.css')); ?>";
         </script>
         <script>
             document.getElementById("moreButton").addEventListener("click", function() {
@@ -339,8 +287,8 @@
                 }
             });
         </script>
-        <script src="{{ asset('assets/js/attendance.js') }}"></script>
-    @else
+        <script src="<?php echo e(asset('assets/js/attendance.js')); ?>"></script>
+    <?php else: ?>
         <style>
             @keyframes fadeIn {
                 from {
@@ -372,42 +320,42 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-8">
                 <div class="flex flex-col gap-4 md:flex-row items-center justify-between mb-8">
-                    @if (in_array(today()->format('Y-m-d'), $holidays))
+                    <?php if(in_array(today()->format('Y-m-d'), $holidays)): ?>
                         <!-- Jika hari ini adalah hari libur -->
                         <div class="text-center md:text-left mb-6 md:mb-0">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, {{ Auth::user()->full_name }}!</h2>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, <?php echo e(Auth::user()->full_name); ?>!</h2>
                             <p class="text-lg text-gray-600">Today is a holiday! Enjoy your day off!</p>
                         </div>
-                    @elseif (Carbon\Carbon::now()->isWeekday())
+                    <?php elseif(Carbon\Carbon::now()->isWeekday()): ?>
                         <!-- Jika hari ini adalah hari kerja -->
-                        @if (Auth::user()->attendances->where('created_at', '>=', today()->startOfDay())->where('created_at', '<=', today()->endOfDay())->count() > 0)
+                        <?php if(Auth::user()->attendances->where('created_at', '>=', today()->startOfDay())->where('created_at', '<=', today()->endOfDay())->count() > 0): ?>
                             <!-- Jika pengguna sudah melakukan attendance hari ini -->
                             <div class="text-center md:text-left mb-6 md:mb-0">
-                                <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, {{ Auth::user()->full_name }}!</h2>
+                                <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, <?php echo e(Auth::user()->full_name); ?>!</h2>
                                 <p class="text-lg text-gray-600">You've marked your presence today. Keep up the good work!</p>
                             </div>
-                        @else
+                        <?php else: ?>
                             <!-- Jika pengguna belum melakukan attendance hari ini -->
-                            @if (Carbon\Carbon::now() >= $lateTime)
+                            <?php if(Carbon\Carbon::now() >= $lateTime): ?>
                                 <!-- Jika waktu saat ini sudah melewati lateTime -->
                                 <div class="text-center md:text-left mb-6 md:mb-0">
                                     <h2 class="text-3xl font-bold text-gray-800 mb-2">You're late!</h2>
                                     <p class="text-lg text-gray-600">Please fill out the form to explain your lateness.</p>
                                 </div>
                                 <div class="flex gap-x-4">
-                                    <button onclick="window.location.href='{{ route('attendance.form', Auth::id()). '&type=late' }}'"
+                                    <button onclick="window.location.href='<?php echo e(route('attendance.form', Auth::id()). '&type=late'); ?>'"
                                         class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
                                         <i class="fas fa-file-alt mr-2"></i> Fill Late Form
                                     </button>
                                 </div>
-                            @else
+                            <?php else: ?>
                                 <!-- Jika waktu saat ini belum melewati lateTime -->
                                 <div class="text-center md:text-left mb-6 md:mb-0">
                                     <h2 class="text-3xl font-bold text-gray-800 mb-2">Hello! Ready to start your day?</h2>
                                     <p class="text-lg text-gray-600">Let's mark your presence and make today count!</p>
                                 </div>
                                 <div class="flex gap-x-4">
-                                    <button onclick="window.location.href='{{ route('attendance.request', Auth::id()) }}'"
+                                    <button onclick="window.location.href='<?php echo e(route('attendance.request', Auth::id())); ?>'"
                                         class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg transform hover:-translate-y-1">
                                         <i class="fas fa-check-circle mr-2"></i> I'm Here!
                                     </button>
@@ -416,9 +364,9 @@
                                         <i class="fas fa-times-circle mr-2"></i> Not Today
                                     </button>
                                 </div>
-                            @endif
-                        @endif
-                    @endif
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Attendance Summary</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -427,7 +375,7 @@
                             <i class="fas fa-user-check text-4xl mb-3"></i>
                             <i class="fas fa-circle-info text-lg opacity-60 hover:opacity-90 -mt-2 -mr-2"></i>
                         </div>
-                        <p class="text-5xl font-bold text-blue-600 mb-1">{{ $presentCount ?? 0 }}</p>
+                        <p class="text-5xl font-bold text-blue-600 mb-1"><?php echo e($presentCount ?? 0); ?></p>
                         <p class="font-medium text-xl text-gray-600">Present</p>
                     </div>
                     <div class="bg-green-100 p-6 rounded-xl hover-lift shadow-md">
@@ -435,7 +383,7 @@
                             <i class="fas fa-clock text-4xl mb-3"></i>
                             <i class="fas fa-circle-info text-lg opacity-60 hover:opacity-90 -mt-2 -mr-2"></i>
                         </div>
-                        <p class="text-5xl font-bold text-green-600 mb-1">{{ $ontimeCount ?? 0 }}</p>
+                        <p class="text-5xl font-bold text-green-600 mb-1"><?php echo e($ontimeCount ?? 0); ?></p>
                         <p class="font-medium text-xl text-gray-600">On Time</p>
                     </div>
                     <div class="bg-yellow-100 p-6 rounded-xl hover-lift shadow-md">
@@ -443,7 +391,7 @@
                             <i class="fas fa-hourglass-half text-4xl mb-3"></i>
                             <i class="fas fa-circle-info text-lg opacity-60 hover:opacity-90 -mt-2 -mr-2"></i>
                         </div>
-                        <p class="text-5xl font-bold text-yellow-600 mb-1">{{ $lateCount ?? 0 }}</p>
+                        <p class="text-5xl font-bold text-yellow-600 mb-1"><?php echo e($lateCount ?? 0); ?></p>
                         <p class="font-medium text-xl text-gray-600">Late</p>
                     </div>
                     <div class="bg-red-100 p-6 rounded-xl hover-lift shadow-md">
@@ -451,7 +399,7 @@
                             <i class="fas fa-user-times text-4xl mb-3"></i>
                             <i class="fas fa-circle-info text-lg opacity-60 hover:opacity-90 -mt-2 -mr-2"></i>
                         </div>
-                        <p class="text-5xl font-bold text-red-600 mb-1">{{ $absentCount ?? 0 }}</p>
+                        <p class="text-5xl font-bold text-red-600 mb-1"><?php echo e($absentCount ?? 0); ?></p>
                         <p class="font-medium text-xl text-gray-600">Absent</p>
                     </div>
                 </div>
@@ -488,8 +436,10 @@
                 </div>
             </div>
         </div>
-        @include('menus.modals.attendance.absent_attendance_modal')
-        <script src="{{ asset('assets/js/clock.js') }}"></script>
-        <script src="{{ asset('assets/js/userAttendance.js') }}"></script>
-    @endif
-@endsection
+        <?php echo $__env->make('menus.modals.attendance.absent_attendance_modal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <script src="<?php echo e(asset('assets/js/clock.js')); ?>"></script>
+        <script src="<?php echo e(asset('assets/js/userAttendance.js')); ?>"></script>
+    <?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\dev\AttenDTI\AttenDTI\resources\views/menus/attendance.blade.php ENDPATH**/ ?>

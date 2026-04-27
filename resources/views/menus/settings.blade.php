@@ -34,7 +34,7 @@
                         <label for="companyName" class="text-sm font-semibold text-gray-700">Nama Perusahaan</label>
                         <input type="text" id="companyName" name="company_name"
                             class="mt-2 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value="{{ old('company_name', $company->name ?? 'My Company') }}">
+                            value="{{ old('company_name', $app_name ?? 'My Company') }}">
                         @error('company_name')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -49,7 +49,7 @@
                                 <select id="lateTimeHour" name="late_time_hour"
                                     class="mt-1 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     @for ($i = 0; $i < 24; $i++)
-                                        <option value="{{ $i }}" {{ (old('late_time_hour', $company->late_time_hour ?? 8) == $i) ? 'selected' : '' }}>
+                                        <option value="{{ $i }}" {{ (old('late_time_hour', $late_time->hour ?? 8) == $i) ? 'selected' : '' }}>
                                             {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
                                         </option>
                                     @endfor
@@ -60,7 +60,7 @@
                                 <select id="lateTimeMinute" name="late_time_minute"
                                     class="mt-1 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     @for ($i = 0; $i < 60; $i += 5)
-                                        <option value="{{ $i }}" {{ (old('late_time_minute', $company->late_time_minute ?? 30) == $i) ? 'selected' : '' }}>
+                                        <option value="{{ $i }}" {{ (old('late_time_minute', $late_time->minute ?? 30) == $i) ? 'selected' : '' }}>
                                             {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
                                         </option>
                                     @endfor
@@ -102,7 +102,7 @@
                         <label for="email" class="text-sm font-semibold text-gray-700">Email</label>
                         <input type="email" id="email" name="email"
                             class="mt-2 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value="{{ old('email', $company->email ?? 'contact@mycompany.com') }}">
+                            value="{{ old('email', $company->email ?? 'dti@itb.ac.id') }}">
                         @error('email')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror

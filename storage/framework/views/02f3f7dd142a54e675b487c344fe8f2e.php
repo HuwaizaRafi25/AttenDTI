@@ -13,7 +13,7 @@
                     <code>location</code>, <code>attendance</code>.
                 </li>
             </ul>
-            <a href="{{ asset('templates/import_attendance_template.xlsx') }}" download
+            <a href="<?php echo e(asset('templates/import_attendance_template.xlsx')); ?>" download
                 class="text-blue-500 underline">Unduh Template</a>
         </div>
 
@@ -31,8 +31,8 @@
                     <li>Data yang diimpor akan menimpa data yang ada jika ada konflik.</li>
                 </ul>
             </div>
-            <form action="{{ route('attendance.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+            <form action="<?php echo e(route('attendance.import')); ?>" method="POST" enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
                 <div id="import" class="tab-content w-full justify-between hidden">
                     <div class="dropzone border-2 border-dashed border-gray-300 p-4 text-center w-full">
                         <p>Seret dan lepaskan file Anda di sini atau <span
@@ -58,7 +58,7 @@
         <div class="rounded-t-lg p-3 flex items-center justify-end absolute top-0 right-0">
             <button id="closeImportAttendanceModal" type="button"
                 class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors">
-                <img src="{{ asset('assets/images/icons/xmark.svg') }}" alt="Close"
+                <img src="<?php echo e(asset('assets/images/icons/xmark.svg')); ?>" alt="Close"
                     class="w-4 h-4 opacity-75 hover:opacity-100">
             </button>
         </div>
@@ -201,3 +201,4 @@
             });
     }
 </script>
+<?php /**PATH D:\dev\AttenDTI\AttenDTI\resources\views/menus/modals/attendance/import_attendance_modal.blade.php ENDPATH**/ ?>

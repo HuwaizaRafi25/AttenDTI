@@ -36,7 +36,7 @@ class AttendanceController extends Controller
         $firstDate = $dates[0];
         $lastDate = end($dates);
 
-        $apiUrl = "https://dayoffapi.vercel.app/api?month={$selectedMonth}&year={$selectedYear}";
+        $apiUrl = "https://dayoff-api-xi.vercel.app/api?month={$selectedMonth}&year={$selectedYear}";
         $response = file_get_contents($apiUrl);
         $holidayData = json_decode($response, true);
 
@@ -111,7 +111,39 @@ class AttendanceController extends Controller
             ->values()
             ->all();
 
-        return view('menus.attendance', compact('users', 'dates', 'months', 'years', 'selectedMonth', 'selectedYear', 'holidays', 'holidaysNames', 'locations', 'search'));
+        $presentCount = Attendance::where('attendance', 'present')
+            ->where('user_id', Auth::id())
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->whereNotIn(DB::raw('DATE(created_at)'), $holidays)
+            ->whereRaw('WEEKDAY(created_at) NOT IN (5, 6)')
+            ->count();
+
+        $ontimeCount = Attendance::where('attendance', 'ontime')
+            ->where('user_id', Auth::id())
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->whereNotIn(DB::raw('DATE(created_at)'), $holidays)
+            ->whereRaw('WEEKDAY(created_at) NOT IN (5, 6)')
+            ->count();
+
+        $lateCount = Attendance::where('attendance', 'late')
+            ->where('user_id', Auth::id())
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->whereNotIn(DB::raw('DATE(created_at)'), $holidays)
+            ->whereRaw('WEEKDAY(created_at) NOT IN (5, 6)')
+            ->count();
+
+        $absentCount = Attendance::where('attendance', 'absent')
+            ->where('user_id', Auth::id())
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->whereNotIn(DB::raw('DATE(created_at)'), $holidays)
+            ->whereRaw('WEEKDAY(created_at) NOT IN (5, 6)')
+            ->count();
+
+        return view('menus.attendance', compact('users', 'dates', 'months', 'years', 'selectedMonth', 'selectedYear', 'holidays', 'holidaysNames', 'locations', 'search', 'presentCount', 'ontimeCount', 'lateCount', 'absentCount'));
     }
 
     public function search(Request $request)
@@ -582,7 +614,7 @@ class AttendanceController extends Controller
 
                         $holidays = [];
                         foreach ($years as $year) {
-                            $apiUrl = "https://dayoffapi.vercel.app/api?year={$year}";
+                            $apiUrl = "https://dayoff-api-xi.vercel.app/api?year={$year}";
                             $response = Http::get($apiUrl);
                             if ($response->successful()) {
                                 $holidayData = $response->json();
@@ -811,7 +843,7 @@ class AttendanceController extends Controller
 
         $holidays = [];
         foreach ($years as $year) {
-            $apiUrl = "https://dayoffapi.vercel.app/api?year={$year}";
+            $apiUrl = "https://dayoff-api-xi.vercel.app/api?year={$year}";
             $response = Http::get($apiUrl);
             if ($response->successful()) {
                 $holidayData = $response->json();

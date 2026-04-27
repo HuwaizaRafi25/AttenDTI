@@ -12,7 +12,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
-    /**
+/**
      * Run the database seeds.
      */
     public function run(): void
@@ -80,8 +80,8 @@ class UserSeeder extends Seeder
             'gender' => '1',
             'address' => 'Jl. Student No. 2',
             'profile_pic' => 'A9DwuCrB5YxU6mhIq0IjK8hPKRsBi6NsY1VrMr9S.jpg',
-            'period_start_date' => Carbon::parse('2025-01-02'),
-            'period_end_date' => Carbon::parse('2025-04-12'),
+            'period_start_date' => Carbon::parse('2026-01-02'),
+            'period_end_date' => Carbon::parse('2026-04-12'),
             'major' => 'Rekayasa Perangkat Lunak',
             'institution' => 'SMK TI Pembangunan Cimahi',
             'placement_id' => 1,
@@ -100,7 +100,7 @@ class UserSeeder extends Seeder
             'address' => 'Jl. Student No. 3',
             'profile_pic' => 'aQQ3fBEi0iDY97mN7ITKtE8KU7gZgXPfVKGtwje1.jpg',
             'period_start_date' => Carbon::parse('2024-11-02'),
-            'period_end_date' => Carbon::parse('2025-01-11'),
+            'period_end_date' => Carbon::parse('2026-01-11'),
             'major' => 'Teknik Komputer dan Jaringan',
             'institution' => 'SMK TI Pembangunan Cimahi',
             'placement_id' => 2,
@@ -119,7 +119,7 @@ class UserSeeder extends Seeder
             'address' => 'Jl. Imam No. 1',
             'profile_pic' => 'hengker.jpg',
             'period_start_date' => Carbon::parse('2024-11-02'),
-            'period_end_date' => Carbon::parse('2025-01-11'),
+            'period_end_date' => Carbon::parse('2026-01-11'),
             'major' => 'Desain Komunikasi dan Visual',
             'institution' => 'SMK TI Pembangunan Cimahi',
             'placement_id' => 1,
@@ -137,8 +137,8 @@ class UserSeeder extends Seeder
             'gender' => '1',
             'address' => 'Leuwigajah, Cimahi Selatan, Jawa barat',
             'profile_pic' => '67dbbfa372c53.jpg',
-            'period_start_date' => Carbon::parse('2025-01-02'),
-            'period_end_date' => Carbon::parse('2025-04-12'),
+            'period_start_date' => Carbon::parse('2026-01-02'),
+            'period_end_date' => Carbon::parse('2026-04-12'),
             'major' => 'Teknik Komputer dan Jaringan',
             'institution' => 'SMK TI Pembangunan Cimahi',
             'placement_id' => 2,
@@ -156,8 +156,8 @@ class UserSeeder extends Seeder
             'gender' => '1',
             'address' => 'Jl. Cibogo Permai',
             'profile_pic' => null,
-            'period_start_date' => Carbon::parse('2025-01-02'),
-            'period_end_date' => Carbon::parse('2025-04-12'),
+            'period_start_date' => Carbon::parse('2026-01-02'),
+            'period_end_date' => Carbon::parse('2026-04-12'),
             'major' => 'Pengembangan Perangkat Lunak dan Gim',
             'institution' => 'SMK TI Pembangunan Cimahi',
             'placement_id' => 1,
@@ -176,7 +176,7 @@ class UserSeeder extends Seeder
             'address' => 'Jl. Cibogo Permai',
             'profile_pic' => null,
             'period_start_date' => Carbon::parse('2024-11-02'),
-            'period_end_date' => Carbon::parse('2025-02-12'),
+            'period_end_date' => Carbon::parse('2026-02-12'),
             'major' => 'Teknik Komputer dan Jaringan',
             'institution' => 'SMK TI Pembangunan Cimahi',
             'placement_id' => 1,

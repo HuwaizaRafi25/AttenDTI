@@ -1,5 +1,4 @@
-@extends('layouts.app')
-@section('content')
+<?php $__env->startSection('content'); ?>
     <style>
         @keyframes fadeIn {
             from {
@@ -147,22 +146,22 @@
     </style>
 
     <!-- Success Message -->
-    @if (session('success'))
+    <?php if(session('success')): ?>
         <div class="fixed z-50 p-4 mb-4 text-sm text-green-800 bg-green-100 border border-green-200 rounded-lg shadow-lg top-4 right-4"
             role="alert">
             <div class="flex items-center">
                 <i class="mr-2 fas fa-check-circle"></i>
-                <span class="font-medium">{{ session('success') }}</span>
+                <span class="font-medium"><?php echo e(session('success')); ?></span>
                 <button type="button" class="ml-auto text-green-800 hover:text-green-900"
                     onclick="this.parentElement.parentElement.remove()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Error Messages -->
-    @if ($errors->any())
+    <?php if($errors->any()): ?>
         <div class="fixed z-50 p-4 mb-4 text-sm text-red-800 bg-red-100 border border-red-200 rounded-lg shadow-lg top-4 right-4"
             role="alert">
             <div class="flex items-center">
@@ -170,9 +169,9 @@
                 <div>
                     <span class="font-medium">Please fix the following errors:</span>
                     <ul class="mt-1 ml-4 list-disc">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </div>
                 <button type="button" class="ml-auto text-red-800 hover:text-red-900"
@@ -181,7 +180,7 @@
                 </button>
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 
     <div class="min-h-screen">
         <div class="container px-4 py-8 mx-auto sm:px-6 lg:px-8">
@@ -204,13 +203,13 @@
                         <div class="p-6">
                             <div class="flex items-center justify-between mb-6">
                                 <h2 class="text-lg font-semibold text-gray-900">Categories</h2>
-                                @if (Auth::check() && Auth::user()->role === 'admin')
+                                <?php if(Auth::check() && Auth::user()->role === 'admin'): ?>
                                     <button
                                         class="inline-flex items-center text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
                                         <i class="mr-1 fas fa-plus-circle"></i>
                                         Add New
                                     </button>
-                                @endif
+                                <?php endif; ?>
                             </div>
                             <nav>
                                 <ul class="space-y-2">
@@ -222,7 +221,7 @@
                                             All Announcements
                                         </a>
                                     </li>
-                                    @php
+                                    <?php
                                         $icons = [
                                             'General' => 'fa-globe',
                                             'Training' => 'fa-book-open',
@@ -235,21 +234,22 @@
                                             'Policy Updates' => 'text-orange-600 bg-orange-100',
                                             'New Hire' => 'text-blue-600 bg-blue-100',
                                         ];
-                                    @endphp
-                                    @foreach ($categories as $category)
-                                        @php
+                                    ?>
+                                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php
                                             $icon = $icons[$category->category_name] ?? 'fa-tag';
                                             $color = $colors[$category->category_name] ?? 'text-gray-600 bg-gray-100';
-                                        @endphp
+                                        ?>
                                         <li>
-                                            <a href="#" data-category-id="{{ $category->id }}"
+                                            <a href="#" data-category-id="<?php echo e($category->id); ?>"
                                                 class="category-link flex items-center px-3 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 rounded-lg hover:bg-gray-50 hover:text-gray-900">
                                                 <i
-                                                    class="flex items-center justify-center w-6 h-6 mr-3 rounded-md fas {{ $icon }} {{ $color }}"></i>
-                                                {{ $category->category_name }}
+                                                    class="flex items-center justify-center w-6 h-6 mr-3 rounded-md fas <?php echo e($icon); ?> <?php echo e($color); ?>"></i>
+                                                <?php echo e($category->category_name); ?>
+
                                             </a>
                                         </li>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </ul>
                             </nav>
                         </div>
@@ -262,7 +262,7 @@
                         <div class="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
                             <div class="p-6">
                                 <div class="flex items-start space-x-4">
-                                    <img src="{{ asset('assets/images/userPlaceHolder.png') }}"
+                                    <img src="<?php echo e(asset('assets/images/userPlaceHolder.png')); ?>"
                                         class="object-cover w-12 h-12 bg-gray-200 rounded-full ring-2 ring-gray-100"
                                         alt="User avatar">
                                     <div class="flex-1">
@@ -283,27 +283,28 @@
                         </div>
 
                         <!-- Announcements will be dynamically loaded here -->
-                        @foreach ($announcements as $announcement)
+                        <?php $__currentLoopData = $announcements; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $announcement): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="mb-6 overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
                                 <div class="p-6">
                                     <div class="flex items-start justify-between">
                                         <div class="flex space-x-4">
-                                            <img src="{{ $announcement->user->profile_pic ? asset('storage/' . $announcement->user->profile_pic) : asset('assets/images/userPlaceHolder.png') }}"
+                                            <img src="<?php echo e($announcement->user->profile_pic ? asset('storage/' . $announcement->user->profile_pic) : asset('assets/images/userPlaceHolder.png')); ?>"
                                                 class="object-cover w-12 h-12 bg-gray-200 rounded-full ring-2 ring-gray-100"
                                                 alt="User avatar">
                                             <div class="flex-1">
                                                 <div class="flex items-center space-x-2">
                                                     <h3 class="font-semibold text-gray-900">
-                                                        {{ $announcement->user->username }}
+                                                        <?php echo e($announcement->user->username); ?>
+
                                                     </h3>
                                                     <span class="text-gray-400">•</span>
                                                     <span
-                                                        class="text-sm text-gray-500">{{ $announcement->user->role ?? 'User' }}</span>
+                                                        class="text-sm text-gray-500"><?php echo e($announcement->user->role ?? 'User'); ?></span>
                                                 </div>
                                                 <p class="text-sm text-gray-500">
-                                                    {{ $announcement->created_at->format('M d, h:i a') }}</p>
+                                                    <?php echo e($announcement->created_at->format('M d, h:i a')); ?></p>
                                                 <div class="mt-3">
-                                                    @php
+                                                    <?php
                                                         $category = $announcement->category;
                                                         $categoryId = $announcement->announcement_category_id;
                                                         switch ($categoryId) {
@@ -328,28 +329,29 @@
                                                                 $textColor = 'text-blue-700';
                                                                 break;
                                                         }
-                                                    @endphp
+                                                    ?>
                                                     <span
-                                                        class="inline-flex items-center px-2.5 py-1 text-xs font-medium {{ $textColor }} {{ $bgColor }} rounded-full">
-                                                        <i class="w-3 h-3 mr-1 {{ $icon }}"></i>
-                                                        {{ $category->category_name ?? 'Tanpa Kategori' }}
+                                                        class="inline-flex items-center px-2.5 py-1 text-xs font-medium <?php echo e($textColor); ?> <?php echo e($bgColor); ?> rounded-full">
+                                                        <i class="w-3 h-3 mr-1 <?php echo e($icon); ?>"></i>
+                                                        <?php echo e($category->category_name ?? 'Tanpa Kategori'); ?>
+
                                                     </span>
                                                 </div>
                                                 <div class="mt-4">
                                                     <h4 class="text-lg font-semibold text-gray-900">
-                                                        {{ $announcement->title }}</h4>
-                                                    <p class="mt-2 text-gray-700">{{ $announcement->text }}</p>
+                                                        <?php echo e($announcement->title); ?></h4>
+                                                    <p class="mt-2 text-gray-700"><?php echo e($announcement->text); ?></p>
 
-                                                    {{-- Enhanced Image Display Section --}}
-                                                    @if ($announcement->image)
+                                                    
+                                                    <?php if($announcement->image): ?>
                                                         <div class="mt-4">
                                                             <div class="relative inline-block group">
-                                                                <img src="{{ asset('storage/' . $announcement->image) }}"
+                                                                <img src="<?php echo e(asset('storage/' . $announcement->image)); ?>"
                                                                     class="object-cover w-full transition-all duration-300 rounded-lg shadow-md max-h-96 hover:shadow-lg"
                                                                     alt="Announcement image" loading="lazy"
                                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
 
-                                                                {{-- Fallback if image fails to load --}}
+                                                                
                                                                 <div
                                                                     class="items-center justify-center hidden w-full h-48 bg-gray-100 rounded-lg">
                                                                     <div class="text-center text-gray-500">
@@ -358,9 +360,9 @@
                                                                     </div>
                                                                 </div>
 
-                                                                {{-- Image overlay with zoom icon --}}
+                                                                
                                                                 <div class="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-0 rounded-lg opacity-0 cursor-pointer group-hover:bg-opacity-30 group-hover:opacity-100"
-                                                                    onclick="openImageModal('{{ asset('storage/' . $announcement->image) }}', '{{ $announcement->title }}')">
+                                                                    onclick="openImageModal('<?php echo e(asset('storage/' . $announcement->image)); ?>', '<?php echo e($announcement->title); ?>')">
                                                                     <div
                                                                         class="text-white transition-transform duration-300 transform scale-0 group-hover:scale-100">
                                                                         <i class="text-2xl fas fa-search-plus"></i>
@@ -369,11 +371,11 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    @elseif ($announcement->image_path)
-                                                        {{-- Alternative field name check --}}
+                                                    <?php elseif($announcement->image_path): ?>
+                                                        
                                                         <div class="mt-4">
                                                             <div class="relative inline-block group">
-                                                                <img src="{{ asset('storage/' . $announcement->image_path) }}"
+                                                                <img src="<?php echo e(asset('storage/' . $announcement->image_path)); ?>"
                                                                     class="object-cover w-full transition-all duration-300 rounded-lg shadow-md max-h-96 hover:shadow-lg"
                                                                     alt="Announcement image" loading="lazy"
                                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -387,7 +389,7 @@
                                                                 </div>
 
                                                                 <div class="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-0 rounded-lg opacity-0 cursor-pointer group-hover:bg-opacity-30 group-hover:opacity-100"
-                                                                    onclick="openImageModal('{{ asset('storage/' . $announcement->image_path) }}', '{{ $announcement->title }}')">
+                                                                    onclick="openImageModal('<?php echo e(asset('storage/' . $announcement->image_path)); ?>', '<?php echo e($announcement->title); ?>')">
                                                                     <div
                                                                         class="text-white transition-transform duration-300 transform scale-0 group-hover:scale-100">
                                                                         <i class="text-2xl fas fa-search-plus"></i>
@@ -396,14 +398,14 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="flex items-center space-x-2">
-                                            <form action="{{ route('announcements.pin', $announcement->id) }}"
+                                            <form action="<?php echo e(route('announcements.pin', $announcement->id)); ?>"
                                                 method="POST">
-                                                @csrf
+                                                <?php echo csrf_field(); ?>
                                                 <button type="submit"
                                                     class="p-2 text-gray-400 transition-colors rounded-lg hover:text-yellow-500 hover:bg-yellow-50">
                                                     <i class="fas fa-thumbtack"></i>
@@ -419,18 +421,18 @@
                                                     <ul class="space-y-1">
                                                         <li>
                                                             <button
-                                                                onclick="openEditModal({{ $announcement->id }}, '{{ addslashes($announcement->title) }}', '{{ addslashes($announcement->text) }}', {{ $announcement->announcement_category_id }}, '{{ $announcement->image ?? ($announcement->image_path ?? '') }}')"
+                                                                onclick="openEditModal(<?php echo e($announcement->id); ?>, '<?php echo e(addslashes($announcement->title)); ?>', '<?php echo e(addslashes($announcement->text)); ?>', <?php echo e($announcement->announcement_category_id); ?>, '<?php echo e($announcement->image ?? ($announcement->image_path ?? '')); ?>')"
                                                                 class="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100">
                                                                 <i class="w-4 h-4 mr-2 fas fa-edit"></i> Edit
                                                             </button>
                                                         </li>
                                                         <li>
                                                             <form
-                                                                action="{{ route('announcements.destroy', $announcement->id) }}"
+                                                                action="<?php echo e(route('announcements.destroy', $announcement->id)); ?>"
                                                                 method="POST"
                                                                 onsubmit="return confirm('Are you sure you want to delete this announcement?')">
-                                                                @csrf
-                                                                @method('DELETE')
+                                                                <?php echo csrf_field(); ?>
+                                                                <?php echo method_field('DELETE'); ?>
                                                                 <button type="submit"
                                                                     class="flex items-center w-full px-3 py-2 text-sm text-red-600 rounded-md hover:bg-red-50">
                                                                     <i class="w-4 h-4 mr-2 fas fa-trash-alt"></i> Delete
@@ -451,7 +453,7 @@
                                                     Share
                                                 </button>
                                             </div>
-                                            <a href="{{ route('announcements.show', $announcement->id) }}"
+                                            <a href="<?php echo e(route('announcements.show', $announcement->id)); ?>"
                                                 class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 transition-colors bg-white border border-blue-200 rounded-lg hover:text-blue-700 hover:bg-blue-50">
                                                 View Full Post <i class="ml-1 fas fa-arrow-right"></i>
                                             </a>
@@ -459,7 +461,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
 
@@ -486,8 +488,8 @@
                             <div class="p-6">
                                 <h3 class="mb-6 text-lg font-semibold text-gray-900">Pinned Announcements</h3>
                                 <div class="space-y-4">
-                                    @forelse ($pinned as $pin)
-                                        @php
+                                    <?php $__empty_1 = true; $__currentLoopData = $pinned; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pin): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                        <?php
                                             $announcement = $pin->announcement;
                                             $user = $announcement->user;
                                             $category = $announcement->category;
@@ -535,24 +537,25 @@
                                             // Truncate long text
                                             $truncatedText = Str::limit($announcement->text, 80, '...');
                                             $truncatedTitle = Str::limit($announcement->title, 40, '...');
-                                        @endphp
+                                        ?>
 
                                         <div
-                                            class="p-4 border {{ $borderColor }} rounded-lg bg-gradient-to-r {{ $cardGradient }} hover:shadow-md transition-all duration-200">
+                                            class="p-4 border <?php echo e($borderColor); ?> rounded-lg bg-gradient-to-r <?php echo e($cardGradient); ?> hover:shadow-md transition-all duration-200">
                                             <!-- Header with user info and pinned badge -->
                                             <div class="flex items-start justify-between mb-3">
                                                 <div class="flex items-center flex-1 min-w-0 space-x-2">
-                                                    <img src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('assets/images/userPlaceHolder.png') }}"
+                                                    <img src="<?php echo e($user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('assets/images/userPlaceHolder.png')); ?>"
                                                         class="flex-shrink-0 object-cover w-8 h-8 bg-gray-200 rounded-full ring-2 ring-white"
-                                                        alt="{{ $user->username ?? 'User' }} avatar"
-                                                        onerror="this.src='{{ asset('assets/images/userPlaceHolder.png') }}'">
+                                                        alt="<?php echo e($user->username ?? 'User'); ?> avatar"
+                                                        onerror="this.src='<?php echo e(asset('assets/images/userPlaceHolder.png')); ?>'">
                                                     <h4 class="text-sm font-semibold text-gray-900 truncate">
-                                                        {{ $user->username ?? 'Unknown User' }}
+                                                        <?php echo e($user->username ?? 'Unknown User'); ?>
+
                                                     </h4>
                                                 </div>
-                                                <form action="{{ route('announcements.pin', $announcement->id) }}"
+                                                <form action="<?php echo e(route('announcements.pin', $announcement->id)); ?>"
                                                     method="POST" style="display: inline;">
-                                                    @csrf
+                                                    <?php echo csrf_field(); ?>
                                                     <button type="submit"
                                                         class="inline-flex items-center flex-shrink-0 px-2 py-1 ml-2 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full hover:bg-yellow-200">
                                                         <i class="w-3 h-3 mr-1 fas fa-thumbtack"></i>
@@ -564,21 +567,24 @@
                                             <!-- Category badge -->
                                             <div class="mb-3">
                                                 <span
-                                                    class="inline-flex items-center px-2 py-1 text-xs font-medium {{ $categoryTextColor }} {{ $categoryBgColor }} rounded-full">
-                                                    <i class="w-3 h-3 mr-1 {{ $categoryIcon }}"></i>
-                                                    {{ $category->category_name ?? 'No Category' }}
+                                                    class="inline-flex items-center px-2 py-1 text-xs font-medium <?php echo e($categoryTextColor); ?> <?php echo e($categoryBgColor); ?> rounded-full">
+                                                    <i class="w-3 h-3 mr-1 <?php echo e($categoryIcon); ?>"></i>
+                                                    <?php echo e($category->category_name ?? 'No Category'); ?>
+
                                                 </span>
                                             </div>
 
                                             <!-- Content -->
                                             <div class="space-y-2">
                                                 <h5 class="font-semibold leading-tight text-gray-900"
-                                                    title="{{ $announcement->title }}">
-                                                    {{ $truncatedTitle }}
+                                                    title="<?php echo e($announcement->title); ?>">
+                                                    <?php echo e($truncatedTitle); ?>
+
                                                 </h5>
                                                 <p class="text-sm leading-relaxed text-gray-600"
-                                                    title="{{ $announcement->text }}">
-                                                    {{ $truncatedText }}
+                                                    title="<?php echo e($announcement->text); ?>">
+                                                    <?php echo e($truncatedText); ?>
+
                                                 </p>
                                             </div>
 
@@ -586,22 +592,23 @@
                                             <div
                                                 class="flex items-center justify-between pt-3 mt-4 border-t border-gray-200/50">
                                                 <span class="text-xs text-gray-500">
-                                                    {{ $announcement->created_at->diffForHumans() }}
+                                                    <?php echo e($announcement->created_at->diffForHumans()); ?>
+
                                                 </span>
-                                                <a href="{{ route('announcements.show', $announcement->id) }}"
+                                                <a href="<?php echo e(route('announcements.show', $announcement->id)); ?>"
                                                     class="inline-flex items-center text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 hover:underline">
                                                     View Post
                                                     <i class="ml-1 text-xs fas fa-arrow-right"></i>
                                                 </a>
                                             </div>
                                         </div>
-                                    @empty
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                         <div class="p-6 text-center border border-gray-200 rounded-lg bg-gray-50">
                                             <p class="text-sm font-medium text-gray-500">No pinned announcements</p>
                                             <p class="mt-1 text-xs text-gray-400">Pin important announcements to see them
                                                 here</p>
                                         </div>
-                                    @endforelse
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -624,9 +631,9 @@
                     </button>
                 </div>
 
-                <form id="createAnnouncementForm" method="POST" action="{{ route('announcements.store') }}"
+                <form id="createAnnouncementForm" method="POST" action="<?php echo e(route('announcements.store')); ?>"
                     enctype="multipart/form-data">
-                    @csrf
+                    <?php echo csrf_field(); ?>
 
                     <div class="mb-6 space-y-4">
                         <div>
@@ -693,12 +700,12 @@
                         <!-- Category List Container -->
                         <div id="createCategoryListContainer"
                             class="flex flex-wrap hidden gap-2 p-4 mt-2 border border-gray-200 rounded-lg bg-gray-50">
-                            @foreach ($categories as $category)
+                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <button type="button"
                                     class="create-category-btn px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 transform hover:scale-105"
-                                    data-id="{{ $category->id }}">
+                                    data-id="<?php echo e($category->id); ?>">
                                     <i
-                                        class="mr-2 fas {{ $category->category_name === 'General'
+                                        class="mr-2 fas <?php echo e($category->category_name === 'General'
                                             ? 'fa-globe text-green-500'
                                             : ($category->category_name === 'Training'
                                                 ? 'fa-book-open text-purple-500'
@@ -706,10 +713,11 @@
                                                     ? 'fa-file-alt text-orange-500'
                                                     : ($category->category_name === 'New Hire'
                                                         ? 'fa-user-plus text-blue-500'
-                                                        : 'fa-tag text-gray-500'))) }}"></i>
-                                    {{ $category->category_name }}
+                                                        : 'fa-tag text-gray-500')))); ?>"></i>
+                                    <?php echo e($category->category_name); ?>
+
                                 </button>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
 
                         <div class="flex items-center justify-end mt-4 space-x-3">
@@ -742,8 +750,8 @@
                 </div>
 
                 <form id="editAnnouncementForm" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('PUT'); ?>
 
                     <div class="mb-6 space-y-4">
                         <div>
@@ -809,12 +817,12 @@
                         <!-- Category List Container -->
                         <div id="editCategoryListContainer"
                             class="flex flex-wrap hidden gap-2 p-4 mt-2 border border-gray-200 rounded-lg bg-gray-50">
-                            @foreach ($categories as $category)
+                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <button type="button"
                                     class="edit-category-btn px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 transform hover:scale-105"
-                                    data-id="{{ $category->id }}">
+                                    data-id="<?php echo e($category->id); ?>">
                                     <i
-                                        class="mr-2 fas {{ $category->category_name === 'General'
+                                        class="mr-2 fas <?php echo e($category->category_name === 'General'
                                             ? 'fa-globe text-green-500'
                                             : ($category->category_name === 'Training'
                                                 ? 'fa-book-open text-purple-500'
@@ -822,10 +830,11 @@
                                                     ? 'fa-file-alt text-orange-500'
                                                     : ($category->category_name === 'New Hire'
                                                         ? 'fa-user-plus text-blue-500'
-                                                        : 'fa-tag text-gray-500'))) }}"></i>
-                                    {{ $category->category_name }}
+                                                        : 'fa-tag text-gray-500')))); ?>"></i>
+                                    <?php echo e($category->category_name); ?>
+
                                 </button>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
 
                         <div class="flex items-center justify-end mt-4 space-x-3">
@@ -1196,8 +1205,8 @@
 
             function fetchAnnouncements(categoryId) {
                 const url = categoryId === 'all' ?
-                    '{{ route('announcements.index') }}' :
-                    `{{ route('announcements.index') }}?category_id=${categoryId}`;
+                    '<?php echo e(route('announcements.index')); ?>' :
+                    `<?php echo e(route('announcements.index')); ?>?category_id=${categoryId}`;
 
                 fetch(url, {
                         headers: {
@@ -1292,7 +1301,7 @@
                         <div class="p-6">
                             <div class="flex items-start justify-between">
                                 <div class="flex space-x-4">
-                                    <img src="${announcement.user.profile_pic ? `/storage/${announcement.user.profile_pic}` : '{{ asset('assets/images/userPlaceHolder.png') }}'}"
+                                    <img src="${announcement.user.profile_pic ? `/storage/${announcement.user.profile_pic}` : '<?php echo e(asset('assets/images/userPlaceHolder.png')); ?>'}"
                                         class="object-cover w-12 h-12 bg-gray-200 rounded-full ring-2 ring-gray-100"
                                         alt="User avatar">
                                     <div class="flex-1">
@@ -1336,7 +1345,7 @@
                                                 </li>
                                                 <li>
                                                     <form action="/announcements/${announcement.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this?')">
-                                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                        <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
                                                         <input type="hidden" name="_method" value="DELETE">
                                                         <button type="submit" class="flex items-center w-full px-3 py-2 text-sm text-red-600 rounded-md hover:bg-red-50">
                                                             <i class="w-4 h-4 mr-2 fas fa-trash-alt"></i> Delete
@@ -1409,4 +1418,6 @@
             window.closeImageModal = closeImageModal;
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\dev\AttenDTI\AttenDTI\resources\views/menus/announcement.blade.php ENDPATH**/ ?>

@@ -1,29 +1,28 @@
-<!-- Modal Import Attendance -->
-<div id="importAttendanceModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+<div id="importUserModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white rounded-lg shadow-lg w-[800px] max-h-[95vh] flex flex-row justify-between relative">
         <!-- Panel Pertama: How to Import -->
         <div class="w-1/2 p-6 overflow-auto bg-gray-50 rounded-lg">
-            <h2 class="text-xl font-bold mb-4">How to Import Attendance Data</h2>
-            <p>Ikuti langkah-langkah berikut untuk mengimpor data kehadiran:</p>
+            <h2 class="text-xl font-bold mb-4">How to Import User Data</h2>
+            <p>Ikuti langkah-langkah berikut untuk mengimpor data pengguna:</p>
             <ul class="list-disc pl-5 my-2">
-                <li>Pastikan semua <code>itb_account</code> terdaftar sebagai pengguna dengan peran 'user'.</li>
-                <li><strong>Peringatan:</strong> Mengimpor data dengan <code>date</code> dan <code>itb_account</code>
-                    yang sudah ada akan menimpa catatan kehadiran sebelumnya.</li>
-                <li>Gunakan format yang benar: <code>date</code>, <code>check_in</code>, <code>itb_account</code>,
-                    <code>location</code>, <code>attendance</code>.
+                <li>Pastikan semua <code>itb_account</code> yang akan diinput belum terdaftar sebagai pengguna.</li>
+                <li><strong>Peringatan:</strong> Jika mengimpor data dengan <code>itb_account</code> atau <code>identity_number</code>
+                    yang sudah terdaftar akan merubah data pengguna yang sudah ada.</li>
+                <li>Gunakan format yang benar: <code>identity_number</code>,  <code>username</code>,  <code>itb_account</code>,
+                    <code>email</code>,  <code>phone</code>, <code>password</code>, <code>full_name</code>, <code>gender</code>, <code>address</code>, <code>period_start_date</code>, <code>period_end_date</code>, <code>major</code>, <code>institution</code>, <code>placement_id</code>.
                 </li>
             </ul>
-            <a href="{{ asset('templates/import_attendance_template.xlsx') }}" download
+            <a href="<?php echo e(asset('templates/import_attendance_template.xlsx')); ?>" download
                 class="text-blue-500 underline">Unduh Template</a>
         </div>
 
         <!-- Panel Kedua: Import -->
         <div class="w-1/2 p-6 overflow-auto">
             <div class="tabs mb-4">
-                <button class="tab active rounded-lg" onclick="showTab('rules')">Rules</button>
-                <button class="tab rounded-lg" onclick="showTab('import')">Import</button>
+                <button class="tab active rounded-lg" onclick="showTab('userRules')">Rules</button>
+                <button class="tab rounded-lg" onclick="showTab('userImport')">Import</button>
             </div>
-            <div id="rules" class="tab-content active">
+            <div id="userRules" class="tab-content active">
                 <p>Ringkasan peraturan untuk mengimpor data kehadiran:</p>
                 <ul class="list-disc pl-5 my-2">
                     <li>Pastikan file Excel mengikuti format template.</li>
@@ -31,21 +30,21 @@
                     <li>Data yang diimpor akan menimpa data yang ada jika ada konflik.</li>
                 </ul>
             </div>
-            <form action="{{ route('attendance.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div id="import" class="tab-content w-full justify-between hidden">
-                    <div class="dropzone border-2 border-dashed border-gray-300 p-4 text-center w-full">
+            <form action="<?php echo e(route('attendance.import')); ?>" method="POST" enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
+                <div id="userImport" class="tab-content w-full justify-between hidden">
+                    <div class="userFileDropzone border-2 border-dashed border-gray-300 p-4 text-center w-full">
                         <p>Seret dan lepaskan file Anda di sini atau <span
                                 class="text-blue-500 underline cursor-pointer"
-                                onclick="document.getElementById('attendanceFile').click()">klik untuk memilih</span>
+                                onclick="document.getElementById('userFile').click()">klik untuk memilih</span>
                         </p>
-                        <input type="file" id="attendanceFile" class="hidden" name="attendance_file"
+                        <input type="file" id="userFile" class="hidden" name="user_file"
                             accept=".xlsx, .xls">
                         <p id="fileName" class="mt-2 text-gray-600"></p>
                         <div id="errorNotification" class="mt-2 text-red-500"></div> <!-- Notifikasi kesalahan -->
                     </div>
                     <div class="flex items-center justify-end mt-4">
-                        <button id="importButton" type="submit"
+                        <button id="submitImportUserButton" type="submit"
                             class="bg-gray-300 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>
                             Import
                         </button>
@@ -56,9 +55,9 @@
 
         <!-- Tombol Tutup -->
         <div class="rounded-t-lg p-3 flex items-center justify-end absolute top-0 right-0">
-            <button id="closeImportAttendanceModal" type="button"
+            <button id="closeImportUserModal" type="button"
                 class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors">
-                <img src="{{ asset('assets/images/icons/xmark.svg') }}" alt="Close"
+                <img src="<?php echo e(asset('assets/images/icons/xmark.svg')); ?>" alt="Close"
                     class="w-4 h-4 opacity-75 hover:opacity-100">
             </button>
         </div>
@@ -88,7 +87,7 @@
         display: block;
     }
 
-    .dropzone:hover {
+    .userFileDropzone:hover {
         border-color: #007bff;
     }
 
@@ -102,34 +101,34 @@
 
 <!-- JavaScript untuk Fungsi Drag-and-Drop dan Tab -->
 <script>
-    const fileInput = document.getElementById('attendanceFile');
-    const fileNameDisplay = document.getElementById('fileName');
-    const dropzone = document.querySelector('.dropzone');
+    const userFileInput = document.getElementById('userFile');
+    const userFileNameDisplay = document.getElementById('fileName');
+    const userFileDropzone = document.querySelector('.userFileDropzone');
 
-    dropzone.addEventListener('dragover', (e) => {
+    userFileDropzone.addEventListener('dragover', (e) => {
         e.preventDefault();
-        dropzone.classList.add('border-blue-500');
+        userFileDropzone.classList.add('border-blue-500');
     });
 
-    dropzone.addEventListener('dragleave', () => {
-        dropzone.classList.remove('border-blue-500');
+    userFileDropzone.addEventListener('dragleave', () => {
+        userFileDropzone.classList.remove('border-blue-500');
     });
 
-    dropzone.addEventListener('drop', (e) => {
+    userFileDropzone.addEventListener('drop', (e) => {
         e.preventDefault();
-        dropzone.classList.remove('border-blue-500');
+        userFileDropzone.classList.remove('border-blue-500');
         const file = e.dataTransfer.files[0];
         if (file) {
-            fileInput.files = e.dataTransfer.files;
-            fileNameDisplay.textContent = `File terpilih: ${file.name}`;
+            userFileInput.files = e.dataTransfer.files;
+            userFileNameDisplay.textContent = `File terpilih: ${file.name}`;
             analyzeData(file);
         }
     });
 
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-            fileNameDisplay.textContent = `File terpilih: ${fileInput.files[0].name}`;
-            analyzeData(fileInput.files[0]);
+    userFileInput.addEventListener('change', () => {
+        if (userFileInput.files.length > 0) {
+            userFileNameDisplay.textContent = `File terpilih: ${userFileInput.files[0].name}`;
+            analyzeData(userFileInput.files[0]);
         }
     });
 
@@ -146,9 +145,7 @@
         document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
     }
 
-    showTab('rules');
-
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    showTab('userRules');
 
     function analyzeData(file) {
         const formData = new FormData();
@@ -172,18 +169,18 @@
             })
             .then(data => {
                 const errorNotification = document.getElementById('errorNotification');
-                const importButton = document.getElementById('importButton');
+                const submitImportUserButton = document.getElementById('submitImportUserButton');
 
                 errorNotification.innerHTML = '';
 
                 if (data.success) {
-                    importButton.classList.remove('bg-gray-300', 'cursor-not-allowed');
-                    importButton.classList.add('bg-blue-500', 'hover:bg-blue-600', 'cursor-pointer');
-                    importButton.disabled = false;
+                    submitImportUserButton.classList.remove('bg-gray-300', 'cursor-not-allowed');
+                    submitImportUserButton.classList.add('bg-blue-500', 'hover:bg-blue-600', 'cursor-pointer');
+                    submitImportUserButton.disabled = false;
                 } else {
-                    importButton.disabled = true;
-                    importButton.classList.add('bg-gray-300', 'cursor-not-allowed');
-                    importButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                    submitImportUserButton.disabled = true;
+                    submitImportUserButton.classList.add('bg-gray-300', 'cursor-not-allowed');
+                    submitImportUserButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
 
                     // Tampilkan semua error
                     if (data.errors && data.errors.length > 0) {
@@ -201,3 +198,4 @@
             });
     }
 </script>
+<?php /**PATH D:\dev\AttenDTI\AttenDTI\resources\views/menus/modals/user/import_user_modal.blade.php ENDPATH**/ ?>
