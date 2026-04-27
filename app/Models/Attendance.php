@@ -15,6 +15,7 @@ class Attendance extends Model
         'attendance',
         'status',
         'note',
+        'check_in',
     ];
     protected $casts = [
         'check_in' => 'datetime:H:i:s',

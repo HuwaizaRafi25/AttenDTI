@@ -372,7 +372,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-8">
                 <div class="flex flex-col gap-4 md:flex-row items-center justify-between mb-8">
-                    @if (in_array(today()->format('Y-m-d'), $holidays))
+                    @if (in_array(today()->format('Y-m-d'), $holidays) || Carbon\Carbon::now()->isWeekend())
                         <!-- Jika hari ini adalah hari libur -->
                         <div class="text-center md:text-left mb-6 md:mb-0">
                             <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, {{ Auth::user()->full_name }}!</h2>

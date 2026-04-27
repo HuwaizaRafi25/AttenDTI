@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     // DOM Elements
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+    const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
     const loadingGif = document.getElementById("loadingGif");
     const errorContainer = document.getElementById("errorContainer");
     const errorMessage = document.getElementById("errorMessage");
@@ -18,24 +20,40 @@ document.addEventListener("DOMContentLoaded", () => {
     let faceVerificationInterval;
     let mediaStream = null;
     let faceAttempts = 0;
+    let isProcessingFace = false;
+    let hasSuccessfullyVerified = false;
     const maxFaceAttempts = 3;
 
     let locationId = 0;
 
-    function markStepCompleted(stepContainerId, stepSubcontainerId, stepCircleId, stepNameId) {
+    function markStepCompleted(
+        stepContainerId,
+        stepSubcontainerId,
+        stepCircleId,
+        stepNameId,
+    ) {
         const stepContainer = document.getElementById(stepContainerId);
         const stepSubcontainer = document.getElementById(stepSubcontainerId);
         const stepCircle = document.getElementById(stepCircleId);
         const stepName = document.getElementById(stepNameId);
         stepContainer.classList.remove("bg-blue-500/15");
-        stepSubcontainer.classList.remove("border-blue-500", "bg-white", "opacity-60");
+        stepSubcontainer.classList.remove(
+            "border-blue-500",
+            "bg-white",
+            "opacity-60",
+        );
         stepSubcontainer.classList.add("bg-blue-500", "border-blue-500");
         stepCircle.classList.remove("bg-blue-500");
         stepCircle.classList.add("bg-white");
         stepName.classList.remove("font-semibold");
     }
 
-    function markStepWorking(stepContainerId, stepSubcontainerId, stepCircleId, stepNameId) {
+    function markStepWorking(
+        stepContainerId,
+        stepSubcontainerId,
+        stepCircleId,
+        stepNameId,
+    ) {
         const stepContainer = document.getElementById(stepContainerId);
         const stepSubcontainer = document.getElementById(stepSubcontainerId);
         const stepCircle = document.getElementById(stepCircleId);
@@ -56,11 +74,15 @@ document.addEventListener("DOMContentLoaded", () => {
         statusText.textContent = "Sedang mengambil lokasi...";
         setTimeout(() => {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0,
-                });
+                navigator.geolocation.getCurrentPosition(
+                    successCallback,
+                    errorCallback,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0,
+                    },
+                );
             } else {
                 errorCallback("Geolocation tidak didukung oleh browser Anda.");
             }
@@ -69,8 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function successCallback(position) {
         // const { latitude, longitude } = position.coords;
-        const latitude = -6.88903200;
-        const longitude = 107.61114700;
+        const latitude = -6.889032;
+        const longitude = 107.611147;
         fetch("../verify-location", {
             method: "POST",
             headers: {
@@ -79,19 +101,38 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             body: JSON.stringify({ latitude, longitude }),
         })
-            .then(response => {
-                if (!response.ok) throw new Error("Network response was not ok");
+            .then((response) => {
+                if (!response.ok)
+                    throw new Error("Network response was not ok");
                 return response.json();
             })
-            .then(data => {
+            .then((data) => {
                 loadingGif.classList.add("hidden");
                 if (data.success) {
                     attempts = 0;
-                    markStepCompleted("stepContainer1", "stepSubcontainer1", "stepCircle1", "stepName1");
-                    markStepWorking("stepContainer2", "stepSubcontainer2", "stepCircle2", "stepName2");
-                    document.getElementById("stepLine1").classList.replace("border-gray-500", "border-blue-500");
-                    document.getElementById("stepLine1").classList.remove("opacity-60");
-                    statusText.textContent = "Lokasi terverifikasi. Memulai pengenalan wajah...";
+                    markStepCompleted(
+                        "stepContainer1",
+                        "stepSubcontainer1",
+                        "stepCircle1",
+                        "stepName1",
+                    );
+                    markStepWorking(
+                        "stepContainer2",
+                        "stepSubcontainer2",
+                        "stepCircle2",
+                        "stepName2",
+                    );
+                    document
+                        .getElementById("stepLine1")
+                        .classList.replace(
+                            "border-gray-500",
+                            "border-blue-500",
+                        );
+                    document
+                        .getElementById("stepLine1")
+                        .classList.remove("opacity-60");
+                    statusText.textContent =
+                        "Lokasi terverifikasi. Memulai pengenalan wajah...";
                     currentStep = "face";
                     vidContainer.classList.remove("hidden"); // Tampilkan video
                     videoContainer.classList.remove("hidden");
@@ -103,7 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     statusText.classList.add("hidden");
                 }
             })
-            .catch(error => errorCallback(`Terjadi kesalahan saat verifikasi lokasi: ${error.message}`));
+            .catch((error) =>
+                errorCallback(
+                    `Terjadi kesalahan saat verifikasi lokasi: ${error.message}`,
+                ),
+            );
     }
 
     function errorCallback(error, type = "geofence") {
@@ -145,26 +190,43 @@ document.addEventListener("DOMContentLoaded", () => {
     function retryFaceVerification() {
         errorContainer.classList.add("hidden");
         errorContainer.classList.remove("flex");
-        // faceAttempts = 0;
         statusText.classList.remove("hidden");
         statusText.textContent = "Mencoba verifikasi wajah kembali...";
         videoContainer.classList.remove("hidden");
+
+        // Reset state flag sebelum mengulang
+        isProcessingFace = false;
+        hasSuccessfullyVerified = false;
+
         startCamera();
-        // Pastikan untuk menghapus interval yang lama sebelum memulai yang baru
         if (faceVerificationInterval) clearInterval(faceVerificationInterval);
         faceVerificationInterval = setInterval(verifyFace, 2000);
     }
 
     // Verifikasi wajah dengan maksimal 3 kesempatan
     async function verifyFace() {
-        if (!modelsLoaded) return;
+        // 1. Blokir eksekusi jika model belum siap, sudah berhasil, atau sedang memproses data sebelumnya.
+        if (!modelsLoaded || hasSuccessfullyVerified || isProcessingFace)
+            return;
+
+        isProcessingFace = true; // Kunci proses saat ini
+
         try {
-            const detection = await faceapi.detectSingleFace(vidContainer)
+            const detection = await faceapi
+                .detectSingleFace(vidContainer)
                 .withFaceLandmarks()
                 .withFaceDescriptor();
+
+            // Cek lagi setelah proses await selesai.
+            // Takutnya saat menunggu deteksi, ada thread lain yang sudah berhasil.
+            if (hasSuccessfullyVerified) return;
+
             if (detection) {
                 const descriptor = new Float32Array(detection.descriptor);
-                const binaryString = btoa(String.fromCharCode(...new Uint8Array(descriptor.buffer)));
+                const binaryString = btoa(
+                    String.fromCharCode(...new Uint8Array(descriptor.buffer)),
+                );
+
                 const response = await fetch("/verify-face", {
                     method: "POST",
                     headers: {
@@ -174,44 +236,67 @@ document.addEventListener("DOMContentLoaded", () => {
                     body: JSON.stringify({ face_code: binaryString }),
                 });
                 const result = await response.json();
+
+                // Cek sekali lagi sebelum final eksekusi
+                if (hasSuccessfullyVerified) return;
+
                 if (result.match) {
+                    // 2. KUNCI STATE SEKARANG JUGA
+                    hasSuccessfullyVerified = true;
                     clearInterval(faceVerificationInterval);
-                    markStepCompleted("stepContainer2", "stepSubcontainer2", "stepCircle2", "stepName2");
-                    document.getElementById("stepLine2").classList.replace("border-gray-500", "border-blue-500");
-                    document.getElementById("stepLine2").classList.remove("opacity-60");
+
+                    markStepCompleted(
+                        "stepContainer2",
+                        "stepSubcontainer2",
+                        "stepCircle2",
+                        "stepName2",
+                    );
+                    document
+                        .getElementById("stepLine2")
+                        .classList.replace(
+                            "border-gray-500",
+                            "border-blue-500",
+                        );
+                    document
+                        .getElementById("stepLine2")
+                        .classList.remove("opacity-60");
                     vidContainer.classList.add("hidden");
                     stopCamera();
                     videoContainer.classList.add("hidden");
-                    markStepCompleted("stepContainer3", "stepSubcontainer3", "stepCircle3", "stepName3");
+                    markStepCompleted(
+                        "stepContainer3",
+                        "stepSubcontainer3",
+                        "stepCircle3",
+                        "stepName3",
+                    );
                     completeContainer.classList.remove("hidden");
                     statusText.classList.add("hidden");
                     currentStep = "complete";
-                    console.log(locationId);
 
-                    await fetch('../store', {
-                        method: 'POST',
+                    // 3. Sekarang fetch ke store hanya akan berjalan SATU KALI
+                    await fetch("../store", {
+                        method: "POST",
                         headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken,
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken,
                         },
                         body: JSON.stringify({
-                            location_id: locationId
+                            location_id: locationId,
+                        }),
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.success) {
+                                console.log("Presensi berhasil coy");
+                            } else {
+                                console.error("Presensi gagal coy");
+                            }
                         })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log('Presensi berhasil coy');
-                        } else {
-                            console.error('Presensi gagal coy');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Fetch error:', error);
-                    });
+                        .catch((error) => {
+                            console.error("Fetch error:", error);
+                        });
                 } else {
                     clearInterval(faceVerificationInterval);
-                    // Wajah terdeteksi, namun tidak cocok
                     errorCallback("Wajah tidak cocok", "face");
                     videoContainer.classList.add("hidden");
                     stopCamera();
@@ -219,7 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } else {
                 clearInterval(faceVerificationInterval);
-                // Tidak ada wajah terdeteksi
                 errorCallback("Wajah tidak terdeteksi", "face");
                 videoContainer.classList.add("hidden");
                 stopCamera();
@@ -228,10 +312,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error during face verification:", error);
             clearInterval(faceVerificationInterval);
-            errorCallback("Terjadi kesalahan saat verifikasi wajah. Silakan coba lagi.", "face");
+            errorCallback(
+                "Terjadi kesalahan saat verifikasi wajah. Silakan coba lagi.",
+                "face",
+            );
+        } finally {
+            // Buka kembali kunci proses ketika fungsi selesai (agar interval berikutnya bisa jalan jika belum sukses)
+            isProcessingFace = false;
         }
     }
-
 
     async function initFaceVerification() {
         try {
@@ -240,32 +329,38 @@ document.addEventListener("DOMContentLoaded", () => {
             await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
             await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
             modelsLoaded = true;
-            statusText.textContent = "Model dimuat. Memulai verifikasi wajah...";
+            statusText.textContent =
+                "Model dimuat. Memulai verifikasi wajah...";
             // Mulai verifikasi wajah secara periodik
             faceVerificationInterval = setInterval(verifyFace, 2000);
         } catch (error) {
             console.error("Error loading models:", error);
-            statusText.textContent = "Gagal memuat model pengenalan wajah. Silakan muat ulang halaman.";
+            statusText.textContent =
+                "Gagal memuat model pengenalan wajah. Silakan muat ulang halaman.";
         }
     }
 
     // Kontrol kamera
     function startCamera() {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-            .then(stream => {
+        navigator.mediaDevices
+            .getUserMedia({ video: true, audio: false })
+            .then((stream) => {
                 mediaStream = stream;
                 vidContainer.srcObject = stream;
-                vidContainer.addEventListener("loadedmetadata", () => vidContainer.play());
+                vidContainer.addEventListener("loadedmetadata", () =>
+                    vidContainer.play(),
+                );
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("Error accessing camera:", error);
-                statusText.textContent = "Gagal mengakses kamera. Silakan periksa izin kamera.";
+                statusText.textContent =
+                    "Gagal mengakses kamera. Silakan periksa izin kamera.";
             });
     }
 
     function stopCamera() {
         if (mediaStream) {
-            mediaStream.getTracks().forEach(track => track.stop());
+            mediaStream.getTracks().forEach((track) => track.stop());
             vidContainer.srcObject = null;
             mediaStream = null;
         }
@@ -283,8 +378,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    formButton.addEventListener("click", () => window.location.href = "/attendance/form");
-    document.getElementById("okButton").addEventListener("click", () => window.location.href = "/attendances");
+    formButton.addEventListener(
+        "click",
+        () => (window.location.href = "/attendance/form"),
+    );
+    document
+        .getElementById("okButton")
+        .addEventListener(
+            "click",
+            () => (window.location.href = "/attendances"),
+        );
 
     // Mulai proses
     getLocation();

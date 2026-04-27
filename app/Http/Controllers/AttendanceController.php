@@ -176,7 +176,7 @@ class AttendanceController extends Controller
                 'location_id' => $locationId,
                 'status' => 'approved',
                 'attendance' => 'present',
-                'check_in' => now(),
+                'check_in' => Carbon::now()->format('H:i:s'),
             ]);
 
             return response()->json([
@@ -210,7 +210,7 @@ class AttendanceController extends Controller
                 'location_id' => $locationId,
                 'status' => 'pending',
                 'attendance' => $attendanceType,
-                'check_in' => now(),
+                'check_in' => Carbon::now()->format('H:i:s'),
                 'note' => $note,
             ]);
 
